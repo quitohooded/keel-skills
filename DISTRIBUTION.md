@@ -38,7 +38,7 @@ remoto público y subirlo:
 gh repo create keel --public --source . --remote origin --push
 
 # O manual: creás el repo vacío en github.com y luego:
-git remote add origin https://github.com/<tu-usuario>/keel.git
+git remote add origin https://github.com/quitohooded/keel.git
 git branch -M main
 git push -u origin main
 ```
@@ -46,7 +46,7 @@ git push -u origin main
 Después, cualquiera instala con:
 
 ```
-/plugin marketplace add https://github.com/<tu-usuario>/keel
+/plugin marketplace add https://github.com/quitohooded/keel
 /plugin install keel@keel
 ```
 

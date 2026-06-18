@@ -48,7 +48,7 @@ Keel se distribuye como un marketplace de un solo plugin.
 
 ```
 # En Claude Code:
-/plugin marketplace add https://github.com/<tu-usuario>/keel
+/plugin marketplace add https://github.com/quitohooded/keel
 /plugin install keel@keel
 ```
 
@@ -69,10 +69,11 @@ publicación (repo git, ruta local, o paquete).
 
 ## Autor
 
-Creado por **Esteban Aguilar**. Keel destila el criterio que uso para operar
-agentes en trabajo real: cuándo un agente puede actuar solo y cuándo tiene que
-parar, qué modelo asignar a cada tarea, y cómo mantener una sesión anclada en
-archivos. Si te sirve, contame en qué lo aplicaste.
+Creado por **Esteban Aguilar** — [estebanaguilar.com.ar](https://estebanaguilar.com.ar)
+· [github.com/quitohooded](https://github.com/quitohooded). Keel destila el
+criterio que uso para operar agentes en trabajo real: cuándo un agente puede
+actuar solo y cuándo tiene que parar, qué modelo asignar a cada tarea, y cómo
+mantener una sesión anclada en archivos. Si te sirve, contame en qué lo aplicaste.
 
 ## Licencia
 
