@@ -1,4 +1,4 @@
-# Keel (plugin)
+# Keel Skills (plugin)
 
 Disciplined operations for Claude agents. Three skills + one command.
 
@@ -13,7 +13,7 @@ Disciplined operations for Claude agents. Three skills + one command.
 
 All project-specific detail lives in an `AGENT_POLICY.md` at the consuming
 project's root. The skills read it at runtime. A template ships in
-`templates/AGENT_POLICY.template.md`. Run `/keel:policy-init` to generate one.
+`templates/AGENT_POLICY.template.md`. Run `/keel-skills:policy-init` to generate one.
 
 The plugin itself contains no project-, client-, or company-specific data by
 design.

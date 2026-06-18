@@ -1,16 +1,16 @@
 {
-  "name": "keel",
+  "name": "keel-skills",
   "owner": {
     "name": "Esteban Aguilar"
   },
   "metadata": {
-    "description": "Keel — disciplined operations for Claude agents. A portable governance framework: authorization levels, cost-aware delegation, and file-grounded context discipline.",
+    "description": "Keel Skills — disciplined operations for Claude agents. A portable governance framework: authorization levels, cost-aware delegation, and file-grounded context discipline.",
     "version": "0.1.0"
   },
   "plugins": [
     {
-      "name": "keel",
-      "source": "./plugins/keel",
+      "name": "keel-skills",
+      "source": "./plugins/keel-skills",
       "description": "Guardrails for autonomous coding agents: a three-level authorization model, cost-aware model delegation, and file-as-source-of-truth context discipline. Project-specific details live in a per-project AGENT_POLICY.md, so the framework ships clean and is configured by the buyer."
     }
   ]

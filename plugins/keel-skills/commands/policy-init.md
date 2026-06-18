@@ -4,7 +4,7 @@ description: Scaffold an AGENT_POLICY.md in the current project by interviewing 
 
 # Initialize an AGENT_POLICY.md
 
-Create a project-specific `AGENT_POLICY.md` so the Keel framework knows this
+Create a project-specific `AGENT_POLICY.md` so the Keel Skills framework knows this
 project's specifics.
 
 Steps:

@@ -1,16 +1,16 @@
-# Distribución de Keel
+# Distribución de Keel Skills
 
-Keel está estructurado como un **marketplace de un solo plugin**, que es la forma
+Keel Skills está estructurado como un **marketplace de un solo plugin**, que es la forma
 directamente instalable en Claude Code. Hay tres caminos de entrega.
 
 ## Estructura del repo
 
 ```
-keel/
+keel-skills/
   .claude-plugin/
-    marketplace.json          ← define el marketplace y lista el plugin "keel"
+    marketplace.json          ← define el marketplace y lista el plugin "keel-skills"
   plugins/
-    keel/
+    keel-skills/
       .claude-plugin/
         plugin.json           ← manifiesto del plugin
       skills/
@@ -18,7 +18,7 @@ keel/
         model-delegation/SKILL.md
         context-discipline/SKILL.md
       commands/
-        policy-init.md        ← /keel:policy-init
+        policy-init.md        ← /keel-skills:policy-init
       templates/
         AGENT_POLICY.template.md
       README.md
@@ -34,11 +34,11 @@ El repo ya está inicializado localmente con el primer commit. Falta crear el
 remoto público y subirlo:
 
 ```
-# Con GitHub CLI (gh) ya autenticado, desde C:\roadtobiz\_experimentos\keel:
-gh repo create keel --public --source . --remote origin --push
+# Con GitHub CLI (gh) ya autenticado, desde C:\roadtobiz\_experimentos\keel-skills:
+gh repo create keel-skills --public --source . --remote origin --push
 
 # O manual: creás el repo vacío en github.com y luego:
-git remote add origin https://github.com/quitohooded/keel.git
+git remote add origin https://github.com/quitohooded/keel-skills.git
 git branch -M main
 git push -u origin main
 ```
@@ -46,19 +46,19 @@ git push -u origin main
 Después, cualquiera instala con:
 
 ```
-/plugin marketplace add https://github.com/quitohooded/keel
-/plugin install keel@keel
+/plugin marketplace add https://github.com/quitohooded/keel-skills
+/plugin install keel-skills@keel-skills
 ```
 
 Para actualizar, publicás un commit nuevo y el usuario hace
-`/plugin marketplace update keel`. La licencia (source-available con atribución,
+`/plugin marketplace update keel-skills`. La licencia (source-available con atribución,
 sin reventa) vive en `LICENSE`.
 
 ## Camino 2 — Ruta local (para pruebas o entrega directa)
 
 ```
-/plugin marketplace add C:/ruta/a/keel
-/plugin install keel@keel
+/plugin marketplace add C:/ruta/a/keel-skills
+/plugin install keel-skills@keel-skills
 ```
 
 Útil para validar antes de publicar, o para entregar a un cliente que prefiere
@@ -66,7 +66,7 @@ instalación local.
 
 ## Camino 3 — Paquete (entrega offline)
 
-Comprimí la carpeta `keel/` y entregala. El comprador la descomprime y usa el
+Comprimí la carpeta `keel-skills/` y entregala. El comprador la descomprime y usa el
 Camino 2 apuntando a la ruta donde la dejó.
 
 ## Antes de publicar (checklist)
@@ -75,7 +75,7 @@ Camino 2 apuntando a la ruta donde la dejó.
 - [ ] Revisar la licencia con asesoría legal (el `LICENSE` es un template).
 - [ ] Confirmar que NINGÚN dato propio quedó en las skills (deben ser genéricas;
       todo lo específico va en el `AGENT_POLICY.md` del comprador).
-- [ ] Probar el ciclo completo: `marketplace add` → `install` → `/keel:policy-init`
+- [ ] Probar el ciclo completo: `marketplace add` → `install` → `/keel-skills:policy-init`
       → disparar cada skill con una situación real.
 - [ ] Bump de versión en `plugin.json`, `marketplace.json` y `CHANGELOG.md`.
 ```

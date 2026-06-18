@@ -1,5 +1,5 @@
 {
-  "name": "keel",
+  "name": "keel-skills",
   "version": "0.1.0",
   "description": "Disciplined operations for Claude agents: a three-level authorization model, cost-aware model delegation, and file-grounded context discipline. Configured per project via an AGENT_POLICY.md you control.",
   "author": {

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the Keel plugin are documented here.
+All notable changes to the Keel Skills plugin are documented here.
 
 ## [0.1.0] — 2026-06-17
 
@@ -14,5 +14,5 @@ Initial release.
   encapsulate-repetition guidance.
 - `context-discipline` skill — files as source of truth, when to stop expanding a
   session, resumable handoff requirements.
-- `/keel:policy-init` command and `AGENT_POLICY.template.md` — per-project
+- `/keel-skills:policy-init` command and `AGENT_POLICY.template.md` — per-project
   configuration that keeps the framework generic and the buyer's data separate.

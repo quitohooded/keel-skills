@@ -1,11 +1,11 @@
-# AGENT_POLICY.md — project configuration for the Keel framework
+# AGENT_POLICY.md — project configuration for the Keel Skills framework
 
-> Copy this file to the root of YOUR project and fill it in. The Keel skills read
+> Copy this file to the root of YOUR project and fill it in. The Keel Skills skills read
 > it to learn *your* specifics: what's hot here, where the source of truth lives,
 > and any overrides. The skills ship generic; this file is the only place your
 > project's details live. Keep it short and concrete.
 >
-> Copiá este archivo a la raíz de TU proyecto y completalo. Las skills de Keel lo
+> Copiá este archivo a la raíz de TU proyecto y completalo. Las skills de Keel Skills lo
 > leen para conocer lo específico de tu proyecto. Las skills son genéricas; este
 > archivo es el único lugar donde viven tus datos. Mantenelo corto y concreto.
 
