@@ -1,0 +1,44 @@
+Keel — Source-Available License (Attribution, No-Resale)
+Copyright (c) 2026 Esteban Aguilar. All rights reserved.
+
+Keel is the agent-governance framework created by Esteban Aguilar. This license
+makes the source available so you can read it, use it, and adapt it for your own
+work — while reserving the right to sell or redistribute Keel itself.
+
+1. GRANT
+   You are granted a worldwide, royalty-free, non-exclusive license to:
+   (a) view and study the Software;
+   (b) use the Software, including in your own commercial work and inside your
+       own organization or your clients' projects;
+   (c) modify and adapt the Software for those uses, including creating and
+       maintaining your own AGENT_POLICY.md and other configuration.
+
+2. ATTRIBUTION (required)
+   In any copy, fork, or substantial adaptation you keep or share, you must
+   retain this license, the copyright notice, and a visible credit to
+   "Keel by Esteban Aguilar" with a link to the project's homepage when one is
+   provided.
+
+3. NO RESALE / NO COMPETING REDISTRIBUTION
+   Without prior written permission from the copyright holder, you may NOT:
+   (a) sell, sublicense, or charge for the Software or any substantial portion
+       or derivative of it as a standalone product;
+   (b) redistribute or publish the Software, or a derivative of it, as a product
+       that competes with Keel (e.g. repackaging it as your own plugin/skill set
+       for distribution).
+   Using Keel to do paid work for yourself or clients is allowed (clause 1b);
+   selling Keel-the-framework is not.
+
+4. NO WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR
+   IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+This is a template inspired by source-available "no-resale" licenses (e.g.
+PolyForm Perimeter). It is not legal advice. Have it reviewed before relying on
+it commercially.
+
+Contact: <add your contact / website>
