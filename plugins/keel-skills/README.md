@@ -18,5 +18,9 @@ project's root. The skills read it at runtime. A template ships in
 The plugin itself contains no project-, client-, or company-specific data by
 design.
 
-See the repository root `README.md` (Spanish) for the commercial overview and
-`DISTRIBUTION.md` for publishing.
+The authorization model and the `AGENT_POLICY.md` format are specified
+runtime-neutral in the repository root `SPEC.md`, so they can be reimplemented
+outside Claude Code.
+
+See the repository root `README.md` (English; Spanish in `README.es.md`) for the
+overview and `DISTRIBUTION.md` for publishing. MIT-licensed.

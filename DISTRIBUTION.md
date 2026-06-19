@@ -25,8 +25,15 @@ keel-skills/
       templates/
         AGENT_POLICY.template.md
       README.md
-  README.md                   ← overview comercial (español)
-  LICENSE                     ← licencia comercial (template)
+  README.md                   ← overview (inglés, primario)
+  README.es.md                ← overview (español, voz de marca)
+  SPEC.md                     ← spec abierto, neutral al runtime (modelo L1/L2/L3 + formato AGENT_POLICY.md)
+  policies/                   ← packs de AGENT_POLICY.md por stack (web-app-deploy, nextjs-vercel, supabase)
+  examples/                   ← l3-brake.md (antes/después) + demo-script.md (guion grabable)
+  CONTRIBUTING.md             ← packs, implementaciones compatibles, mejoras al spec
+  STRATEGY.md                 ← estrategia de crecimiento (fuente de verdad interna)
+  LICENSE                     ← MIT
+  NOTICE                      ← atribución (norma) sobre MIT
   CHANGELOG.md
   DISTRIBUTION.md             ← este archivo
 ```
@@ -51,8 +58,9 @@ Cualquiera instala con:
 ```
 
 Para actualizar, publicás un commit nuevo y el usuario hace
-`/plugin marketplace update keel-skills`. La licencia (source-available con atribución,
-sin reventa) vive en `LICENSE`.
+`/plugin marketplace update keel-skills`. La licencia (**MIT**) vive en `LICENSE`;
+la atribución pedida (norma, no obligación legal más allá del aviso MIT) está en
+`NOTICE`.
 
 ## Camino 2 — Ruta local (para pruebas o entrega directa)
 
@@ -71,13 +79,14 @@ Camino 2 apuntando a la ruta donde la dejó.
 
 ## Antes de publicar (checklist)
 
-- [x] Completar `author.homepage` en `plugin.json` y el contacto en `LICENSE`.
-- [x] Revisión de la licencia (consistencia/estructura/intención; agregadas
-      definiciones y cláusula de terminación). Asesoría legal profesional sigue
-      siendo recomendable para ejecución en una jurisdicción específica.
+- [x] Completar `author.homepage` en `plugin.json` y el contacto en docs.
+- [x] Licencia **MIT** + `NOTICE` con la atribución pedida. (Decisión 2026-06-19:
+      se relicenció desde source-available/no-reventa a MIT para habilitar adopción
+      y reimplementación libres — ver `STRATEGY.md`.)
+- [x] Bump de versión sincronizado en `plugin.json`, `marketplace.json` y `CHANGELOG.md` (0.3.0).
 - [ ] Confirmar que NINGÚN dato propio quedó en las skills (deben ser genéricas;
       todo lo específico va en el `AGENT_POLICY.md` del comprador).
 - [ ] Probar el ciclo completo: `marketplace add` → `install` → `/keel-skills:policy-init`
       → disparar cada skill con una situación real, y verificar que el hook
       `SessionStart` inyecta el `AGENT_POLICY.md` al abrir sesión.
-- [ ] Bump de versión sincronizado en `plugin.json`, `marketplace.json` y `CHANGELOG.md`.
+- [ ] Grabar el demo de 60s (`examples/demo-script.md`) y embeberlo en el README.

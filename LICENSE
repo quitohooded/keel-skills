@@ -1,59 +1,21 @@
-Keel Skills — Source-Available License (Attribution, No-Resale)
-Copyright (c) 2026 Esteban Aguilar. All rights reserved.
+MIT License
 
-Keel Skills is the agent-governance framework created by Esteban Aguilar. This license
-makes the source available so you can read it, use it, and adapt it for your own
-work — while reserving the right to sell or redistribute Keel Skills itself.
+Copyright (c) 2026 Esteban Aguilar
 
-0. DEFINITIONS
-   "The Software" means Keel Skills: the skills, commands, hooks, templates,
-   documentation, and other files distributed under this license, in whole or in
-   part, and any modified or derivative version of them. "You" means the person or
-   organization exercising the rights granted below.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-1. GRANT
-   You are granted a worldwide, royalty-free, non-exclusive license to:
-   (a) view and study the Software;
-   (b) use the Software, including in your own commercial work and inside your
-       own organization or your clients' projects;
-   (c) modify and adapt the Software for those uses, including creating and
-       maintaining your own AGENT_POLICY.md and other configuration.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-2. ATTRIBUTION (required)
-   In any copy, fork, or substantial adaptation you keep or share, you must
-   retain this license, the copyright notice, and a visible credit to
-   "Keel Skills by Esteban Aguilar" with a link to the project's homepage when one is
-   provided.
-
-3. NO RESALE / NO COMPETING REDISTRIBUTION
-   Without prior written permission from the copyright holder, you may NOT:
-   (a) sell, sublicense, or charge for the Software or any substantial portion
-       or derivative of it as a standalone product;
-   (b) redistribute, publish, or otherwise make the Software, or a derivative of
-       it, available to third parties as a plugin, skill set, template, or similar
-       distributable product or marketplace listing, whether or not for a fee.
-   Using Keel Skills to do paid work for yourself or clients is allowed (clause 1b);
-   distributing Keel Skills itself as a product is not.
-
-4. TERMINATION
-   If you breach this license, your rights under it terminate automatically. They
-   are reinstated if you cure the breach within 30 days of becoming aware of it,
-   unless the copyright holder has already given you notice of the breach, in which
-   case reinstatement requires the copyright holder's written consent. Sections 4
-   (this section) and 5 survive termination.
-
-5. NO WARRANTY
-   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-   FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-   COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY,
-   WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR
-   IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-This license is inspired by source-available "no-resale" licenses (e.g. PolyForm
-Perimeter) and has been reviewed for internal consistency and for alignment with
-the author's intent (source-available, attribution required, no resale). It is not
-a substitute for professional legal advice; for high-stakes commercial reliance or
-enforcement in a specific jurisdiction, have it reviewed by qualified counsel.
-
-Contact: https://estebanaguilar.com.ar — Esteban Aguilar (github.com/quitohooded)
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

@@ -1,0 +1,21 @@
+Keel Skills
+Created by Esteban Aguilar — https://estebanaguilar.com.ar · github.com/quitohooded
+Licensed under the MIT License (see LICENSE).
+
+Keel Skills is now permissively licensed (MIT) on purpose: the goal is for the
+authorization model and the AGENT_POLICY.md format to become a shared standard
+for governing AI agents, adopted and reimplemented freely.
+
+Attribution — appreciated, and the norm we ask you to follow even though MIT
+only requires you to keep the copyright notice above:
+
+  If Keel Skills (or its model) helps your project, product, or framework,
+  please keep a visible credit — "Governance model based on Keel Skills by
+  Esteban Aguilar" — with a link back to the project.
+
+The portable parts are specified, runtime-neutral, in SPEC.md:
+  - the L1 / L2 / L3 authorization model and the four-step safety test;
+  - the AGENT_POLICY.md configuration format.
+
+Implementations in any agent runtime (Claude Code, Agent SDK, other harnesses)
+are welcome and encouraged. If you build one, open an issue — we want to list it.

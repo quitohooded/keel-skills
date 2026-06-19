@@ -1,96 +1,117 @@
-# Keel Skills — operación disciplinada para agentes de Claude
+# Keel Skills — disciplined operations for Claude agents
 
-> Un marco portable de gobernanza para correr agentes de Claude (Claude Code,
-> Agent SDK) sin romper cosas ni quemar tokens. Tres skills + un comando, listos
-> para instalar y configurar por proyecto.
+> *Read this in [Spanish / Español](README.es.md).*
+
+> A portable governance framework for running Claude agents (Claude Code, Agent
+> SDK) without breaking things or burning tokens. Three skills + one command +
+> one hook — install, configure per project, done.
 >
-> **Keel Skills es la metodología de gobernanza de agentes de [Esteban Aguilar](#autor).**
-> Nace de operar agentes en producción todos los días, no de la teoría.
+> **Keel Skills is [Esteban Aguilar](#author)'s agent-governance methodology**,
+> distilled from operating agents in production every day — not from theory.
 
-Keel Skills toma su nombre de la quilla del barco (*keel*): la pieza que no se ve pero mantiene todo estable y en
-rumbo. Eso hace este plugin con un agente: lo deja moverse rápido en lo seguro y lo
-frena en seco antes de lo irreversible.
+A keel is the part of a ship you never see, the one that keeps everything stable
+and on course. That's what this plugin does to an agent: it lets it move fast on
+the safe stuff and **stops it cold before the irreversible**.
 
-## El problema que resuelve
+## The problem it solves
 
-Un agente con autonomía es útil hasta que toca producción, sobrescribe algo
-publicado, ejecuta un `push`/deploy que no correspondía, o gasta el presupuesto de
-tokens corriendo el modelo más caro en una tarea mecánica. La mayoría de los
-equipos no tiene un criterio **explícito** de cuándo el agente puede actuar solo y
-cuándo tiene que parar y preguntar. Keel Skills es ese criterio, ya escrito.
+An autonomous agent is useful right up until it touches production, overwrites
+something already published, runs a `push`/deploy that wasn't its call, or burns
+your token budget running the most expensive model on a mechanical task. Most
+teams have **no explicit rule** for when the agent may act alone and when it must
+stop and ask. Keel Skills is that rule, already written.
 
-## Qué incluye
+You usually discover you needed it the day *after* the bad push. The point of
+Keel Skills is to have it in place before that day.
 
-Tres skills (se activan solas cuando la situación lo amerita) y un comando:
+## What's inside
 
-| Skill | Para qué |
-|-------|----------|
-| **`authorization-protocol`** | Decide si el agente puede ejecutar o tiene que pedir aprobación. Modelo de 3 niveles (mandato amplio / mecanismo / aprobación explícita con scope), test de 4 pasos, zonas calientes y regla de propagación mecánica. |
-| **`model-delegation`** | Elegir el modelo más barato que preserve calidad y riesgo. Tiers por tipo de tarea, profundidad máxima de subagentes, prohibición de auto-escalar, y escalera de herramientas más-barata-primero. |
-| **`context-discipline`** | Mantener la sesión anclada en archivos y no en el chat. Cuándo cortar una sesión larga, qué registrar y cómo dejar un punto de retomado para una sesión nueva. |
-| **`/keel-skills:policy-init`** | Genera el `AGENT_POLICY.md` de tu proyecto entrevistándote sobre tus zonas calientes y fuentes de verdad. |
+Three skills (they trigger themselves when the situation calls for it), one
+command, and one hook:
 
-Y un **hook `SessionStart`**: si tu proyecto tiene un `AGENT_POLICY.md`, lo inyecta
-automáticamente al contexto al abrir cada sesión. Así la política deja de depender
-de que el agente "se acuerde" de leerla — siempre la tiene a mano.
+| Component | What it does |
+|-----------|--------------|
+| **`authorization-protocol`** skill | Decides whether the agent may execute or must ask for approval. Three-level model (broad mandate / mechanism / explicit scoped approval), four-step test, hot zones, mechanical-propagation rule. |
+| **`model-delegation`** skill | Pick the cheapest model that still preserves quality and risk control. Tiers by task type, max subagent depth, no self-escalation, cheapest-first tool ladder. |
+| **`context-discipline`** skill | Keep the session anchored in files, not chat. When to end a long session, what to record, how to leave a resumable handoff. |
+| **`/keel-skills:policy-init`** command | Generates your project's `AGENT_POLICY.md` by interviewing you about your hot zones and sources of truth. |
+| **`SessionStart` hook** | If your project has an `AGENT_POLICY.md`, it's injected into context at the start of every session — so the policy no longer depends on the agent *remembering* to read it. |
 
-## El modelo de autorización, de un vistazo
+## The authorization model, at a glance
 
-El corazón de Keel Skills: un test de cuatro pasos que decide, antes de cada acción
-que escribe o cambia algo, si el agente puede actuar solo o tiene que parar y pedir
-aprobación explícita (L3).
+The core of Keel Skills: a four-step test that decides, before any action that
+writes or changes something, whether the agent can act alone or must stop and ask
+for explicit approval (L3).
 
-![Modelo de autorización de Keel Skills: test de cuatro pasos](assets/authorization-flow.svg)
+![Keel Skills authorization model: four-step test](assets/authorization-flow.svg)
 
-## La separación clave: mecanismo vs. tus datos
+> Read-only and proposals are free. Anything **hot, outward, irreversible, or
+> structural** is L3. When in doubt, it's L3.
 
-Las skills son **genéricas**: describen el *patrón* (qué es una zona caliente, qué
-significa propagación mecánica, cómo se elige un modelo). Lo específico de tu
-proyecto —qué rutas son calientes, dónde vive tu fuente de verdad, qué cuenta como
-release— vive en un único archivo que vos controlás: **`AGENT_POLICY.md`** en la
-raíz de tu proyecto.
+The model is specified runtime-neutral in **[SPEC.md](SPEC.md)** so it can be
+cited and reimplemented outside Claude Code.
 
-Resultado: el producto se distribuye limpio, sin nada de tu empresa adentro, y cada
-comprador lo configura para lo suyo. La plantilla está en
-`plugins/keel-skills/templates/AGENT_POLICY.template.md`.
+## The key separation: mechanism vs. your data
 
-## Instalación
+The skills are **generic**: they describe the *pattern* (what a hot zone is, what
+mechanical propagation means, how a model gets chosen). Everything specific to
+your project — which paths are hot, where your source of truth lives, what counts
+as a release — lives in a single file you control: **`AGENT_POLICY.md`** at your
+project root.
 
-Keel Skills se distribuye como un marketplace de un solo plugin.
+The result: the framework ships clean, with none of your company's data inside,
+and each user configures it for their own work. The template is in
+[`plugins/keel-skills/templates/AGENT_POLICY.template.md`](plugins/keel-skills/templates/AGENT_POLICY.template.md),
+and ready-made packs for common stacks live in [`policies/`](policies/).
 
-```
-# En Claude Code:
+## Install
+
+Keel Skills ships as a single-plugin marketplace.
+
+```text
+# In Claude Code:
 /plugin marketplace add https://github.com/quitohooded/keel-skills
 /plugin install keel-skills@keel-skills
 ```
 
-Después, en tu proyecto:
+Then, in your project:
 
-```
+```text
 /keel-skills:policy-init
 ```
 
-para generar el `AGENT_POLICY.md`. Ver `DISTRIBUTION.md` para las rutas de
-publicación (repo git, ruta local, o paquete).
+to generate the `AGENT_POLICY.md`. See [DISTRIBUTION.md](DISTRIBUTION.md) for the
+publishing paths (git repo, local path, or package).
 
-## Cómo usarlo, en una línea
+## See it in 60 seconds
 
-> Read-only y propuestas son libres. Lo caliente, hacia afuera, irreversible o
-> estructural es aprobación explícita. Ante la duda, se pregunta. Modelo más
-> barato que rinda; delegación corta; herramienta más liviana primero.
+A concrete before/after of the L3 brake — the agent about to force-push a
+"cleanup", and Keel stopping it — is in
+[`examples/l3-brake.md`](examples/l3-brake.md). The recordable demo script is in
+[`examples/demo-script.md`](examples/demo-script.md).
 
-## Autor
+## How to use it, in one line
 
-Creado por **Esteban Aguilar** — [estebanaguilar.com.ar](https://estebanaguilar.com.ar)
-· [github.com/quitohooded](https://github.com/quitohooded). Keel Skills destila el
-criterio que uso para operar agentes en trabajo real: cuándo un agente puede
-actuar solo y cuándo tiene que parar, qué modelo asignar a cada tarea, y cómo
-mantener una sesión anclada en archivos. Si te sirve, contame en qué lo aplicaste.
+> Read-only and proposals are free. Anything hot, outward-facing, irreversible or
+> structural needs explicit approval. When in doubt, ask. Cheapest model that does
+> the job; shallow delegation; lightest tool first.
 
-## Licencia
+## Author
 
-**Source-available con atribución (sin reventa).** Podés ver, usar y adaptar Keel Skills
-para tu propio trabajo —incluido trabajo comercial tuyo o de tus clientes— siempre
-que conserves la atribución a *Keel Skills by Esteban Aguilar*. No podés vender ni
-redistribuir Keel Skills (o un derivado) como producto propio sin permiso. Ver `LICENSE`.
-© 2026 Esteban Aguilar.
+Created by **Esteban Aguilar** — [estebanaguilar.com.ar](https://estebanaguilar.com.ar)
+· [github.com/quitohooded](https://github.com/quitohooded). Keel Skills distills
+the judgment I use to operate agents in real work: when an agent can act alone and
+when it has to stop, which model to assign to each task, and how to keep a session
+anchored in files. If it helps you, tell me what you applied it to.
+
+## Contributing
+
+Policy packs for new stacks and implementations for other runtimes are very
+welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+**MIT.** Use it, fork it, build on it, including in commercial work. Keeping the
+copyright notice is all MIT requires; a visible credit to *Keel Skills by Esteban
+Aguilar* is the norm we ask you to follow (see [NOTICE](NOTICE)). © 2026 Esteban
+Aguilar.

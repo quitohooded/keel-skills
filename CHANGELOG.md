@@ -2,6 +2,29 @@
 
 All notable changes to the Keel Skills plugin are documented here.
 
+## [0.3.0] — 2026-06-19
+
+Strategic repositioning toward an open governance standard.
+
+- **License → MIT.** Relicensed from source-available (Attribution, No-Resale) to
+  MIT to enable free adoption, forking, and reimplementation. Attribution is
+  preserved via the MIT notice and a new `NOTICE` file. This unblocks the
+  distribution model the project's growth strategy depends on.
+- **`SPEC.md`** — the authorization model (L1/L2/L3, four-step test, hot zones,
+  mechanical propagation) and the `AGENT_POLICY.md` format are now specified
+  **runtime-neutral**, with a Conformance section, so they can be cited and
+  reimplemented outside Claude Code (the "open standard" play).
+- **English is now the primary repo language** (`README.md`); the Spanish version
+  is preserved as `README.es.md`.
+- **`policies/`** — ready-made `AGENT_POLICY.md` packs for common stacks
+  (`web-app-deploy`, `nextjs-vercel`, `supabase`) + a registry index.
+- **`examples/`** — `l3-brake.md` (a concrete before/after of the brake) and
+  `demo-script.md` (a recordable 60-second demo script).
+- **`CONTRIBUTING.md`** — how to add policy packs, build Keel-compatible
+  implementations, and improve the spec.
+- **`STRATEGY.md`** — the growth strategy and roadmap (internal source of truth).
+- No behavioral change to the three skills, the command, or the hook.
+
 ## [0.2.0] — 2026-06-19
 
 - **`SessionStart` hook** (`hooks/hooks.json` + `hooks/inject-policy.cjs`) — when a
