@@ -1,0 +1,50 @@
+name: validate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate JSON manifests
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('.claude-plugin/marketplace.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('plugins/keel-skills/.claude-plugin/plugin.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('plugins/keel-skills/hooks/hooks.json','utf8'))"
+
+      - name: Syntax-check the SessionStart hook
+        run: node --check plugins/keel-skills/hooks/inject-policy.cjs
+
+      - name: Check version sync (plugin.json == marketplace.json)
+        run: |
+          node -e "
+          const fs = require('fs');
+          const p = JSON.parse(fs.readFileSync('plugins/keel-skills/.claude-plugin/plugin.json','utf8')).version;
+          const m = JSON.parse(fs.readFileSync('.claude-plugin/marketplace.json','utf8')).metadata.version;
+          if (p !== m) { console.error('Version mismatch: plugin ' + p + ' vs marketplace ' + m); process.exit(1); }
+          console.log('versions in sync: ' + p);
+          "
+
+      - name: Each skill has a name + description in its front matter
+        run: |
+          node -e "
+          const fs = require('fs');
+          const dir = 'plugins/keel-skills/skills';
+          let bad = 0;
+          for (const s of fs.readdirSync(dir)) {
+            const f = dir + '/' + s + '/SKILL.md';
+            const t = fs.readFileSync(f, 'utf8');
+            if (!/^---[\s\S]*?\bname:/m.test(t) || !/^---[\s\S]*?\bdescription:/m.test(t)) {
+              console.error('Missing name/description front matter: ' + f); bad++;
+            }
+          }
+          if (bad) process.exit(1);
+          console.log('all skills have valid front matter');
+          "
