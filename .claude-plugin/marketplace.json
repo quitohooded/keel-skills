@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Keel Skills — disciplined operations for Claude agents. A portable governance framework: authorization levels, cost-aware delegation, and file-grounded context discipline.",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "plugins": [
     {

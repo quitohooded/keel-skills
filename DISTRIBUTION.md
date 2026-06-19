@@ -19,6 +19,9 @@ keel-skills/
         context-discipline/SKILL.md
       commands/
         policy-init.md        ← /keel-skills:policy-init
+      hooks/
+        hooks.json            ← SessionStart: inyecta el AGENT_POLICY.md al contexto
+        inject-policy.cjs     ← script del hook (Node, cross-platform)
       templates/
         AGENT_POLICY.template.md
       README.md
@@ -30,20 +33,17 @@ keel-skills/
 
 ## Camino 1 — Repositorio git público (camino elegido)
 
-El repo ya está inicializado localmente con el primer commit. Falta crear el
-remoto público y subirlo:
+**Ya publicado** en `https://github.com/quitohooded/keel-skills` (rama `main`).
+Para publicar una versión nueva, basta con commitear y pushear:
 
 ```
-# Con GitHub CLI (gh) ya autenticado, desde C:\roadtobiz\_experimentos\keel-skills:
-gh repo create keel-skills --public --source . --remote origin --push
-
-# O manual: creás el repo vacío en github.com y luego:
-git remote add origin https://github.com/quitohooded/keel-skills.git
-git branch -M main
-git push -u origin main
+# desde C:\roadtobiz\_experimentos\keel-skills:
+git add -A
+git commit -m "Keel Skills vX.Y.Z — <resumen>"
+git push
 ```
 
-Después, cualquiera instala con:
+Cualquiera instala con:
 
 ```
 /plugin marketplace add https://github.com/quitohooded/keel-skills
@@ -71,11 +71,13 @@ Camino 2 apuntando a la ruta donde la dejó.
 
 ## Antes de publicar (checklist)
 
-- [ ] Completar `author.homepage` en `plugin.json` y el contacto en `LICENSE`.
-- [ ] Revisar la licencia con asesoría legal (el `LICENSE` es un template).
+- [x] Completar `author.homepage` en `plugin.json` y el contacto en `LICENSE`.
+- [x] Revisión de la licencia (consistencia/estructura/intención; agregadas
+      definiciones y cláusula de terminación). Asesoría legal profesional sigue
+      siendo recomendable para ejecución en una jurisdicción específica.
 - [ ] Confirmar que NINGÚN dato propio quedó en las skills (deben ser genéricas;
       todo lo específico va en el `AGENT_POLICY.md` del comprador).
 - [ ] Probar el ciclo completo: `marketplace add` → `install` → `/keel-skills:policy-init`
-      → disparar cada skill con una situación real.
-- [ ] Bump de versión en `plugin.json`, `marketplace.json` y `CHANGELOG.md`.
-```
+      → disparar cada skill con una situación real, y verificar que el hook
+      `SessionStart` inyecta el `AGENT_POLICY.md` al abrir sesión.
+- [ ] Bump de versión sincronizado en `plugin.json`, `marketplace.json` y `CHANGELOG.md`.

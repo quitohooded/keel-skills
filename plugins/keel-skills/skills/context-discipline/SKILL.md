@@ -27,7 +27,10 @@ files are. Two consequences:
 - Don't rely on chat history to know the current state — **read it from the
   files.** Verify before you assert that something is done.
 - When you reach a decision or a new state, **write it to the appropriate file.**
-  A conclusion that exists only in the transcript will be lost.
+  A conclusion that exists only in the transcript will be lost. If the project has
+  an `AGENT_POLICY.md`, its section *"Where state and decisions get recorded"* names
+  exactly where decisions, project state, and per-task notes belong — use those
+  paths instead of guessing.
 
 ## Don't hoard context
 

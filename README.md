@@ -30,6 +30,18 @@ Tres skills (se activan solas cuando la situación lo amerita) y un comando:
 | **`context-discipline`** | Mantener la sesión anclada en archivos y no en el chat. Cuándo cortar una sesión larga, qué registrar y cómo dejar un punto de retomado para una sesión nueva. |
 | **`/keel-skills:policy-init`** | Genera el `AGENT_POLICY.md` de tu proyecto entrevistándote sobre tus zonas calientes y fuentes de verdad. |
 
+Y un **hook `SessionStart`**: si tu proyecto tiene un `AGENT_POLICY.md`, lo inyecta
+automáticamente al contexto al abrir cada sesión. Así la política deja de depender
+de que el agente "se acuerde" de leerla — siempre la tiene a mano.
+
+## El modelo de autorización, de un vistazo
+
+El corazón de Keel Skills: un test de cuatro pasos que decide, antes de cada acción
+que escribe o cambia algo, si el agente puede actuar solo o tiene que parar y pedir
+aprobación explícita (L3).
+
+![Modelo de autorización de Keel Skills: test de cuatro pasos](assets/authorization-flow.svg)
+
 ## La separación clave: mecanismo vs. tus datos
 
 Las skills son **genéricas**: describen el *patrón* (qué es una zona caliente, qué

@@ -2,6 +2,19 @@
 
 All notable changes to the Keel Skills plugin are documented here.
 
+## [0.2.0] — 2026-06-19
+
+- **`SessionStart` hook** (`hooks/hooks.json` + `hooks/inject-policy.cjs`) — when a
+  project has an `AGENT_POLICY.md`, its contents are injected into context at the
+  start of every session, so the policy no longer depends on the agent choosing to
+  read it. Cross-platform (runs via Node); stays silent when no policy is present.
+- `authorization-protocol` — Step 0 now notes the policy may already be in context
+  via the hook.
+- `context-discipline` — now points to `AGENT_POLICY.md`'s "where state and
+  decisions get recorded" section instead of leaving the location to guesswork.
+- Docs — README embeds the authorization-model diagram (`assets/authorization-flow.svg`);
+  `DISTRIBUTION.md` updated (repo already published, hook added to layout/checklist).
+
 ## [0.1.0] — 2026-06-17
 
 Initial release.

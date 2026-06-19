@@ -27,7 +27,9 @@ belong in a per-project **`AGENT_POLICY.md`** at the project root.
 ## Step 0 — Load the project policy
 
 Before applying this protocol to real work, check for an `AGENT_POLICY.md` in the
-project root (or the path the user points you to).
+project root (or the path the user points you to). When this plugin's
+`SessionStart` hook is active, an existing `AGENT_POLICY.md` is already injected
+into context at session start — use that and don't re-read it.
 
 - **If it exists:** read it. It defines this project's hot zones, source-of-truth
   files, and any overrides. Treat it as authoritative for the specifics.
