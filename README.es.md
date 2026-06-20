@@ -48,7 +48,7 @@ El corazón de Keel Skills: un test de cuatro pasos que decide, antes de cada ac
 que escribe o cambia algo, si el agente puede actuar solo o tiene que parar y pedir
 aprobación explícita (L3).
 
-![Modelo de autorización de Keel Skills: test de cuatro pasos](assets/authorization-flow.svg)
+![Modelo de autorización de Keel Skills: test de cuatro pasos](assets/authorization-flow.es.svg)
 
 El modelo está especificado de forma neutral al runtime en **[SPEC.md](SPEC.md)**,
 para que pueda citarse y reimplementarse fuera de Claude Code.

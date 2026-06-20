@@ -1,4 +1,4 @@
-<svg width="680" height="560" viewBox="0 0 680 560" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-label="Keel Skills authorization model: a four-step test deciding whether an agent acts freely or needs explicit L3 approval">
+<svg width="680" height="560" viewBox="0 0 680 560" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" role="img" aria-label="Modelo de autorización de Keel Skills: un test de cuatro pasos que decide si el agente actúa solo o necesita aprobación explícita L3">
   <defs>
     <marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
       <path d="M0,0 L7,3 L0,6 Z" fill="#8b949e"/>
@@ -8,54 +8,54 @@
   <rect x="1" y="1" width="678" height="558" rx="14" fill="#0d1117" stroke="#30363d" stroke-width="1.5"/>
 
   <rect x="200" y="36" width="280" height="44" rx="8" fill="#161b22" stroke="#30363d"/>
-  <text x="340" y="63" text-anchor="middle" font-size="14" font-weight="600" fill="#e6edf3">Action that writes or changes something</text>
+  <text x="340" y="63" text-anchor="middle" font-size="14" font-weight="600" fill="#e6edf3">Acción que escribe o cambia algo</text>
   <line x1="340" y1="80" x2="340" y2="104" stroke="#8b949e" stroke-width="1.5" marker-end="url(#ah)"/>
 
   <rect x="44" y="106" width="372" height="56" rx="8" fill="#161b22" stroke="#30363d"/>
-  <text x="60" y="130" font-size="14" font-weight="600" fill="#e6edf3">1 · Read-only, analysis, or a</text>
-  <text x="60" y="150" font-size="14" font-weight="600" fill="#e6edf3">[PROPOSAL] draft?</text>
+  <text x="60" y="130" font-size="14" font-weight="600" fill="#e6edf3">1 · ¿Read-only, análisis o</text>
+  <text x="60" y="150" font-size="14" font-weight="600" fill="#e6edf3">borrador [PROPUESTA]?</text>
   <line x1="416" y1="134" x2="452" y2="134" stroke="#8b949e" stroke-width="1.5" marker-end="url(#ah)"/>
   <rect x="456" y="106" width="184" height="56" rx="8" fill="#0f2417" stroke="#238636"/>
-  <text x="548" y="130" text-anchor="middle" font-size="14" font-weight="700" fill="#3fb950">Free</text>
-  <text x="548" y="148" text-anchor="middle" font-size="12" fill="#3fb950">act</text>
+  <text x="548" y="130" text-anchor="middle" font-size="14" font-weight="700" fill="#3fb950">Libre</text>
+  <text x="548" y="148" text-anchor="middle" font-size="12" fill="#3fb950">actuá</text>
   <text x="240" y="178" text-anchor="middle" font-size="12" fill="#8b949e">no</text>
   <line x1="230" y1="162" x2="230" y2="190" stroke="#8b949e" stroke-width="1.5" marker-end="url(#ah)"/>
 
   <rect x="44" y="192" width="372" height="56" rx="8" fill="#161b22" stroke="#30363d"/>
-  <text x="60" y="216" font-size="14" font-weight="600" fill="#e6edf3">2 · Touches a hot zone?</text>
-  <text x="60" y="236" font-size="12" fill="#8b949e">prod · data · client-facing · irreversible</text>
+  <text x="60" y="216" font-size="14" font-weight="600" fill="#e6edf3">2 · ¿Toca una zona caliente?</text>
+  <text x="60" y="236" font-size="12" fill="#8b949e">prod · datos · cliente · irreversible</text>
   <line x1="416" y1="220" x2="452" y2="220" stroke="#8b949e" stroke-width="1.5" marker-end="url(#ah)"/>
   <rect x="456" y="192" width="184" height="56" rx="8" fill="#25171c" stroke="#da3633"/>
   <text x="548" y="216" text-anchor="middle" font-size="14" font-weight="700" fill="#f85149">L3</text>
-  <text x="548" y="234" text-anchor="middle" font-size="12" fill="#f85149">explicit approval</text>
+  <text x="548" y="234" text-anchor="middle" font-size="12" fill="#f85149">aprobación explícita</text>
   <text x="240" y="264" text-anchor="middle" font-size="12" fill="#8b949e">no</text>
   <line x1="230" y1="248" x2="230" y2="276" stroke="#8b949e" stroke-width="1.5" marker-end="url(#ah)"/>
 
   <rect x="44" y="278" width="372" height="56" rx="8" fill="#161b22" stroke="#30363d"/>
-  <text x="60" y="302" font-size="14" font-weight="600" fill="#e6edf3">3 · Structural or cumulative?</text>
-  <text x="60" y="322" font-size="12" fill="#8b949e">builds or reconfigures a system</text>
+  <text x="60" y="302" font-size="14" font-weight="600" fill="#e6edf3">3 · ¿Estructural o acumulativo?</text>
+  <text x="60" y="322" font-size="12" fill="#8b949e">arma o reconfigura un sistema</text>
   <line x1="416" y1="306" x2="452" y2="306" stroke="#8b949e" stroke-width="1.5" marker-end="url(#ah)"/>
   <rect x="456" y="278" width="184" height="56" rx="8" fill="#25171c" stroke="#da3633"/>
   <text x="548" y="302" text-anchor="middle" font-size="14" font-weight="700" fill="#f85149">L3</text>
-  <text x="548" y="320" text-anchor="middle" font-size="12" fill="#f85149">explicit approval</text>
+  <text x="548" y="320" text-anchor="middle" font-size="12" fill="#f85149">aprobación explícita</text>
   <text x="240" y="350" text-anchor="middle" font-size="12" fill="#8b949e">no</text>
   <line x1="230" y1="334" x2="230" y2="362" stroke="#8b949e" stroke-width="1.5" marker-end="url(#ah)"/>
 
   <rect x="44" y="364" width="372" height="56" rx="8" fill="#161b22" stroke="#30363d"/>
-  <text x="60" y="388" font-size="14" font-weight="600" fill="#e6edf3">4 · Reversible + internal + isolated</text>
-  <text x="60" y="408" font-size="12" fill="#8b949e">+ low-impact</text>
+  <text x="60" y="388" font-size="14" font-weight="600" fill="#e6edf3">4 · Reversible + interno + aislado</text>
+  <text x="60" y="408" font-size="12" fill="#8b949e">+ bajo impacto</text>
   <line x1="416" y1="392" x2="452" y2="392" stroke="#8b949e" stroke-width="1.5" marker-end="url(#ah)"/>
   <rect x="456" y="364" width="184" height="56" rx="8" fill="#0f2417" stroke="#238636"/>
-  <text x="548" y="388" text-anchor="middle" font-size="14" font-weight="700" fill="#3fb950">Free</text>
-  <text x="548" y="406" text-anchor="middle" font-size="12" fill="#3fb950">act and report</text>
+  <text x="548" y="388" text-anchor="middle" font-size="14" font-weight="700" fill="#3fb950">Libre</text>
+  <text x="548" y="406" text-anchor="middle" font-size="12" fill="#3fb950">actuá y reportá</text>
 
   <rect x="44" y="448" width="596" height="44" rx="8" fill="#27210f" stroke="#9e6a03"/>
-  <text x="340" y="475" text-anchor="middle" font-size="14" font-weight="600" fill="#e3b341">Any doubt, at any step → L3</text>
+  <text x="340" y="475" text-anchor="middle" font-size="14" font-weight="600" fill="#e3b341">Ante cualquier duda, en cualquier paso → L3</text>
 
   <rect x="44" y="512" width="13" height="13" rx="3" fill="#0f2417" stroke="#238636"/>
-  <text x="63" y="523" font-size="12" fill="#8b949e">Free = acts alone</text>
+  <text x="63" y="523" font-size="12" fill="#8b949e">Libre = actúa solo</text>
   <rect x="210" y="512" width="13" height="13" rx="3" fill="#25171c" stroke="#da3633"/>
-  <text x="229" y="523" font-size="12" fill="#8b949e">L3 = asks approval</text>
+  <text x="229" y="523" font-size="12" fill="#8b949e">L3 = pide aprobación</text>
   <rect x="404" y="512" width="13" height="13" rx="3" fill="#161b22" stroke="#30363d"/>
-  <text x="423" y="523" font-size="12" fill="#8b949e">decision step</text>
+  <text x="423" y="523" font-size="12" fill="#8b949e">paso de decisión</text>
 </svg>
