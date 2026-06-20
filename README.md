@@ -13,6 +13,12 @@ A keel is the part of a ship you never see, the one that keeps everything stable
 and on course. That's what this plugin does to an agent: it lets it move fast on
 the safe stuff and **stops it cold before the irreversible**.
 
+![Keel Skills stopping an agent that was told to "clean up and push": it hits the four-step test, stops at the hot zone, and proposes a scoped plan instead](assets/keel-demo.gif)
+
+*The agent got "clean it up and push." Without a rule it just does it — delete,
+force-push, done. With Keel it hits a hot zone, stops, and proposes a scoped plan,
+flagging the unsafe delete. ([full walkthrough](examples/l3-brake.md))*
+
 ## The problem it solves
 
 An autonomous agent is useful right up until it touches production, overwrites

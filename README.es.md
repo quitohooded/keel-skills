@@ -13,6 +13,12 @@ Keel Skills toma su nombre de la quilla del barco (*keel*): la pieza que no se v
 rumbo. Eso hace este plugin con un agente: lo deja moverse rápido en lo seguro y lo
 frena en seco antes de lo irreversible.
 
+![Keel Skills frenando a un agente al que le dijeron "limpiá y pusheá": pasa el test de 4 pasos, frena en la zona caliente y propone un plan acotado](assets/keel-demo.gif)
+
+*Al agente le dijeron "limpiá y pusheá". Sin una regla, lo hace —borra, force-push,
+listo—. Con Keel toca una zona caliente, frena y propone un plan acotado, marcando
+el borrado peligroso. ([recorrido completo](examples/l3-brake.md))*
+
 ## El problema que resuelve
 
 Un agente con autonomía es útil hasta que toca producción, sobrescribe algo
