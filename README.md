@@ -19,6 +19,13 @@ the safe stuff and **stops it cold before the irreversible**.
 force-push, done. With Keel it hits a hot zone, stops, and proposes a scoped plan,
 flagging the unsafe delete. ([full walkthrough](examples/l3-brake.md))*
 
+> **In plain words.** AI assistants that write code can now act on their own — and
+> sometimes they do something you can't undo, like permanently deleting work or
+> publishing a change to the live system before anyone checked it. Keel Skills is a
+> set of house rules: it lets the assistant handle the small, safe things by itself,
+> but makes it **stop and ask you first** before anything risky or permanent. You
+> stay in control without having to watch every step.
+
 ## The problem it solves
 
 An autonomous agent is useful right up until it touches production, overwrites

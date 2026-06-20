@@ -19,6 +19,14 @@ frena en seco antes de lo irreversible.
 listo—. Con Keel toca una zona caliente, frena y propone un plan acotado, marcando
 el borrado peligroso. ([recorrido completo](examples/l3-brake.md))*
 
+> **En palabras simples.** Los asistentes de IA que escriben código ya pueden actuar
+> solos — y a veces hacen algo que no se puede deshacer, como borrar trabajo para
+> siempre o publicar un cambio en el sistema en vivo antes de que alguien lo revise.
+> Keel Skills es un conjunto de reglas de la casa: deja que el asistente haga lo
+> chico y seguro por su cuenta, pero lo obliga a **frenar y preguntarte primero**
+> antes de cualquier cosa riesgosa o permanente. Vos mantenés el control sin tener
+> que vigilar cada paso.
+
 ## El problema que resuelve
 
 Un agente con autonomía es útil hasta que toca producción, sobrescribe algo

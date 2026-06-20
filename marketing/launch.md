@@ -1,11 +1,12 @@
 # Launch drafts — Keel Skills v0.3.0
 
 Build-in-public copy for the v0.3.0 repositioning (MIT + open spec). Edit to taste,
-then post from your own accounts. Three formats: an X/Twitter thread, a longer
-LinkedIn/blog post, and a Spanish version for your channels.
+then post from your own accounts. Four formats: a full X/Twitter thread, a short
+punchy X variant, a longer LinkedIn/blog post, and a Spanish version for your channels.
 
-> Replace `[DEMO_GIF]` once you've recorded the 60s demo (`examples/demo-script.md`).
-> The clip is what makes this land — lead with it if you have it.
+> **Attach the demo when you post — it's what makes this land, so lead with it.**
+> The clip is already in the repo at `assets/keel-demo.gif` (or use the original
+> MP4). On X, attach it to the **first** tweet; on LinkedIn, attach it to the post.
 
 ---
 
@@ -19,7 +20,9 @@ It deleted a file that was still imported and force-pushed over a teammate's com
 
 The fix isn't a smarter model. It's a written rule about when to stop.
 
-That rule is Keel Skills. [DEMO_GIF]
+That rule is Keel Skills.
+
+*(Attach `assets/keel-demo.gif` to this first tweet.)*
 
 **2/**
 Most "go do it" instructions aren't actually permission to do *it*. They're a goal.
@@ -53,6 +56,37 @@ reimplemented outside Claude Code. I want this to be a *standard* for agent
 governance, not a walled product.
 
 Install + spec + demo 👇
+github.com/quitohooded/keel-skills
+
+---
+
+## X / Twitter — short variant (EN, 3 tweets)
+
+A punchier cut for when you don't want the full thread. Same demo, lead with it.
+
+**1/**
+I told an AI agent: "clean up the repo and push so the build's green."
+
+It deleted a still-imported file and force-pushed over a teammate's commit. Green
+build, real damage.
+
+The fix isn't a smarter model — it's a written rule for when to stop. That's Keel Skills.
+
+*(Attach `assets/keel-demo.gif` to this first tweet.)*
+
+**2/**
+Keel Skills gives the agent one reflex before it writes, pushes, deploys, or deletes:
+
+read-only? → go
+hot / outward / irreversible? → stop and ask
+in doubt? → ask
+
+Generic by default. Your specifics live in one file *you* control.
+
+**3/**
+MIT, self-hosted, runtime-neutral open spec. I'd rather agent governance be a shared
+standard than a walled product.
+
 github.com/quitohooded/keel-skills
 
 ---
