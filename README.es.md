@@ -101,7 +101,7 @@ publicación (repo git, ruta local, o paquete).
 
 ## Autor
 
-Creado por **Esteban Aguilar** — [estebanaguilar.com.ar](https://estebanaguilar.com.ar)
+Creado por **Esteban Aguilar** — [estebanaguilar.me](https://estebanaguilar.me)
 · [github.com/quitohooded](https://github.com/quitohooded). Keel Skills destila el
 criterio que uso para operar agentes en trabajo real: cuándo un agente puede
 actuar solo y cuándo tiene que parar, qué modelo asignar a cada tarea, y cómo

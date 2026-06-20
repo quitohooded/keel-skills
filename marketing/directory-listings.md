@@ -6,10 +6,8 @@ truth (`.claude-plugin/marketplace.json`, `plugins/keel-skills/.claude-plugin/pl
 so the listings match the plugin exactly. Just open each link and paste.
 
 > ⚠️ **Homepage heads-up.** `plugin.json` lists the homepage as
-> `https://estebanaguilar.com.ar`, which doesn't resolve yet (the site is live at
-> `https://estebanaguilar.vercel.app`). When a form asks for a homepage/website,
-> use **`https://github.com/quitohooded/keel-skills`** (always works) or the
-> Vercel URL — not the `.com.ar` until the domain is pointed.
+> `https://estebanaguilar.me`. If the domain isn't pointed to Vercel yet, use
+> **`https://github.com/quitohooded/keel-skills`** (always works) as a fallback.
 
 ---
 

@@ -111,7 +111,7 @@ A concrete before/after of the L3 brake — the agent about to force-push a
 
 ## Author
 
-Created by **Esteban Aguilar** — [estebanaguilar.com.ar](https://estebanaguilar.com.ar)
+Created by **Esteban Aguilar** — [estebanaguilar.me](https://estebanaguilar.me)
 · [github.com/quitohooded](https://github.com/quitohooded). Keel Skills distills
 the judgment I use to operate agents in real work: when an agent can act alone and
 when it has to stop, which model to assign to each task, and how to keep a session
