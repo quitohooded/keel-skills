@@ -6,6 +6,7 @@
     "name": "Esteban Aguilar"
   },
   "homepage": "https://estebanaguilar.me",
+  "repository": "https://github.com/quitohooded/keel-skills",
   "license": "MIT",
   "keywords": [
     "agent",

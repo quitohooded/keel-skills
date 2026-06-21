@@ -5,9 +5,10 @@ Claude Code plugin directories. Every field below is copied from the source of
 truth (`.claude-plugin/marketplace.json`, `plugins/keel-skills/.claude-plugin/plugin.json`)
 so the listings match the plugin exactly. Just open each link and paste.
 
-> ⚠️ **Homepage heads-up.** `plugin.json` lists the homepage as
-> `https://estebanaguilar.me`. If the domain isn't pointed to Vercel yet, use
-> **`https://github.com/quitohooded/keel-skills`** (always works) as a fallback.
+> ✅ **Homepage.** `plugin.json` lists `https://estebanaguilar.me`, which is live
+> (returns 200, redirects to `/es`). Use it as-is. The repo URL
+> `https://github.com/quitohooded/keel-skills` works as a fallback if any form
+> rejects the domain.
 
 ---
 
@@ -48,9 +49,27 @@ so the listings match the plugin exactly. Just open each link and paste.
 
 ## 1. Official Anthropic directory  ·  **recommended, do this first**
 
-- **Submit at:** https://clau.de/plugin-directory-submission
-- **Type:** web form (reviewed for quality + security before it appears in
-  `/external_plugins`).
+Submissions land in the **community marketplace** (`anthropics/claude-plugins-community`)
+after automated validation + safety screening. Two forms feed the same pipeline:
+
+- **Console (use this one):** https://platform.claude.com/plugins/submit — for
+  individual authors who are **not** part of a Team/Enterprise org. This is the
+  right path for Esteban.
+- **claude.ai:** https://claude.ai/admin-settings/directory/submissions/plugins/new
+  — requires a Team/Enterprise org with directory-management access. Not available
+  to a solo account.
+
+Notes on how approval works:
+- Approved plugins are pinned to a specific **commit SHA** in the catalog; CI
+  bumps the pin automatically as you push new commits to `main`.
+- The public catalog **syncs nightly**, so expect a delay between approval and the
+  plugin appearing. Check by searching `keel-skills` in
+  https://github.com/anthropics/claude-plugins-community/blob/main/.claude-plugin/marketplace.json
+- Run `claude plugin validate` locally before submitting (the pipeline runs the
+  same check).
+- Users install with: `/plugin marketplace add anthropics/claude-plugins-community`
+  then `/plugin install keel-skills@claude-community`.
+
 - **What it asks for:** plugin name, description, repo URL, author, category,
   and the source commit. All of that is in the table above.
 - **Source block** (if the form asks for structured source / a commit SHA, the

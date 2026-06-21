@@ -6,3 +6,6 @@ desktop.ini
 *~
 .vscode/
 .idea/
+
+# Raw demo recording (only the optimized assets/keel-demo.gif is tracked)
+assets/keel-demo.mp4
