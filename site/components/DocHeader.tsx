@@ -24,45 +24,39 @@ export default function DocHeader() {
           : "border-transparent bg-transparent"
       }`}
     >
-      <div className="mx-auto flex h-16 max-w-content items-center justify-between px-5 md:px-8">
-        <div className="flex items-baseline gap-2.5">
-          <Link
-            href="/"
-            className="font-display text-lg font-semibold tracking-tight text-ink transition-colors hover:text-accent"
+      <div className="relative mx-auto flex h-16 max-w-content items-center justify-between px-5 md:px-8">
+        {/* Left — subtle cross-link back to the personal site */}
+        <a
+          href={SITE_URL}
+          title="Esteban Aguilar — estebanaguilar.me"
+          className="group/home inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-muted transition-colors hover:text-accent"
+        >
+          <span className="hidden sm:inline">Esteban Aguilar</span>
+          <span className="sm:hidden">E. Aguilar</span>
+          <span
+            className="text-[9px] transition-transform duration-300 group-hover/home:-translate-y-0.5 group-hover/home:translate-x-0.5"
+            aria-hidden
           >
+            ↗
+          </span>
+        </a>
+
+        {/* Center — the docs wordmark (absolutely centered) */}
+        <Link
+          href="/"
+          aria-label="Keel Skills docs — home"
+          className="group/brand absolute left-1/2 inline-flex -translate-x-1/2 items-baseline gap-2"
+        >
+          <span className="font-display text-base font-semibold tracking-tight text-ink transition-colors group-hover/brand:text-accent md:text-lg">
             Keel Skills
-          </Link>
+          </span>
           <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
             docs
           </span>
-        </div>
+        </Link>
 
-        <div className="flex items-center gap-3.5 font-mono text-[11px] uppercase tracking-[0.16em] sm:gap-5">
-          {/* Author mark — doubles as the way home to estebanaguilar.me */}
-          <a
-            href={SITE_URL}
-            title="Esteban Aguilar — estebanaguilar.me"
-            className="group/home inline-flex items-center gap-2 text-muted transition-colors hover:text-ink"
-          >
-            <span className="grid h-[26px] w-[26px] place-items-center rounded-[8px] bg-accent font-display text-[12px] font-semibold leading-none text-paper transition-transform duration-300 group-hover/home:-rotate-6">
-              EA
-            </span>
-            <span className="hidden flex-col leading-tight sm:flex">
-              <span className="text-[9px] tracking-[0.14em] text-muted">by</span>
-              <span className="text-[11px] tracking-[0.12em] text-ink">
-                Esteban Aguilar
-              </span>
-            </span>
-            <span
-              className="hidden text-[9px] text-muted transition-transform duration-300 group-hover/home:-translate-y-0.5 group-hover/home:translate-x-0.5 sm:inline"
-              aria-hidden
-            >
-              ↗
-            </span>
-          </a>
-          <span className="text-line" aria-hidden>
-            |
-          </span>
+        {/* Right — utilities */}
+        <div className="flex items-center gap-3.5 justify-self-end font-mono text-[11px] uppercase tracking-[0.16em] sm:gap-5">
           <a
             href={REPO_URL}
             target="_blank"
