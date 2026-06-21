@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="7" fill="#15120d" />
+  <!-- Keel: a hull cross-section with a downward fin (the keel) -->
+  <path d="M7 9 H25" stroke="#ec5a3c" stroke-width="2.4" stroke-linecap="round" />
+  <path d="M16 9 V21" stroke="#f0e9db" stroke-width="2.4" stroke-linecap="round" />
+  <path d="M16 21 q0 4 -3 4 M16 21 q0 4 3 4" fill="none" stroke="#ec5a3c" stroke-width="2.4" stroke-linecap="round" />
+</svg>
