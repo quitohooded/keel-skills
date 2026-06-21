@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { REPO_URL, SITE_URL } from "@/lib/nav";
 import GithubIcon from "@/components/GithubIcon";
 
@@ -9,6 +10,9 @@ export default function DocFooter() {
           Keel Skills · MIT · © {new Date().getFullYear()} Esteban Aguilar
         </span>
         <div className="flex items-center gap-5">
+          <Link href="/privacy" className="transition-colors hover:text-ink">
+            Privacy
+          </Link>
           <a
             href={SITE_URL}
             className="transition-colors hover:text-ink"
