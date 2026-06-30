@@ -30,10 +30,20 @@ fs.writeFileSync(path.join(PROJ, "AGENT_POLICY.md"), [
   "",
 ].join("\n"));
 
+// Build a hermetic child env: strip any ambient CI / KEEL_NONINTERACTIVE (GitHub
+// Actions sets CI=true, which would otherwise force every `ask` case to `deny`),
+// then apply the per-case overrides so headless cases opt in explicitly.
+function childEnv(env) {
+  const base = { ...process.env, CLAUDE_PROJECT_DIR: PROJ };
+  delete base.CI;
+  delete base.KEEL_NONINTERACTIVE;
+  return { ...base, ...env };
+}
+
 function run(input, env) {
   const out = execFileSync("node", [HOOK], {
     input: JSON.stringify(input),
-    env: { ...process.env, CLAUDE_PROJECT_DIR: PROJ, ...env },
+    env: childEnv(env),
     encoding: "utf8",
   });
   return JSON.parse(out).hookSpecificOutput.permissionDecision;
@@ -64,7 +74,7 @@ for (const [name, input, env, expected] of cases) {
   let got;
   try {
     if (input === "__RAW__") {
-      const out = execFileSync("node", [HOOK], { input: "not json", env: { ...process.env, CLAUDE_PROJECT_DIR: PROJ }, encoding: "utf8" });
+      const out = execFileSync("node", [HOOK], { input: "not json", env: childEnv({}), encoding: "utf8" });
       got = JSON.parse(out).hookSpecificOutput.permissionDecision;
     } else {
       got = run({ tool_name: input.tool_name, tool_input: input.tool_input, cwd: PROJ }, env);
