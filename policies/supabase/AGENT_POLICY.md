@@ -4,7 +4,7 @@
 > Copy to your repo root as `AGENT_POLICY.md` and adjust paths. The database is the
 > sharpest hot zone here — treat schema and RLS with extra care.
 
-## 1. Hot zones (require explicit L3 approval before any change)
+## 1. Hot zones (need a green light before any change)
 
 - **Production / data / infra (sharpest here):**
   - `supabase/migrations/**` — schema changes
@@ -21,7 +21,7 @@
     deleting rows/tables, rotating keys, sending email, charging money
 - **Promoting a draft to a decision** — `[APPROVED]` / `[CONFIRMED]`.
 
-Everything not listed is hot **only** when the four-step test says so; under doubt, L3.
+Everything not listed is hot **only** when the four-step check says so; under doubt, ask.
 **Prefer local/branch databases and test before touching a remote project.**
 
 ## 2. Source-of-truth artifacts

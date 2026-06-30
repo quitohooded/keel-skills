@@ -4,7 +4,7 @@
 > surface. Copy to your repo root as `AGENT_POLICY.md` and replace the angle-bracket
 > paths with your real ones. Delete what doesn't apply. Keep it short and concrete.
 
-## 1. Hot zones (require explicit L3 approval before any change)
+## 1. Hot zones (need a green light before any change)
 
 - **Client/external-facing surfaces:**
   - `<src/ or app/ — anything rendered to users>`
@@ -18,13 +18,13 @@
   - `git push`, deploy / publish, sending email, charging money, deleting data
 - **Promoting a draft to a decision** — marking anything `[APPROVED]` / `[CONFIRMED]`.
 
-Everything not listed is hot **only** when the four-step test says so; under doubt, L3.
+Everything not listed is hot **only** when the four-step check says so; under doubt, ask.
 
-## 2. Source-of-truth artifacts
+## 2. Source-of-truth files
 
-Files other work derives from — new decisions or interpretive edits require L3;
-only mechanical propagation (deterministic, scope stated, cites its source, still
-current) runs without a new L3.
+Files other work depends on — new decisions or meaning-changing edits need a green
+light; only following through (no judgment needed, scope stated, points back to its
+source, still current) runs without a new green light.
 
 - `<the canonical spec / master copy doc>`
 - `<the decisions log (below)>`

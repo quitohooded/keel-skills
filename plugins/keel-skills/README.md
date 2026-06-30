@@ -3,7 +3,8 @@
 Disciplined operations for Claude agents. Three skills + one command + two hooks.
 
 - `skills/authorization-protocol` — when the agent may execute vs. must get
-  explicit approval (3 levels, 4-step test, hot zones, mechanical propagation).
+  stop and ask (goal / method / green light, the four-step check, hot zones, and
+  following through on a green light you already have).
 - `skills/model-delegation` — cheapest-capable model selection, subagent depth
   limits, no self-escalation, cheapest-first tool ladder.
 - `skills/context-discipline` — files as source of truth, clean session handoff.
@@ -12,7 +13,7 @@ Disciplined operations for Claude agents. Three skills + one command + two hooks
   context each session, so the policy doesn't depend on the agent reading it.
 - `hooks/enforce-policy.cjs` (`PreToolUse`) — deterministic backstop: inspects
   each tool call before it runs and returns allow / ask / deny against your
-  policy's hot paths and commands (plus SPEC §4 defaults). `ask` is the L3 prompt;
+  policy's hot paths and commands (plus SPEC §4 defaults). `ask` is the green-light prompt;
   in non-interactive runs a hot action is denied. Decisions log to
   `.keel/audit.jsonl`. It is a backstop, **not** a security boundary — see the
   root `README.md`.

@@ -38,15 +38,15 @@ so the listings match the plugin exactly. Just open each link and paste.
 > Disciplined operations for Claude agents: authorization levels, cost-aware delegation, file-grounded context.
 
 ### Short description (≈160 chars)
-> Guardrails for autonomous coding agents — a three-level authorization model that the agent both reasons with *and* a hook enforces, plus cost-aware delegation.
+> Guardrails for autonomous coding agents — a goal/method/green-light permission model the agent both reasons with *and* a hook enforces, plus cost-aware delegation.
 
 ### Long description (paste where a fuller blurb is allowed)
 > Keel Skills is a portable governance framework for running Claude agents (Claude
 > Code, Agent SDK) without breaking things or burning tokens. It works in two
-> layers: skills that make the agent *reason* about whether it may act (a
-> three-level authorization model — broad mandate / mechanism / explicit scoped
-> approval — with a four-step test before anything that writes, pushes, deploys,
-> sends, or deletes), and a `PreToolUse` hook that *enforces* the same rules
+> layers: skills that make the agent *reason* about whether it may act (it sorts
+> what looks like permission into a goal, a method, and a green light — only a
+> green light means go — with a four-step check before anything that writes,
+> pushes, deploys, sends, or deletes), and a `PreToolUse` hook that *enforces* the same rules
 > deterministically — stopping a hot action for explicit approval even if the
 > model didn't stop itself, and denying it outright in non-interactive runs where
 > no human can approve. Plus cost-aware model delegation and file-grounded context

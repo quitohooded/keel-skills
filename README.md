@@ -13,11 +13,11 @@ A keel is the part of a ship you never see, the one that keeps everything stable
 and on course. That's what this plugin does to an agent: it lets it move fast on
 the safe stuff and **stops it cold before the irreversible**.
 
-![Keel Skills stopping an agent that was told to "clean up and push": it hits the four-step test, stops at the hot zone, and proposes a scoped plan instead](assets/keel-demo.gif)
+![Keel Skills stopping an agent that was told to "clean up and push": it runs the four-step check, stops at the risky zone, and proposes a scoped plan instead](assets/keel-demo.gif)
 
 *The agent got "clean it up and push." Without a rule it just does it — delete,
-force-push, done. With Keel it hits a hot zone, stops, and proposes a scoped plan,
-flagging the unsafe delete. ([full walkthrough](examples/l3-brake.md))*
+force-push, done. With Keel it hits a risky zone, stops, and proposes a scoped plan,
+flagging the unsafe delete. ([full walkthrough](examples/green-light-brake.md))*
 
 > **In plain words.** AI assistants that write code can now act on their own — and
 > sometimes they do something you can't undo, like permanently deleting work or
@@ -44,23 +44,23 @@ command, and one hook:
 
 | Component | What it does |
 |-----------|--------------|
-| **`authorization-protocol`** skill | Decides whether the agent may execute or must ask for approval. Three-level model (broad mandate / mechanism / explicit scoped approval), four-step test, hot zones, mechanical-propagation rule. |
+| **`authorization-protocol`** skill | Decides whether the agent may act or must stop and ask. Sorts what looks like permission into three things — a goal, a method, and a green light (only a green light means go) — with a four-step check, risky "hot" zones, and a rule for following through on a green light you already have. |
 | **`model-delegation`** skill | Pick the cheapest model that still preserves quality and risk control. Tiers by task type, max subagent depth, no self-escalation, cheapest-first tool ladder. |
 | **`context-discipline`** skill | Keep the session anchored in files, not chat. When to end a long session, what to record, how to leave a resumable handoff. |
 | **`/keel-skills:policy-init`** command | Generates your project's `AGENT_POLICY.md` by interviewing you about your hot zones and sources of truth. |
 | **`SessionStart` hook** | If your project has an `AGENT_POLICY.md`, it's injected into context at the start of every session — so the policy no longer depends on the agent *remembering* to read it. |
 | **`PreToolUse` hook** *(new in 0.4)* | The hard backstop. Inspects every tool call *before* it runs and stops a hot one (`git push`, deploy, `rm -rf`, writes to your hot paths, outward MCP calls) for explicit approval — even if the agent didn't stop itself. Logs every decision to `.keel/audit.jsonl`. |
 
-## The authorization model, at a glance
+## The permission model, at a glance
 
-The core of Keel Skills: a four-step test that decides, before any action that
+The core of Keel Skills: a four-step check that decides, before any action that
 writes or changes something, whether the agent can act alone or must stop and ask
-for explicit approval (L3).
+for a clear yes — a **green light**.
 
-![Keel Skills authorization model: four-step test](assets/authorization-flow.svg)
+![Keel Skills permission model: the four-step check](assets/authorization-flow.svg)
 
-> Read-only and proposals are free. Anything **hot, outward, irreversible, or
-> structural** is L3. When in doubt, it's L3.
+> Read-only and proposals are free. Anything **risky, outward, undoable-only-with-pain,
+> or system-rebuilding** needs a green light. When in doubt, ask.
 
 The model is specified runtime-neutral in **[SPEC.md](SPEC.md)** so it can be
 cited and reimplemented outside Claude Code.
@@ -88,8 +88,8 @@ Keel works in two layers, and you want both:
 
 ## The key separation: mechanism vs. your data
 
-The skills are **generic**: they describe the *pattern* (what a hot zone is, what
-mechanical propagation means, how a model gets chosen). Everything specific to
+The skills are **generic**: they describe the *pattern* (what a risky zone is, what
+following through on a green light means, how a model gets chosen). Everything specific to
 your project — which paths are hot, where your source of truth lives, what counts
 as a release — lives in a single file you control: **`AGENT_POLICY.md`** at your
 project root.
@@ -120,19 +120,19 @@ publishing paths (git repo, local path, or package).
 
 ## See it in 60 seconds
 
-A concrete before/after of the L3 brake — the agent about to force-push a
+A concrete before/after of the green-light brake — the agent about to force-push a
 "cleanup", and Keel stopping it — is in
-[`examples/l3-brake.md`](examples/l3-brake.md) (the **soft** brake: the agent
-reasoning its way to a stop). The **hard** brake — the `PreToolUse` hook
-intercepting the call and denying it when no human is present — is in
-[`examples/enforcement.md`](examples/enforcement.md). The recordable demo script is
-in [`examples/demo-script.md`](examples/demo-script.md).
+[`examples/green-light-brake.md`](examples/green-light-brake.md) (the **soft**
+brake: the agent reasoning its way to a stop). The **hard** brake — the
+`PreToolUse` hook intercepting the call and denying it when no human is present — is
+in [`examples/enforcement.md`](examples/enforcement.md). The recordable demo script
+is in [`examples/demo-script.md`](examples/demo-script.md).
 
 ## How to use it, in one line
 
-> Read-only and proposals are free. Anything hot, outward-facing, irreversible or
-> structural needs explicit approval. When in doubt, ask. Cheapest model that does
-> the job; shallow delegation; lightest tool first.
+> Read-only and proposals are free. Anything risky, outward-facing,
+> undoable-only-with-pain or system-rebuilding needs a green light. When in doubt,
+> ask. Cheapest model that does the job; shallow delegation; lightest tool first.
 
 ## Author
 

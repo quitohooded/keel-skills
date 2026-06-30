@@ -17,7 +17,7 @@ frena en seco antes de lo irreversible.
 
 *Al agente le dijeron "limpiá y pusheá". Sin una regla, lo hace —borra, force-push,
 listo—. Con Keel toca una zona caliente, frena y propone un plan acotado, marcando
-el borrado peligroso. ([recorrido completo](examples/l3-brake.md))*
+el borrado peligroso. ([recorrido completo](examples/green-light-brake.md))*
 
 > **En palabras simples.** Los asistentes de IA que escriben código ya pueden actuar
 > solos — y a veces hacen algo que no se puede deshacer, como borrar trabajo para
@@ -44,27 +44,27 @@ Tres skills (se activan solas cuando la situación lo amerita), un comando y un 
 
 | Componente | Para qué |
 |-----------|----------|
-| **`authorization-protocol`** | Decide si el agente puede ejecutar o tiene que pedir aprobación. Modelo de 3 niveles (mandato amplio / mecanismo / aprobación explícita con scope), test de 4 pasos, zonas calientes y regla de propagación mecánica. |
+| **`authorization-protocol`** | Decide si el agente puede actuar o tiene que parar y preguntar. Ordena lo que parece permiso en tres cosas — un objetivo, un método y una luz verde (solo la luz verde habilita) — con un chequeo de cuatro pasos, zonas de riesgo ("calientes") y una regla para seguir adelante con una luz verde que ya tenés. |
 | **`model-delegation`** | Elegir el modelo más barato que preserve calidad y riesgo. Tiers por tipo de tarea, profundidad máxima de subagentes, prohibición de auto-escalar, y escalera de herramientas más-barata-primero. |
 | **`context-discipline`** | Mantener la sesión anclada en archivos y no en el chat. Cuándo cortar una sesión larga, qué registrar y cómo dejar un punto de retomado para una sesión nueva. |
 | **`/keel-skills:policy-init`** | Genera el `AGENT_POLICY.md` de tu proyecto entrevistándote sobre tus zonas calientes y fuentes de verdad. |
 | **hook `SessionStart`** | Si tu proyecto tiene un `AGENT_POLICY.md`, lo inyecta automáticamente al contexto al abrir cada sesión. Así la política deja de depender de que el agente "se acuerde" de leerla. |
 
-## El modelo de autorización, de un vistazo
+## El modelo de permisos, de un vistazo
 
-El corazón de Keel Skills: un test de cuatro pasos que decide, antes de cada acción
-que escribe o cambia algo, si el agente puede actuar solo o tiene que parar y pedir
-aprobación explícita (L3).
+El corazón de Keel Skills: un chequeo de cuatro pasos que decide, antes de cada
+acción que escribe o cambia algo, si el agente puede actuar solo o tiene que parar y
+pedir un sí claro — una **luz verde**.
 
-![Modelo de autorización de Keel Skills: test de cuatro pasos](assets/authorization-flow.es.svg)
+![Modelo de permisos de Keel Skills: el chequeo de cuatro pasos](assets/authorization-flow.es.svg)
 
 El modelo está especificado de forma neutral al runtime en **[SPEC.md](SPEC.md)**,
 para que pueda citarse y reimplementarse fuera de Claude Code.
 
 ## La separación clave: mecanismo vs. tus datos
 
-Las skills son **genéricas**: describen el *patrón* (qué es una zona caliente, qué
-significa propagación mecánica, cómo se elige un modelo). Lo específico de tu
+Las skills son **genéricas**: describen el *patrón* (qué es una zona de riesgo, qué
+significa seguir adelante con una luz verde que ya tenés, cómo se elige un modelo). Lo específico de tu
 proyecto —qué rutas son calientes, dónde vive tu fuente de verdad, qué cuenta como
 release— vive en un único archivo que vos controlás: **`AGENT_POLICY.md`** en la
 raíz de tu proyecto.
@@ -95,9 +95,9 @@ publicación (repo git, ruta local, o paquete).
 
 ## Cómo usarlo, en una línea
 
-> Read-only y propuestas son libres. Lo caliente, hacia afuera, irreversible o
-> estructural es aprobación explícita. Ante la duda, se pregunta. Modelo más
-> barato que rinda; delegación corta; herramienta más liviana primero.
+> Read-only y propuestas son libres. Lo riesgoso, hacia afuera, difícil de
+> deshacer o que reconstruye un sistema necesita una luz verde. Ante la duda, se
+> pregunta. Modelo más barato que rinda; delegación corta; herramienta más liviana primero.
 
 ## Autor
 

@@ -84,10 +84,10 @@ That rule is Keel Skills.
 **2/**
 Most "go do it" instructions aren't actually permission to do *it*. They're a goal.
 
-Keel Skills gives an agent a 3-level model:
-• broad mandate → investigate + propose
-• naming the mechanism → still not approval
-• explicit scoped approval → execute, and don't exceed the scope
+Keel Skills sorts what looks like permission into three things:
+• a goal ("make it better") → investigate + propose
+• a method ("use a migration") → still not a yes
+• a green light (a clear yes to this exact thing) → act, and don't exceed the scope
 
 **3/**
 Before any action that writes, pushes, deploys, sends, or deletes, it runs a
@@ -164,10 +164,10 @@ A smarter model doesn't fix that. A written rule about when to stop does.
 That's what Keel Skills is. Three things, distilled from operating agents in real
 work:
 
-- **Authorization** — a 3-level model (broad mandate / mechanism / explicit scoped
-  approval) and a 4-step test the agent runs before anything that writes, pushes,
-  deploys, sends, or deletes. Read-only is free; anything hot, outward, or
-  irreversible stops and asks; in doubt, it asks.
+- **Permission** — it sorts what looks like permission into three things (a goal /
+  a method / a green light, and only a green light means go) and runs a 4-step
+  check before anything that writes, pushes, deploys, sends, or deletes. Read-only
+  is free; anything risky, outward, or hard to undo stops and asks; in doubt, it asks.
 - **Delegation** — cheapest model that does the job well, shallow subagents, no
   self-escalation. Don't burn the budget running the top model on a mechanical task.
 - **Context discipline** — files are the source of truth, not the chat. Know when
@@ -203,10 +203,11 @@ Un modelo más inteligente no arregla eso. Una regla escrita de cuándo frenar, 
 
 Eso es Keel Skills. Tres cosas, destiladas de operar agentes en trabajo real:
 
-- **Autorización** — modelo de 3 niveles (mandato amplio / mecanismo / aprobación
-  explícita con scope) y un test de 4 pasos antes de cualquier acción que escriba,
-  pushee, deploye, envíe o borre. Lo read-only es libre; lo caliente, hacia afuera
-  o irreversible frena y pregunta; ante la duda, pregunta.
+- **Permisos** — ordena lo que parece permiso en tres cosas (un objetivo / un
+  método / una luz verde, y solo la luz verde habilita) y corre un chequeo de 4
+  pasos antes de cualquier acción que escriba, pushee, deploye, envíe o borre. Lo
+  read-only es libre; lo riesgoso, hacia afuera o difícil de deshacer frena y
+  pregunta; ante la duda, pregunta.
 - **Delegación** — el modelo más barato que rinda, subagentes poco profundos, sin
   auto-escalar. No quemes el presupuesto corriendo el modelo más caro en una tarea
   mecánica.

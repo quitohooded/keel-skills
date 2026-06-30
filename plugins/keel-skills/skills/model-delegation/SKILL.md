@@ -52,9 +52,9 @@ usually doesn't — but a task that mixes mechanical and judgment work should be
 - **No self-escalation.** If a subagent decides it needs a smarter model, it does
   **not** upgrade itself — it returns to the parent with what it found and why a
   stronger model is warranted. The parent decides.
-- **A subagent cannot approve, confirm, or execute in a hot zone.** Authorization
-  always returns to the human (or the parent acting under a human's approval).
-  See the `authorization-protocol` skill.
+- **A subagent cannot approve, confirm, or do anything risky in a hot zone.** The
+  green light always comes back to the human (or the parent acting under a human's
+  green light). See the `authorization-protocol` skill.
 - **Delegation does not replace reading the source.** A summary from a subagent is
   an input, not the ground truth. Validate against the real files before acting.
 

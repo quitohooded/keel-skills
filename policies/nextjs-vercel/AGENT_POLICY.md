@@ -3,7 +3,7 @@
 > Pack for a JS/TS web app deployed on Vercel (or similar PaaS). Copy to your repo
 > root as `AGENT_POLICY.md` and adjust paths. Delete what doesn't apply.
 
-## 1. Hot zones (require explicit L3 approval before any change)
+## 1. Hot zones (need a green light before any change)
 
 - **Client/external-facing surfaces:**
   - `src/app/**`, `src/pages/**`, `app/**`, `pages/**` — rendered routes
@@ -21,13 +21,13 @@
   - sending email, charging money, deleting data
 - **Promoting a draft to a decision** — `[APPROVED]` / `[CONFIRMED]`.
 
-Everything not listed is hot **only** when the four-step test says so; under doubt, L3.
+Everything not listed is hot **only** when the four-step check says so; under doubt, ask.
 
-## 2. Source-of-truth artifacts
+## 2. Source-of-truth files
 
 - `lib/content.*` or wherever canonical copy lives
 - the decisions log (below)
-- `package.json` dependencies/scripts (interpretive edits → L3)
+- `package.json` dependencies/scripts (meaning-changing edits → green light)
 
 ## 3. Where state and decisions get recorded
 

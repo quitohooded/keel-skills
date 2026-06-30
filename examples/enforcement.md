@@ -1,6 +1,6 @@
 # Example: the hard brake (enforcement hook)
 
-[`l3-brake.md`](l3-brake.md) shows the **soft** brake — the agent *reasoning* its
+[`green-light-brake.md`](green-light-brake.md) shows the **soft** brake — the agent *reasoning* its
 way to a stop. This shows the **hard** brake: the `PreToolUse` hook
 (`enforce-policy.cjs`) intercepting a tool call and stopping it *regardless* of
 what the model decided. Two layers, defense in depth.
@@ -32,7 +32,7 @@ schema changes, outward MCP calls), even with no block at all.
 
 Every tool call is inspected *before* it runs. The hook emits a decision
 (`allow` / `ask` / `deny`). `ask` becomes an explicit human-approval prompt — the
-L3 event.
+request for a green light.
 
 **The agent tries to read a file** → free, never interrupts.
 ```json
@@ -44,7 +44,7 @@ out: { "permissionDecision": "allow", "reason": "keel: read-only tool" }
 ```json
 in : { "tool_name": "Bash", "tool_input": { "command": "git push origin main" } }
 out: { "permissionDecision": "ask",
-       "reason": "keel: needs explicit approval (L3) — command matches hot pattern `git push`" }
+       "reason": "keel: needs a green light (explicit approval) — command matches hot pattern `git push`" }
 ```
 
 **The agent tries to run the approved build** → standing approval lets it through.
@@ -57,7 +57,7 @@ out: { "permissionDecision": "allow", "reason": "keel: covered by standing appro
 ```json
 in : { "tool_name": "Write", "tool_input": { "file_path": "src/app/page.tsx" } }
 out: { "permissionDecision": "ask",
-       "reason": "keel: needs explicit approval (L3) — writes to hot path `src/app/page.tsx` (matches `src/**`)" }
+       "reason": "keel: needs a green light (explicit approval) — writes to hot path `src/app/page.tsx` (matches `src/**`)" }
 ```
 
 ---
@@ -65,13 +65,13 @@ out: { "permissionDecision": "ask",
 ## The part the soft layer can't do: no human, no pass
 
 Run the same push in a **non-interactive** context (CI, a headless agent, a
-scheduled job — `KEEL_NONINTERACTIVE=1` or `CI`). There's no one to grant L3, so
-`ask` can't be answered. The hook **denies** outright:
+scheduled job — `KEEL_NONINTERACTIVE=1` or `CI`). There's no one to give a green
+light, so `ask` can't be answered. The hook **denies** outright:
 
 ```json
 in : { "tool_name": "Bash", "tool_input": { "command": "git push --force origin main" } }
 out: { "permissionDecision": "deny",
-       "reason": "keel: BLOCKED (no human present to grant L3) — command matches hot pattern `git push`" }
+       "reason": "keel: BLOCKED (no human present to give a green light) — command matches hot pattern `git push`" }
 ```
 
 This is the case the reasoning layer fundamentally can't cover: when the agent
@@ -104,7 +104,7 @@ a sandbox for actual isolation. Keel raises the floor; it is not the wall.
 
 | | Soft layer (skills) | Hard layer (hook) |
 |---|---|---|
-| **What it is** | The agent applies the four-step test itself | Deterministic code intercepts the call |
+| **What it is** | The agent applies the four-step check itself | Deterministic code intercepts the call |
 | **Strength** | Context-aware, smart, explains itself | Fires regardless of the model's choice |
 | **Weakness** | Depends on the model complying | Only catches concrete, pattern-matchable cases |
 | **Covers headless?** | No (assumes a human is asked) | Yes (denies when no human present) |

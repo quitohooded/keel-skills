@@ -3,11 +3,11 @@
  * ----------------------------------------------------------------------------
  * The "hard" counterpart to inject-policy.cjs. Where inject-policy.cjs only
  * injects an AGENT_POLICY.md into context (soft), this hook inspects each tool
- * call BEFORE it runs and returns allow / ask / deny. `ask` is the L3 event: it
- * forces an explicit human approval prompt.
+ * call BEFORE it runs and returns allow / ask / deny. `ask` is the request for a
+ * green light: it forces an explicit human approval prompt.
  *
  * TWO LAYERS, DEFENSE IN DEPTH. This hook does NOT re-implement the interpretive
- * four-step test (SPEC §3) — that stays the model's job via the
+ * four-step check (SPEC §3) — that stays the model's job via the
  * authorization-protocol skill. The hook enforces only the *concrete, mechanical*
  * subset of a policy: hot paths (globs) and hot commands (patterns). The skill
  * reasons; the hook backstops.
@@ -231,8 +231,8 @@ function decide(permissionDecision, permissionDecisionReason) {
 
 function reasonHot(why) {
   return NONINTERACTIVE
-    ? "keel: BLOCKED (no human present to grant L3) — " + why
-    : "keel: needs explicit approval (L3) — " + why;
+    ? "keel: BLOCKED (no human present to give a green light) — " + why
+    : "keel: needs a green light (explicit approval) — " + why;
 }
 
 function audit(projectDir, record) {
