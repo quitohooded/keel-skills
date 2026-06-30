@@ -140,6 +140,18 @@ authority. It can investigate and propose; the L3 decision returns to the human
 (or the parent agent acting under a human's L3). Delegation never launders
 authorization. (See the `model-delegation` skill for the delegation rules.)
 
+## The enforcement backstop (this skill is the reasoning layer)
+
+This skill is the **soft** layer: it makes you apply the test yourself. The plugin
+also ships a **hard** layer — the `PreToolUse` hook (`enforce-policy.cjs`) — that
+intercepts hot tool calls (`git push`, deploy, `rm -rf`, writes to hot paths,
+outward MCP calls) and forces an explicit approval prompt *regardless* of your
+reasoning, denying them outright in non-interactive runs. The two layers are
+complementary: you still run this test on every action; the hook only catches the
+concrete cases you might miss. Do **not** treat the hook as permission — if it
+stays silent, the four-step test still governs. And it is a backstop, not a
+sandbox: it cannot contain an adversarial process.
+
 ## How to apply this in one line
 
 > Read-only and proposals are free. Anything hot, outward, irreversible, or

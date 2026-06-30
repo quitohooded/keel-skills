@@ -49,6 +49,7 @@ command, and one hook:
 | **`context-discipline`** skill | Keep the session anchored in files, not chat. When to end a long session, what to record, how to leave a resumable handoff. |
 | **`/keel-skills:policy-init`** command | Generates your project's `AGENT_POLICY.md` by interviewing you about your hot zones and sources of truth. |
 | **`SessionStart` hook** | If your project has an `AGENT_POLICY.md`, it's injected into context at the start of every session — so the policy no longer depends on the agent *remembering* to read it. |
+| **`PreToolUse` hook** *(new in 0.4)* | The hard backstop. Inspects every tool call *before* it runs and stops a hot one (`git push`, deploy, `rm -rf`, writes to your hot paths, outward MCP calls) for explicit approval — even if the agent didn't stop itself. Logs every decision to `.keel/audit.jsonl`. |
 
 ## The authorization model, at a glance
 
@@ -63,6 +64,27 @@ for explicit approval (L3).
 
 The model is specified runtime-neutral in **[SPEC.md](SPEC.md)** so it can be
 cited and reimplemented outside Claude Code.
+
+## Two layers: judgment and enforcement
+
+Keel works in two layers, and you want both:
+
+- **Soft (reasoning).** The skills make the agent *apply the test itself* and stop
+  before hot work. Smart, context-aware — but it depends on the model choosing to
+  comply.
+- **Hard (enforcement).** The `PreToolUse` hook is deterministic code that
+  intercepts hot tool calls and blocks them for approval *regardless* of what the
+  model decided. It reads the concrete `hot_paths` / `hot_commands` from your
+  policy's [machine-readable block](SPEC.md#71-optional-machine-readable-block-for-enforcing-implementations)
+  (plus the SPEC §4 defaults), turns a hot action into an explicit approval
+  prompt, and in a non-interactive run (CI) **denies** it outright since no human
+  is there to approve. Every decision lands in `.keel/audit.jsonl`.
+
+> **It is a backstop, not a sandbox.** Enforcement catches accidents, drift, and
+> hallucinated actions — a huge lift in assurance — but a determined or
+> jailbroken agent with shell access can still route around command matching.
+> Real isolation (scoped credentials, a sandbox) is complementary; Keel does not
+> replace it. We say this plainly so nobody leans on it as a security boundary.
 
 ## The key separation: mechanism vs. your data
 

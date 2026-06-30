@@ -153,6 +153,32 @@ Rules:
 The canonical template is
 [`plugins/keel-skills/templates/AGENT_POLICY.template.md`](plugins/keel-skills/templates/AGENT_POLICY.template.md).
 
+### 7.1 Optional machine-readable block (for enforcing implementations)
+
+The prose sections above are written for an LLM to *reason* with. An implementation
+that enforces the policy with deterministic code (e.g. a pre-action hook, §8.1)
+needs a concrete, parseable subset. It SHOULD read it from a single fenced
+` ```keel-policy ` block inside the same `AGENT_POLICY.md`, so the project keeps
+**one file**. The block uses flat lists only:
+
+```keel-policy
+hot_paths:
+  - "src/**"
+hot_commands:
+  - "git push"
+standing_allow_commands:
+  - "npm run build"
+standing_allow_paths:
+  - "_borradores/**"
+```
+
+- `hot_paths` / `hot_commands` — glob paths and command substrings that are hot.
+- `standing_allow_*` — scoped exceptions, the machine-readable form of §7.6.
+- The block **refines** the §4 defaults; it MUST NOT be read as removing a default
+  category. Anything not in the block still falls under the four-step test (§3).
+- The block is **optional**. Its absence means the enforcing layer runs on §4
+  defaults alone; the reasoning layer (the LLM) is unaffected either way.
+
 ---
 
 ## 8. Conformance
@@ -170,6 +196,26 @@ An implementation is **Keel-compatible** if it:
 
 An implementation MAY add stricter rules. It MUST NOT relax §3–§5 below what is
 specified here.
+
+### 8.1 Enforcing implementations (optional, stricter)
+
+The conformance above is satisfied by a *reasoning* implementation — one where the
+agent applies the test itself. An implementation MAY additionally **enforce** the
+policy with deterministic code that intercepts actions before they run and blocks
+hot ones that lack L3. An enforcing implementation:
+
+1. Intercepts actions (§1) **before execution** and maps them to allow / ask / deny,
+   where *ask* is the L3 event (an explicit human-approval prompt).
+2. Treats the §4 defaults as hot even with no machine-readable block (§7.1) present.
+3. In a non-interactive context (no human able to grant L3), **denies** any action
+   it would otherwise have asked about.
+4. Is understood to be a **backstop, not a security boundary** — it raises assurance
+   against accident, drift, and hallucination, but cannot contain an adversarial
+   agent. Real isolation (scoped credentials, sandboxing) is complementary, not
+   replaced.
+
+The reference enforcing implementation is the Keel Skills `PreToolUse` hook
+(`enforce-policy.cjs`).
 
 ---
 

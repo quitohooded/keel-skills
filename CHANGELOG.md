@@ -2,6 +2,35 @@
 
 All notable changes to the Keel Skills plugin are documented here.
 
+## [0.4.0] — 2026-06-30
+
+Enforcement layer — Keel goes from a framework the agent *tries* to follow to a
+guardrail that *backstops* it.
+
+- **`PreToolUse` hook** (`hooks/enforce-policy.cjs`) — deterministic enforcement.
+  Inspects every tool call before it runs and returns allow / ask / deny against
+  the SPEC §4 hot defaults plus your policy's concrete hot paths and commands.
+  `ask` is the L3 event (an explicit human-approval prompt); in a non-interactive
+  run (`KEEL_NONINTERACTIVE=1` / `CI`) a hot action is **denied** since no human
+  can grant L3. Standing approvals in the policy let scoped exceptions through.
+  Fails open on malformed hook input so it never wedges a workflow. Dependency-free.
+- **Audit trail** — every decision is appended to `.keel/audit.jsonl`
+  (timestamp, tool, matched rule, verdict).
+- **`AGENT_POLICY.md` machine-readable block** — an optional fenced
+  ` ```keel-policy ` block (flat lists: `hot_paths`, `hot_commands`,
+  `standing_allow_commands`, `standing_allow_paths`) that the hook parses, kept in
+  the same single file as the prose. Documented in `SPEC.md` §7.1; added to the
+  template.
+- **`SPEC.md`** — §7.1 (machine-readable block) and §8.1 (enforcing
+  implementations, optional & stricter) added, both runtime-neutral. The model is
+  explicit that enforcement is a backstop, **not** a security boundary.
+- **Tests** — `hooks/enforce-policy.test.cjs`, a dependency-free runner (16 cases)
+  wired into CI (`validate.yml`).
+- **Docs** — root and plugin READMEs gain a "two layers (judgment + enforcement)"
+  section and the not-a-security-boundary caveat; `authorization-protocol` skill
+  notes the hard backstop.
+- No change to the existing skills' decision logic or the `SessionStart` hook.
+
 ## [0.3.0] — 2026-06-19
 
 Strategic repositioning toward an open governance standard.

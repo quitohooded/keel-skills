@@ -9,3 +9,6 @@ desktop.ini
 
 # Raw demo recording (only the optimized assets/keel-demo.gif is tracked)
 assets/keel-demo.mp4
+
+# Runtime audit trail written by the PreToolUse enforcement hook
+.keel/

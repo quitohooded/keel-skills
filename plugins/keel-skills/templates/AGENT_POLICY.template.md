@@ -66,3 +66,31 @@ Recorded decisions that grant L3 in advance for a defined scope. Each entry must
 state its scope explicitly so the agent never has to infer it.
 
 - `[APPROVED <date>]` `<action + exact scope it covers>`
+
+## 7. Machine-readable block (optional — powers the enforcement hook)
+
+The prose above is for the agent to *reason* with. The `PreToolUse` enforcement
+hook (`enforce-policy.cjs`) is deterministic code, so it reads a concrete,
+machine-readable subset from a fenced ` ```keel-policy ` block. Keep the two in
+sync. Flat lists only (no nesting). Anything not listed here still falls under the
+agent's four-step test; this block just adds a *hard* backstop for the concrete
+cases. See `SPEC.md` §7 for the format.
+
+```keel-policy
+hot_paths:
+  - "src/**"
+  - "supabase/migrations/**"
+hot_commands:
+  - "git push"
+  - "vercel deploy"
+standing_allow_commands:
+  - "npm run build"
+standing_allow_paths:
+  - "_borradores/**"
+```
+
+> The hook ships with SPEC §4 defaults (`git push`, deploy, `rm -rf`, schema
+> changes, outward MCP calls) already hot, so it protects you even with no block
+> at all. This block *refines* — it never removes a default category. In a
+> non-interactive run (CI, `KEEL_NONINTERACTIVE=1`) a hot action that would prompt
+> for approval is denied instead, since no human is present to grant L3.
