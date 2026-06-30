@@ -122,8 +122,11 @@ publishing paths (git repo, local path, or package).
 
 A concrete before/after of the L3 brake — the agent about to force-push a
 "cleanup", and Keel stopping it — is in
-[`examples/l3-brake.md`](examples/l3-brake.md). The recordable demo script is in
-[`examples/demo-script.md`](examples/demo-script.md).
+[`examples/l3-brake.md`](examples/l3-brake.md) (the **soft** brake: the agent
+reasoning its way to a stop). The **hard** brake — the `PreToolUse` hook
+intercepting the call and denying it when no human is present — is in
+[`examples/enforcement.md`](examples/enforcement.md). The recordable demo script is
+in [`examples/demo-script.md`](examples/demo-script.md).
 
 ## How to use it, in one line
 

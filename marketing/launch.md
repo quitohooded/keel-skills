@@ -1,12 +1,69 @@
-# Launch drafts — Keel Skills v0.3.0
+# Launch drafts — Keel Skills
 
-Build-in-public copy for the v0.3.0 repositioning (MIT + open spec). Edit to taste,
-then post from your own accounts. Four formats: a full X/Twitter thread, a short
-punchy X variant, a longer LinkedIn/blog post, and a Spanish version for your channels.
+Build-in-public copy. Edit to taste, then post from your own accounts.
 
 > **Attach the demo when you post — it's what makes this land, so lead with it.**
 > The clip is already in the repo at `assets/keel-demo.gif` (or use the original
 > MP4). On X, attach it to the **first** tweet; on LinkedIn, attach it to the post.
+
+---
+
+## 🆕 v0.4.0 angle — "now it has teeth" (use this as the headline)
+
+**This is the freshest and sharpest hook, so lead with it.** Until v0.4.0 Keel
+*advised* the agent to stop — it depended on the model choosing to comply. v0.4.0
+adds a `PreToolUse` hook that *enforces* it: the action is intercepted before it
+runs and stopped regardless of what the model decided, and **denied outright** when
+there's no human present to approve (CI, headless). The story shifts from
+"a smart agent that should stop" to **"a brake that actually engages."**
+
+> ⚠️ **This is a skeleton — the creative voice is yours.** Below are the structural
+> beats and the facts, not the final punch. Drop in your own angle and personality;
+> I'm only giving you the bones and the honest claims so they stay accurate. And
+> record a fresh ~20s clip of the hook firing `deny`/`ask` (see
+> [`examples/enforcement.md`](../examples/enforcement.md)) — the old GIF shows the
+> *soft* brake; the new news is the *hard* one.
+
+**Talking points (true, use freely):**
+- The old failure story still opens it: agent told "clean up and push," deletes a
+  live file, force-pushes over a teammate. *(Your existing thread below nails this.)*
+- The new twist: *"I shipped the fix that would've stopped it — not a smarter
+  prompt, an actual brake."*
+- Two layers: the skill **reasons**; the hook **enforces**. The hook fires even if
+  the model wouldn't have stopped.
+- The killer line for production people: **no human present → it doesn't ask, it
+  denies.** Headless agents and CI can't "stop and ask" — so Keel stops.
+- Every decision is logged to `.keel/audit.jsonl` — an audit trail of what the
+  agent tried and what got blocked.
+- **Stay honest (this builds trust):** it's a *backstop, not a sandbox*. It catches
+  accidents and drift, not an adversarial agent. Say so — the credibility is worth
+  more than the overclaim.
+
+**Skeleton thread (rewrite in your voice):**
+
+> **1/** [the failure hook — your voice. The "clean up and push" disaster.]
+> *(attach the new enforcement clip)*
+>
+> **2/** Last time I shared this, Keel *told* the agent to stop. Honest gap: that
+> still depended on the model listening.
+>
+> **3/** v0.4.0 closes it. A hook now checks every action *before* it runs — push,
+> deploy, rm, writes to your hot paths — and stops the dangerous ones cold.
+>
+> **4/** The part I care about most: when the agent runs headless — CI, a scheduled
+> job — there's no one to approve. So it doesn't ask. It **denies**. "Stop and ask"
+> only works if someone's there to ask.
+>
+> **5/** Still MIT, still a runtime-neutral open spec, still your rules in one
+> `AGENT_POLICY.md`. And still honest: it's a backstop, not a sandbox.
+> github.com/quitohooded/keel-skills
+
+---
+
+## Earlier drafts — v0.3.0 repositioning (MIT + open spec)
+
+Still usable, especially the failure-story opening. Four formats: a full X thread,
+a short punchy X variant, a LinkedIn/blog post, and a Spanish version.
 
 ---
 
