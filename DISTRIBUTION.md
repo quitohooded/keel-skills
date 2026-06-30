@@ -27,9 +27,9 @@ keel-skills/
       README.md
   README.md                   ← overview (inglés, primario)
   README.es.md                ← overview (español, voz de marca)
-  SPEC.md                     ← spec abierto, neutral al runtime (modelo L1/L2/L3 + formato AGENT_POLICY.md)
+  SPEC.md                     ← spec abierto, neutral al runtime (modelo objetivo/método/luz verde + formato AGENT_POLICY.md)
   policies/                   ← packs de AGENT_POLICY.md por stack (web-app-deploy, nextjs-vercel, supabase)
-  examples/                   ← l3-brake.md (antes/después) + demo-script.md (guion grabable)
+  examples/                   ← green-light-brake.md (antes/después) + demo-script.md (guion grabable)
   CONTRIBUTING.md             ← packs, implementaciones compatibles, mejoras al spec
   STRATEGY.md                 ← estrategia de crecimiento (fuente de verdad interna)
   LICENSE                     ← MIT

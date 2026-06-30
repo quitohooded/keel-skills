@@ -2,6 +2,23 @@
 
 All notable changes to the Keel Skills plugin are documented here.
 
+## [Unreleased]
+
+Plain-language vocabulary — same model, readable names. No behavior change.
+
+- **Renamed the three permission levels** from the code names `L1` / `L2` / `L3`
+  to plain words: **a goal** (was L1), **a method** (was L2), and **a green light**
+  (was L3). "Only a green light means go." Other jargon was humanized too:
+  *mechanical propagation* → "following through on a green light you already have";
+  *four-step test* → "four-step check"; *source-of-truth artifact* →
+  "source-of-truth file". *Hot zone* was kept (already intuitive).
+- Applied across the skills, `SPEC.md` (bumped to **spec 0.2** with a terms
+  migration note), both READMEs, the policy template and packs, the enforcement
+  hook's user-facing reason strings, the examples (`l3-brake.md` →
+  `green-light-brake.md`), the docs site, the diagrams, and the marketing copy.
+- Historical changelog entries below are left as-is — they describe what shipped at
+  the time, under the old names.
+
 ## [0.4.0] — 2026-06-30
 
 Enforcement layer — Keel goes from a framework the agent *tries* to follow to a

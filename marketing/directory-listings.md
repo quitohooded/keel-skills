@@ -89,7 +89,7 @@ Notes on how approval works:
   ```json
   {
     "name": "keel-skills",
-    "description": "Disciplined operations for Claude agents: a three-level authorization model, cost-aware model delegation, and file-grounded context discipline. Configured per project via an AGENT_POLICY.md you control.",
+    "description": "Disciplined operations for Claude agents: a goal/method/green-light permission model (only a green light means go), cost-aware model delegation, and file-grounded context discipline. Configured per project via an AGENT_POLICY.md you control.",
     "author": { "name": "Esteban Aguilar" },
     "category": "development",
     "source": {

@@ -14,7 +14,7 @@ only requires you to keep the copyright notice above:
   Esteban Aguilar" — with a link back to the project.
 
 The portable parts are specified, runtime-neutral, in SPEC.md:
-  - the L1 / L2 / L3 authorization model and the four-step safety test;
+  - the goal / method / green-light permission model and the four-step check;
   - the AGENT_POLICY.md configuration format.
 
 Implementations in any agent runtime (Claude Code, Agent SDK, other harnesses)

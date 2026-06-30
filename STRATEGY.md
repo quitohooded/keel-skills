@@ -12,8 +12,8 @@ Don't try to be Paperclip — **be the keel of Paperclip.** Orchestration platfo
 (Paperclip and its clones) will commoditize *coordinating many agents*; they treat
 *fine-grained governance* (when an agent may act alone) shallowly — in Paperclip
 it's subsystem 6 of 12. That precision is exactly where Keel is strong and they are
-coarse. The winning play: make the **L1/L2/L3 model + `AGENT_POLICY.md` format the
-open standard for agent governance**, dogfooded in public on real work, distributed
+coarse. The winning play: make the **goal/method/green-light model + `AGENT_POLICY.md`
+format the open standard for agent governance**, dogfooded in public on real work, distributed
 with zero friction, and monetized *above* the mechanism (packs, compliance,
 consulting) — never by selling the mechanism.
 
@@ -22,7 +22,7 @@ consulting) — never by selling the mechanism.
 **Copied:**
 - Open source as the *distribution channel*, not ideology → **relicensed to MIT**
   (was source-available/no-resale, which directly blocked viral forking).
-- Time-to-value must be immediate and **visible** → built `examples/l3-brake.md`
+- Time-to-value must be immediate and **visible** → built `examples/green-light-brake.md`
   + `examples/demo-script.md` (the invisible text plugin needs a "see it" moment).
 - Distribution = the product's own output (Paperclip analyzed 14k commits made by
   its users) → our equivalent metric is **repos with an `AGENT_POLICY.md`
@@ -56,13 +56,13 @@ forkable. We picked growth.
 ## Roadmap (by impact)
 
 **0–30 days — make value visible + free the distribution.** ✅ mostly done in repo:
-MIT relicense, English README, SPEC, policy packs, L3-brake example + demo script.
+MIT relicense, English README, SPEC, policy packs, green-light-brake example + demo script.
 Remaining (manual, see below): record the demo GIF; push; run the end-to-end
 install test; first build-in-public post.
 - Metrics: installs, ⭐, **# repos with `AGENT_POLICY.md` committed**, "got it in 30s?" on 5 testers.
 
 **30–90 days — first external users + concept travels beyond our repo.**
-More policy packs; a technical post on the L1/L2/L3 model *as an idea*; weekly
+More policy packs; a technical post on the goal/method/green-light model *as an idea*; weekly
 build-in-public on real RoadToBiz usage; open Discussions; list in plugin directories.
 - Metrics: external repos with a policy, contributed packs, organic mentions, first third-party issues.
 
@@ -86,7 +86,7 @@ If those two hold for 90 days, the standard play has a real shot.
 
 ## What only Esteban can do (out of agent scope)
 
-- `git push` the `strategy/v0.3-reposition` branch / merge to `main` (outward, L3).
+- `git push` the `strategy/v0.3-reposition` branch / merge to `main` (outward, needs a green light).
 - Record the demo GIF (`examples/demo-script.md`) and embed it in the README.
 - Run the interactive `/plugin marketplace add … → install → policy-init` end-to-end test.
 - Publish the build-in-public post and list the plugin in directories.
