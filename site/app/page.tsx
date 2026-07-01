@@ -19,7 +19,7 @@ export default function HomePage() {
       <section className="grid items-center gap-10 py-14 md:grid-cols-[1.05fr_0.95fr] md:gap-12 md:py-20">
         <div>
           <p className="reveal font-mono text-[11px] uppercase tracking-[0.2em] text-accent">
-            Documentation · v0.3.0 · MIT
+            Documentation · v0.4.0 · MIT
           </p>
           <h1
             className="reveal mt-4 font-display text-[2.6rem] font-semibold leading-[1.04] tracking-tight text-ink md:text-[3.5rem]"
