@@ -28,7 +28,7 @@ so the listings match the plugin exactly. Just open each link and paste.
 | **Repository** | `https://github.com/quitohooded/keel-skills` |
 | **Homepage (use this)** | `https://docs.estebanaguilar.me` (repo URL as fallback) |
 | **License** | MIT |
-| **Version** | 0.4.0 |
+| **Version** | 0.5.0 |
 | **Category** | Workflow / Development (pick whichever the form offers) |
 | **Marketplace add** | `/plugin marketplace add https://github.com/quitohooded/keel-skills` |
 | **Install** | `/plugin install keel-skills@keel-skills` |
