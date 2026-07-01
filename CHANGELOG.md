@@ -2,7 +2,7 @@
 
 All notable changes to the Keel Skills plugin are documented here.
 
-## [Unreleased]
+## [0.5.0] — 2026-06-30
 
 Plain-language vocabulary — same model, readable names. No behavior change.
 
