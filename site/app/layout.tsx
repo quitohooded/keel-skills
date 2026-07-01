@@ -32,14 +32,14 @@ export const metadata: Metadata = {
     template: "%s · Keel Skills docs",
   },
   description:
-    "Documentation for Keel Skills: a portable governance framework for Claude agents — a three-level authorization model, cost-aware model delegation, and file-grounded context discipline.",
+    "Documentation for Keel Skills: a portable governance framework for Claude agents — a goal/method/green-light permission model, cost-aware model delegation, and file-grounded context discipline.",
   applicationName: "Keel Skills docs",
   authors: [{ name: "Esteban Aguilar", url: "https://estebanaguilar.me" }],
   alternates: { canonical: "/" },
   openGraph: {
     title: "Keel Skills — Documentation",
     description:
-      "Guardrails for autonomous coding agents: a three-level authorization model, cost-aware delegation, and file-as-source-of-truth context discipline.",
+      "Guardrails for autonomous coding agents: a goal/method/green-light permission model, cost-aware delegation, and file-as-source-of-truth context discipline.",
     url: SITE,
     siteName: "Keel Skills docs",
     locale: "en_US",

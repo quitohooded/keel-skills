@@ -98,10 +98,10 @@ export default function Page() {
           with what it found and why. The parent decides.
         </li>
         <li>
-          <strong>A subagent cannot approve, confirm, or execute in a hot
-          zone.</strong> Authorization always returns to the human (or the parent
-          acting under a human&apos;s approval). See{" "}
-          <a href="/concepts/authorization">the authorization model</a>.
+          <strong>A subagent cannot approve, confirm, or do anything risky in a
+          hot zone.</strong> The green light always comes back to the human (or
+          the parent acting under a human&apos;s green light). See{" "}
+          <a href="/concepts/authorization">the permission model</a>.
         </li>
         <li>
           <strong>Delegation does not replace reading the source.</strong> A

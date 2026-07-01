@@ -32,9 +32,9 @@ export default function HomePage() {
             style={{ animationDelay: "120ms" }}
           >
             Keel Skills is a portable governance framework for running Claude
-            agents without breaking things or burning tokens — a three-level
-            authorization model, cost-aware delegation, and file-grounded
-            context discipline. Install it, configure it per project, done.
+            agents without breaking things or burning tokens — a
+            goal/method/green-light permission model, cost-aware delegation, and
+            file-grounded context discipline. Install it, configure it per project, done.
           </p>
           <div
             className="reveal mt-7 flex flex-wrap items-center gap-3"
@@ -64,7 +64,7 @@ export default function HomePage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={demoGif.src}
-              alt="Keel Skills stopping an agent told to 'clean up and push': it hits the four-step test, stops at the hot zone, and proposes a scoped plan instead."
+              alt="Keel Skills stopping an agent told to 'clean up and push': it runs the four-step check, stops at the risky zone, and proposes a scoped plan instead."
               className="w-full rounded-xl"
               width={demoGif.width}
               height={demoGif.height}
@@ -102,14 +102,14 @@ export default function HomePage() {
           The core idea
         </p>
         <h2 className="mt-3 max-w-[20ch] font-display text-3xl font-semibold tracking-tight text-ink md:text-4xl">
-          A four-step test before anything that writes or changes.
+          A four-step check before anything that writes or changes.
         </h2>
         <AuthDiagram />
         <p className="text-sm text-ink-soft">
-          The full model — hot zones, mechanical propagation, tie-breakers — is
+          The full model — hot zones, following through, tie-breakers — is
           on the{" "}
           <Link href="/concepts/authorization" className="text-accent underline underline-offset-2">
-            Authorization model
+            Permission model
           </Link>{" "}
           page, and specified runtime-neutral in the{" "}
           <Link href="/spec" className="text-accent underline underline-offset-2">
@@ -150,8 +150,8 @@ export default function HomePage() {
             Install, scaffold an AGENT_POLICY.md, and run your first guarded
             session.
           </Card>
-          <Card href="/concepts/authorization" title="Authorization model">
-            L1/L2/L3, the four-step test, hot zones, and mechanical propagation.
+          <Card href="/concepts/authorization" title="Permission model">
+            Goal, method, green light; the four-step check; hot zones; following through.
           </Card>
           <Card href="/agent-policy" title="AGENT_POLICY.md">
             The single file where your project&apos;s hot zones and sources of

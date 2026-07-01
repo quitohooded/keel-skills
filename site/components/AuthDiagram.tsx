@@ -1,27 +1,27 @@
 /* The signature diagram of the personal site, rebuilt for the docs:
-   the three authorization levels, with L3 (the only one that executes)
-   highlighted and gently pulsing. */
+   the three things that look like permission, with the green light (the only
+   one that lets the agent act) highlighted and gently pulsing. */
 
 const LEVELS = [
   {
-    tag: "L1",
-    name: "Broad mandate",
+    tag: "Goal",
+    name: "A goal",
     note: '"improve this", "do what\'s needed", "handle it"',
     verdict: "Investigate + propose",
     executes: false,
   },
   {
-    tag: "L2",
-    name: "Mechanism / direction",
+    tag: "Method",
+    name: "A method",
     note: '"use a migration", "edit the config", "use a subagent"',
     verdict: "Still not permission",
     executes: false,
   },
   {
-    tag: "L3",
-    name: "Explicit scoped approval",
-    note: "approved action + scope, or a recorded current decision",
-    verdict: "Executes — within scope",
+    tag: "Green light",
+    name: "A green light",
+    note: "a clear yes to this exact action, or a recorded current decision",
+    verdict: "Acts — within scope",
     executes: true,
   },
 ];
@@ -30,10 +30,10 @@ export default function AuthDiagram() {
   return (
     <div className="not-prose my-8 rounded-2xl border border-line bg-paper-2 p-6 md:p-8">
       <h3 className="font-display text-xl font-semibold tracking-tight text-ink">
-        Three levels. Only one authorizes execution.
+        Three things look like permission. Only one means go.
       </h3>
       <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
-        Most "go do it" instructions are L1 or L2
+        Most "go do it" instructions are just a goal or a method
       </p>
 
       <ul className="mt-6 space-y-3">
@@ -47,7 +47,7 @@ export default function AuthDiagram() {
             }`}
           >
             <span
-              className={`font-display text-2xl font-semibold leading-none md:text-3xl ${
+              className={`w-24 shrink-0 font-display text-lg font-semibold leading-tight md:w-28 md:text-xl ${
                 level.executes ? "text-accent" : "text-ink"
               }`}
             >
@@ -72,7 +72,7 @@ export default function AuthDiagram() {
       </ul>
 
       <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.18em] text-ink">
-        Read-only & proposals are free · hot / outward / irreversible / structural → L3 · doubt → L3
+        Read-only & proposals are free · risky / outward / undoable / system-rebuilding → ask · doubt → ask
       </p>
     </div>
   );

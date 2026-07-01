@@ -5,7 +5,7 @@ import { REPO_URL } from "@/lib/nav";
 export const metadata: Metadata = {
   title: "Specification",
   description:
-    "The Keel Agent Governance Specification — a runtime-neutral statement of the authorization model and the AGENT_POLICY.md format, so Keel can be reimplemented anywhere.",
+    "The Keel Agent Governance Specification — a runtime-neutral statement of the permission model (goal / method / green light) and the AGENT_POLICY.md format, so Keel can be reimplemented anywhere.",
 };
 
 export default function Page() {
@@ -14,17 +14,17 @@ export default function Page() {
       <PageHeader
         eyebrow="Reference"
         title="The specification"
-        lead="The authorization model written down independently of any runtime — so it can be cited, audited, and reimplemented outside Claude Code."
+        lead="The permission model written down independently of any runtime — so it can be cited, audited, and reimplemented outside Claude Code."
       />
 
       <p>
-        <Pill>spec v0.1 · draft</Pill> <Pill>MIT</Pill>
+        <Pill>spec v0.2 · draft</Pill> <Pill>MIT</Pill>
       </p>
       <p>
         The Keel Skills plugin for Claude Code is the <em>reference</em>{" "}
         implementation. The spec itself is runtime-neutral: an Agent SDK app,
         another harness, or a CI gate can implement it too. It specifies two
-        portable things — the <strong>authorization model</strong> and the{" "}
+        portable things — the <strong>permission model</strong> and the{" "}
         <strong>
           <code>AGENT_POLICY.md</code> format
         </strong>
@@ -40,25 +40,25 @@ export default function Page() {
           reconfigures); reading and analysis are not actions.
         </li>
         <li>
-          <strong>The three levels (§2)</strong> — L1 / L2 / L3, of which only L3
-          authorizes execution. See{" "}
-          <a href="/concepts/authorization">the authorization model</a>.
+          <strong>The three things (§2)</strong> — a goal, a method, a green
+          light, of which only a green light means go. See{" "}
+          <a href="/concepts/authorization">the permission model</a>.
         </li>
         <li>
-          <strong>The four-step test (§3)</strong> — run before every action;
-          first step that applies wins; any doubt → L3.
+          <strong>The four-step check (§3)</strong> — run before every action;
+          first step that applies wins; any doubt → ask.
         </li>
         <li>
           <strong>Hot zones (§4)</strong> — the default categories a conforming
           implementation must treat as hot.
         </li>
         <li>
-          <strong>Mechanical propagation (§5)</strong> — the only way approval is
-          inherited without a new L3, gated on all four conditions.
+          <strong>Following through (§5)</strong> — the only way a green light
+          carries over without asking again, gated on all four conditions.
         </li>
         <li>
-          <strong>Delegation (§6)</strong> — subagents never grant L3; shallow
-          nesting; no self-escalation.
+          <strong>Delegation (§6)</strong> — subagents never grant a green light;
+          shallow nesting; no self-escalation.
         </li>
         <li>
           <strong>The <code>AGENT_POLICY.md</code> format (§7)</strong> — the six
@@ -75,17 +75,17 @@ export default function Page() {
           Reads <code>AGENT_POLICY.md</code> from the project root (or a path the
           user designates) and treats it as authoritative over the defaults.
         </li>
-        <li>Runs the four-step test before every action.</li>
+        <li>Runs the four-step check before every action.</li>
         <li>
           Treats every default hot-zone category as hot unless the policy
           concretely refines it.
         </li>
         <li>
-          Only inherits approval through mechanical propagation when all four
-          conditions hold.
+          Only lets a green light carry over through following-through when all
+          four conditions hold.
         </li>
-        <li>Never lets a subagent grant L3 (if it supports delegation).</li>
-        <li>Resolves any doubt toward L3.</li>
+        <li>Never lets a subagent grant a green light (if it supports delegation).</li>
+        <li>Resolves any doubt toward stopping and asking.</li>
       </ol>
       <Callout type="key">
         An implementation may add <strong>stricter</strong> rules. It must{" "}

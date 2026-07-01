@@ -83,17 +83,17 @@ export default function Page() {
         for your explicit approval.
       </p>
       <Callout type="note">
-        That&apos;s the whole point: autonomy on the safe, reversible, internal
-        work — and a hard stop before anything outward-facing, irreversible, or
-        structural. Walk through a concrete case on{" "}
-        <a href="/examples/l3-brake">the L3 brake</a>.
+        That&apos;s the whole point: autonomy on the safe, undoable, internal
+        work — and a hard stop before anything outward-facing, hard to undo, or
+        system-rebuilding. Walk through a concrete case on{" "}
+        <a href="/examples/green-light-brake">the green-light brake</a>.
       </Callout>
 
       <H2 id="next">Where to go next</H2>
       <ul>
         <li>
-          <a href="/concepts/authorization">Authorization model</a> — the core:
-          L1/L2/L3, the four-step test, hot zones.
+          <a href="/concepts/authorization">Permission model</a> — the core:
+          goal / method / green light, the four-step check, hot zones.
         </li>
         <li>
           <a href="/concepts/delegation">Model &amp; delegation</a> — pick the

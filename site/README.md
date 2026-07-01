@@ -42,16 +42,16 @@ app/
     policy-packs/
     reference/
     spec/
-    examples/l3-brake/
+    examples/green-light-brake/
 components/              header, sidebar, prose primitives, AuthDiagram, CodeBlock
 lib/nav.ts              the single source of nav order + install commands
 ```
 
-The L3-brake demo GIF is **not duplicated** — it's imported directly from the
+The demo GIF is **not duplicated** — it's imported directly from the
 repo's `../assets/keel-demo.gif`, and Next emits a hashed copy at build.
 
 Content is sourced from the repo's `README.md`, `SPEC.md`, the three `SKILL.md`
-files, and `examples/l3-brake.md`. When those change, update the matching page.
+files, and `examples/green-light-brake.md`. When those change, update the matching page.
 
 ## Deploy
 

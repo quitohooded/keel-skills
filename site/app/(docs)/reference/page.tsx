@@ -23,16 +23,16 @@ export default function Page() {
         <Pill>skill</Pill> <Pill>model-invoked</Pill>
       </p>
       <p>
-        Decides whether the agent may execute or must ask for approval — the
-        three-level model, the four-step test, hot zones, and the
-        mechanical-propagation rule. Triggers before any action that writes,
-        edits, commits, pushes, deploys, sends, publishes, or reconfigures, and
-        whenever a request is a broad mandate (&ldquo;do whatever is
-        needed&rdquo;, &ldquo;fix this&rdquo;, &ldquo;handle it&rdquo;) with no
+        Decides whether the agent may act or must stop and ask — goal / method /
+        green light (only a green light means go), the four-step check, hot
+        zones, and the following-through rule. Triggers before any action that
+        writes, edits, commits, pushes, deploys, sends, publishes, or
+        reconfigures, and whenever a request is a vague goal (&ldquo;do whatever
+        is needed&rdquo;, &ldquo;fix this&rdquo;, &ldquo;handle it&rdquo;) with no
         specific scope.
       </p>
       <p>
-        Full write-up: <a href="/concepts/authorization">the authorization model</a>.
+        Full write-up: <a href="/concepts/authorization">the permission model</a>.
       </p>
 
       <H3 id="model-delegation">model-delegation</H3>

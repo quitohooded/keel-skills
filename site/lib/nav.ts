@@ -37,9 +37,9 @@ export const nav: NavGroup[] = [
     label: "Concepts",
     items: [
       {
-        title: "Authorization model",
+        title: "Permission model",
         href: "/concepts/authorization",
-        blurb: "L1/L2/L3, the four-step test, hot zones, mechanical propagation.",
+        blurb: "Goal, method, green light; the four-step check; hot zones; following through.",
       },
       {
         title: "Model & delegation",
@@ -82,8 +82,8 @@ export const nav: NavGroup[] = [
         blurb: "The runtime-neutral spec and conformance rules.",
       },
       {
-        title: "Example: the L3 brake",
-        href: "/examples/l3-brake",
+        title: "Example: the green-light brake",
+        href: "/examples/green-light-brake",
         blurb: "A concrete before/after of the agent stopping itself.",
       },
     ],

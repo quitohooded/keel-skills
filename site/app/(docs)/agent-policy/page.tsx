@@ -10,17 +10,17 @@ export const metadata: Metadata = {
 
 const TEMPLATE = `# AGENT_POLICY.md — project configuration for the Keel Skills framework
 
-## 1. Hot zones (require explicit L3 approval before any change)
-- **Client/external-facing surfaces:**
+## 1. Hot zones (need a green light before any change)
+- **Anything users or the public see:**
   - <e.g. src/pages, content/, public API routes>
 - **Production / data / infra:**
   - <e.g. database, schema/migrations, settings, CI/CD, deploy config, hooks>
-- **Outward / irreversible actions:**
+- **Actions that reach outside or can't be undone:**
   - <e.g. git push, deploy, sending email, charging, deleting data>
 - **Anything else this project treats as hot:**
   - <...>
 
-## 2. Source-of-truth artifacts
+## 2. Source-of-truth files
 - <e.g. docs/decisions.md, the canonical spec, the master copy doc>
 
 ## 3. Where state and decisions get recorded
@@ -73,13 +73,13 @@ export default function Page() {
             <td>1</td>
             <td><strong>Hot zones</strong></td>
             <td>Yes</td>
-            <td>Concrete paths / surfaces / actions that require L3.</td>
+            <td>Concrete paths / surfaces / actions that need a green light.</td>
           </tr>
           <tr>
             <td>2</td>
-            <td><strong>Source-of-truth artifacts</strong></td>
+            <td><strong>Source-of-truth files</strong></td>
             <td>Yes</td>
-            <td>Files where only mechanical propagation runs without L3.</td>
+            <td>Files where only following-through runs without a green light.</td>
           </tr>
           <tr>
             <td>3</td>
@@ -103,7 +103,7 @@ export default function Page() {
             <td>6</td>
             <td>Standing approvals</td>
             <td>No</td>
-            <td>Recorded decisions granting L3 in advance for a defined scope.</td>
+            <td>Written decisions giving a green light in advance for a defined scope.</td>
           </tr>
         </tbody>
       </table>
@@ -116,13 +116,13 @@ export default function Page() {
         </li>
         <li>
           Anything not listed is treated as potentially hot{" "}
-          <strong>only</strong> when the four-step test says so; under doubt, the
-          implementation escalates to L3.
+          <strong>only</strong> when the four-step check says so; under doubt, the
+          implementation stops and asks for a green light.
         </li>
         <li>
           A standing approval that does not state its scope explicitly is{" "}
-          <strong>not</strong> a valid L3 source — the implementation must not
-          infer the scope.
+          <strong>not</strong> a valid green light — the implementation must not
+          guess the scope.
         </li>
       </ul>
       <Callout type="warn" title="Don't gut the defaults">
