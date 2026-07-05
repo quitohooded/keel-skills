@@ -3,8 +3,9 @@
 Build-in-public copy. Edit to taste, then post from your own accounts.
 
 > **Attach the demo when you post — it's what makes this land, so lead with it.**
-> The clip is already in the repo at `assets/keel-demo.gif` (or use the original
-> MP4). On X, attach it to the **first** tweet; on LinkedIn, attach it to the post.
+> Lead with the newest clip, `assets/demo-keelskills.mp4` (the *hard* brake firing
+> live); `assets/keel-demo.gif` is the older *soft*-brake clip. On X, attach it to
+> the **first** tweet; on LinkedIn, attach it to the post.
 
 ---
 
@@ -19,10 +20,14 @@ there's no human present to approve (CI, headless). The story shifts from
 
 > ⚠️ **This is a skeleton — the creative voice is yours.** Below are the structural
 > beats and the facts, not the final punch. Drop in your own angle and personality;
-> I'm only giving you the bones and the honest claims so they stay accurate. And
-> record a fresh ~20s clip of the hook firing `deny`/`ask` (see
-> [`examples/enforcement.md`](../examples/enforcement.md)) — the old GIF shows the
-> *soft* brake; the new news is the *hard* one.
+> I'm only giving you the bones and the honest claims so they stay accurate.
+>
+> **The clip to lead with:** `assets/demo-keelskills.mp4` — a real (not staged)
+> `PreToolUse` interception recorded live 2026-07-01/04: an agent asked to edit a
+> hot path and push gets stopped with `keel: needs a green light...`, approved, and
+> the push completes for real. Hard facts + the raw audit-log proof backing this
+> clip are in [`marketing/enforcement-proof.md`](enforcement-proof.md). The old GIF
+> (`assets/keel-demo.gif`) shows the *soft* brake; this new clip is the *hard* one.
 
 **Talking points (true, use freely):**
 - The old failure story still opens it: agent told "clean up and push," deletes a
@@ -35,6 +40,11 @@ there's no human present to approve (CI, headless). The story shifts from
   denies.** Headless agents and CI can't "stop and ask" — so Keel stops.
 - Every decision is logged to `.keel/audit.jsonl` — an audit trail of what the
   agent tried and what got blocked.
+- **Spicy angle (observed, verify before headlining):** in the recorded demo,
+  Claude Code's own permission prompts were set to *skip* — and the Keel hook
+  stopped the commit and push *anyway*. "I turned the safety off and it still
+  braked." Real, but seen once so far — see `enforcement-proof.md` before making it
+  the centerpiece.
 - **Stay honest (this builds trust):** it's a *backstop, not a sandbox*. It catches
   accidents and drift, not an adversarial agent. Say so — the credibility is worth
   more than the overclaim.
