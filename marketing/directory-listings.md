@@ -57,6 +57,76 @@ so the listings match the plugin exactly. Just open each link and paste.
 
 ---
 
+## Resubmission content (Console form) — paste-ready
+
+For the https://platform.claude.com/plugins/submit resubmission. English (the form
+and marketplace audience are English). Pick the description length that fits the
+field; use the example use cases where the form allows a longer blurb.
+
+### Plugin description
+
+**Short (one field, ≈220 chars):**
+> Guardrails for autonomous Claude agents. A goal/method/green-light permission
+> model the agent reasons with — and a PreToolUse hook enforces — so it handles the
+> small, safe things itself but stops and asks before anything risky or permanent.
+
+**Full:**
+> Keel Skills is a portable governance framework for running Claude agents (Claude
+> Code, Agent SDK) without breaking things or burning tokens.
+>
+> It works in two layers. First, skills that make the agent *reason* about whether
+> it may act: it sorts what looks like permission into a goal ("make it better"), a
+> method ("use a migration"), and a green light (a clear yes to this exact thing) —
+> only a green light means go — and runs a four-step check before anything that
+> writes, pushes, deploys, sends, or deletes. Second, a `PreToolUse` hook that
+> *enforces* the same rules deterministically: it stops a hot action for explicit
+> approval even if the model didn't stop itself, and denies it outright in
+> non-interactive runs (CI, scheduled jobs) where no human is there to approve.
+> Every decision is logged to an append-only `.keel/audit.jsonl`.
+>
+> It also brings cost-aware model delegation (use the cheapest model that preserves
+> quality; don't run the top model on mechanical work) and file-grounded context
+> discipline (files are the source of truth, not the chat).
+>
+> The framework ships generic — everything specific to your project lives in a
+> single `AGENT_POLICY.md` you control, so the plugin contains none of your data.
+> MIT-licensed, with a runtime-neutral open spec (SPEC.md) so the model can be
+> reimplemented outside Claude Code.
+>
+> Honest scope: the enforcement hook is a *backstop, not a sandbox*. It catches
+> accidents, drift, and hallucinated actions — a large lift in assurance — but real
+> isolation still needs scoped credentials and a sandbox.
+
+### Example use cases
+
+1. **"Clean up the repo and push so the build is green."** A vague instruction that
+   *feels* like permission but is really a goal. Without a rule, an agent may delete
+   a still-imported file and force-push over a teammate's commit. Keel stops at the
+   push, flags the unsafe delete, and proposes a scoped plan instead of acting.
+
+2. **A scheduled / CI agent about to deploy.** Running headless, there's no human to
+   approve a hot action. "Stop and ask" goes nowhere — so Keel *denies* the deploy
+   outright rather than proceeding unattended, and records why in the audit log.
+
+3. **An agent editing client-facing code or a migration.** Writes to your declared
+   hot paths (e.g. `src/**`, `supabase/migrations/**`) are intercepted for a green
+   light before they land, while read-only work and non-hot files flow freely.
+
+4. **Keeping model spend sane on a big task.** Delegation guidance routes mechanical
+   work (inventories, searches, cleanup) to a cheap model and reserves the top model
+   for real planning and cross-cutting decisions — with shallow subagents and no
+   self-escalation.
+
+5. **A long session that's lost the plot.** Context discipline pushes the agent to
+   treat files as the source of truth and hand off cleanly, so a fresh session can
+   resume from the source files instead of a bloated chat history.
+
+6. **A hot command the model *would have* run anyway.** Even if the agent decides a
+   `git push`, `rm -rf`, or schema change is fine, the deterministic hook still
+   intercepts it — the reasoning layer and the enforcement layer back each other up.
+
+---
+
 ## 1. Official Anthropic directory  ·  **recommended, do this first**
 
 Submissions land in the **community marketplace** (`anthropics/claude-plugins-community`)
