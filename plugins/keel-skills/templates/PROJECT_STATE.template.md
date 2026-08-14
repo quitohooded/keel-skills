@@ -1,5 +1,9 @@
 # <Project> — State
 
+> **Last reconciled: `<YYYY-MM-DD>`** — update this every time you close a
+> session against this file. It is the one date that says how much to trust the
+> rest of the document, and it is what a mechanical check can measure.
+>
 > **What this is.** What is true *right now* and what is open. Reconstructed
 > from files and tools, never from a conversation or an agent's memory.
 > **What this is NOT.** History. What happened and why lives in the history file

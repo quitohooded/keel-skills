@@ -164,6 +164,37 @@ def case_catches_state_drift(tmp):
     return code == 1 and "unrecorded work" in out, out
 
 
+def case_fresh_template_informs_not_fails(tmp):
+    """A just-copied, unfilled template reports info — it must not fail.
+
+    Regression: the shipped templates use <YYYY-MM-DD> placeholders, so a user
+    who had just finished onboarding correctly got two red FAILs caused by our
+    own placeholder. A failure that means nothing on day one is how people learn
+    to ignore the suite.
+    """
+    tpl = SCRIPT.parent.parent
+    state = (tpl / "PROJECT_STATE.template.md").read_text(encoding="utf-8")
+    hist = (tpl / "HISTORY.template.md").read_text(encoding="utf-8")
+    root = build_repo(tmp, state=state, history=hist)
+    code, out = run(root)
+    if not have_git():
+        return True, "SKIPPED (no git)"
+    return code == 0 and "still the unfilled template" in out and "FAIL" not in out, out
+
+
+def case_missing_dates_without_placeholder_fails(tmp):
+    """NEG: a state file with no dates and no placeholder is real drift.
+
+    The counterpart to the case above — proves the exemption is keyed on the
+    template signature and hasn't quietly disabled the check for everyone.
+    """
+    root = build_repo(tmp, state="# State\n\nNothing here has a date.\n")
+    code, out = run(root)
+    if not have_git():
+        return True, "SKIPPED (no git)"
+    return code == 1 and "carries no date at all" in out, out
+
+
 def case_dirty_file_warns_not_fails(tmp):
     """A defect in an UNCOMMITTED file warns instead of failing.
 
@@ -176,6 +207,35 @@ def case_dirty_file_warns_not_fails(tmp):
     (root / "AGENT_POLICY.md").write_text(
         "# AGENT_POLICY.md\n\n```keel-policy\nhot_paths:\n```\n", encoding="utf-8")
     code, out = run(root)
+    return code == 0 and "WARN" in out, out
+
+
+def case_nested_project_still_warns(tmp):
+    """A project nested inside a larger repo still tells dirty from committed.
+
+    Regression, and it failed toward the unsafe side: `git status --porcelain`
+    prints paths from the repository root while `git ls-files` prints them from
+    the current directory. Resolving both against the project root worked only
+    while the two happened to coincide; in a monorepo every dirty path missed,
+    so every finding came back FAIL — telling one session to fix a file another
+    session had open.
+    """
+    if not have_git():
+        return True, "SKIPPED (no git)"
+    outer = Path(tmp) / "monorepo"
+    (outer / "other").mkdir(parents=True)
+    (outer / "other" / "unrelated.txt").write_text("x", encoding="utf-8")
+    subprocess.run(["git", "-C", str(outer), "init", "-q"], check=False, capture_output=True)
+
+    inner = build_repo(str(outer / "packages" / "app"), commit=False)
+    subprocess.run(["git", "-C", str(outer), "add", "-A"], check=False, capture_output=True)
+    subprocess.run(["git", "-C", str(outer), "-c", "user.email=t@e.com", "-c", "user.name=t",
+                    "commit", "-q", "-m", "fixture"], check=False, capture_output=True)
+
+    # Now break the policy *and leave it uncommitted* — in flight, so WARN.
+    (inner / "AGENT_POLICY.md").write_text(
+        "# AGENT_POLICY.md\n\n```keel-policy\nhot_paths:\n```\n", encoding="utf-8")
+    code, out = run(inner)
     return code == 0 and "WARN" in out, out
 
 
@@ -224,7 +284,10 @@ CASES = [
     ("NEG: hollow policy block fails", case_catches_empty_policy_block),
     ("NEG: unfilled placeholder fails", case_catches_unfilled_placeholder),
     ("NEG: state drift fails", case_catches_state_drift),
+    ("fresh template informs, does not fail", case_fresh_template_informs_not_fails),
+    ("NEG: undated state without placeholder fails", case_missing_dates_without_placeholder_fails),
     ("dirty file warns, does not fail", case_dirty_file_warns_not_fails),
+    ("nested project still warns, does not fail", case_nested_project_still_warns),
     ("runs outside a git repo", case_no_git_still_runs),
     ("writes nothing to the project", case_does_not_write_to_the_project),
     ("does not flag its own patterns", case_self_scan_does_not_self_report),

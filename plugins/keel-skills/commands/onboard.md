@@ -123,6 +123,13 @@ paths in the policy's *"Where state and decisions get recorded"* section, which
 is how every other component finds them. Show them
 `/keel-skills:session-start` and `/keel-skills:session-close`.
 
+> **Don't hand over a file that is still the template.** Replace the
+> `<YYYY-MM-DD>` placeholders with today's real date and write the **first real
+> entry in both files** before you finish: in the state, what is true right now
+> and what is open, from what you learned in Step 1; in the history, one dated
+> line saying the project adopted Keel. A state file whose first content is
+> written weeks later is a state file nobody ever started using.
+
 **Level 3.** Copy `${CLAUDE_PLUGIN_ROOT}/templates/checks/keel_checks.py` into
 the repo (suggest `scripts/`), run it once so they see real output, and record
 the command in the policy's *"Checks"* section. Create the improvement backlog

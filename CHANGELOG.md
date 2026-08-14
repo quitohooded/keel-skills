@@ -83,6 +83,35 @@ detail. Six regression cases added; the suite goes 16 → 25.
   **`templates/routines/weekly-hygiene.md`** — the state/history pair, the
   capture file, and a ready-made unattended routine prompt.
 
+### Fixed — two defects the end-to-end run found
+
+Walking a synthetic project through `onboard` from zero surfaced two problems
+that no unit test would have caught, because both only appear when the pieces
+are composed:
+
+- **A brand-new user got two red FAILs for doing everything right.** The state
+  and history templates ship with `<YYYY-MM-DD>` placeholders, so the
+  state-drift check found no date and reported real drift — on day one, caused
+  by our own template. A failure that means nothing is how people learn to
+  ignore a suite. An unfilled template now reports `info` with the exact thing
+  to replace, and the check still fails on a state file that genuinely lost its
+  dates. `onboard` now stamps the date and writes the first real entry in both
+  files rather than handing over a raw template, and
+  `PROJECT_STATE.template.md` gained the **Last reconciled** line it was
+  missing — a state file with nowhere to put a date was an odd gap in a system
+  whose whole doctrine is dating state.
+- **In a nested project the FAIL/WARN split silently stopped working**, failing
+  toward the unsafe side. `git status --porcelain` prints paths from the
+  *repository root* while `git ls-files` prints them from the *current
+  directory*; the script resolved both against the project root, which is
+  correct only while those coincide. In a monorepo every dirty path missed, so
+  every finding came back FAIL — telling one session to fix a file another
+  session had open, which is precisely the collision the three levels exist to
+  prevent.
+
+Test bank 10 → 13, including a monorepo regression case. Both fixes were
+confirmed by reverting them and watching the bank go red.
+
 ### Added — spec 0.3
 
 - **§6.1 Unattended agents.** With no human present, **no green light exists to

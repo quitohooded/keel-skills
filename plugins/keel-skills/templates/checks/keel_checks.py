@@ -70,6 +70,11 @@ CONTEXT_BUDGET_BYTES = 20_000
 # pointer. It is `info`, not FAIL: only a human can tell stale from stable.
 SNAPSHOT_MAX_AGE_DAYS = 45
 
+# The literal the shipped templates use for a date the user has to fill in. Its
+# presence is how a never-filled template is told apart from a state file that
+# genuinely lost its dates - the first is an unfinished setup, the second is drift.
+TEMPLATE_PLACEHOLDER = "<YYYY-MM-DD>"
+
 SKIP_DIRS = {".git", "node_modules", ".next", "dist", "build", "__pycache__",
              ".venv", "venv", ".mypy_cache", ".pytest_cache", "vendor"}
 
@@ -129,6 +134,16 @@ def _git(*args):
 
 IS_REPO = bool(_git("rev-parse", "--git-dir").strip())
 
+# The two git commands below disagree about what their paths are relative to, and
+# getting this wrong is silent: `git status --porcelain` prints paths from the
+# REPOSITORY ROOT, while `git ls-files` prints them from the CURRENT DIRECTORY.
+# Resolving both against ROOT works only while ROOT happens to be the repo root.
+# In a monorepo or any nested layout it makes every dirty path miss, so every
+# finding reports FAIL even on a file another session has open — the exact
+# collision the three levels exist to prevent, failing toward the unsafe side.
+_TOPLEVEL = _git("rev-parse", "--show-toplevel").strip()
+_REPO_ROOT = Path(_TOPLEVEL) if _TOPLEVEL else ROOT
+
 _dirty = set()
 for _line in _git("status", "--porcelain").splitlines():
     if len(_line) < 4:
@@ -136,7 +151,7 @@ for _line in _git("status", "--porcelain").splitlines():
     _rel = _line[3:].strip().strip('"')
     if " -> " in _rel:                      # renames
         _rel = _rel.split(" -> ")[-1]
-    _dirty.add(str((ROOT / _rel).resolve()))
+    _dirty.add(str((_REPO_ROOT / _rel).resolve()))
 
 
 def _is_dirty(path):
@@ -299,9 +314,18 @@ def check_state_drift():
         if not path.exists():
             info(f"{name} not found: level 2 of /keel-skills:onboard creates it")
             continue
-        newest = newest_date(read(path))
+        text = read(path)
+        newest = newest_date(text)
         if newest is None:
-            finding(path, f"{name} carries no date at all, so its age cannot be measured")
+            # An unfilled template is an incomplete setup, not drift. Reporting
+            # it as FAIL means the first thing a brand-new user sees after doing
+            # everything right is a red failure caused by our own placeholder -
+            # which is how people learn to ignore a suite on day one.
+            if TEMPLATE_PLACEHOLDER in text:
+                info(f"{name} is still the unfilled template: replace the "
+                     f"{TEMPLATE_PLACEHOLDER} placeholders with your first real entry")
+            else:
+                finding(path, f"{name} carries no date at all, so its age cannot be measured")
             continue
         try:
             commit_day = datetime.strptime(last_commit, "%Y-%m-%d").date()
