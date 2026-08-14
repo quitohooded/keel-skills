@@ -12,3 +12,7 @@ assets/keel-demo.mp4
 
 # Runtime audit trail written by the PreToolUse enforcement hook
 .keel/
+
+# Python bytecode from running the checks template / its test bank
+__pycache__/
+*.pyc
