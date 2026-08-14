@@ -12,6 +12,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
       - name: Validate JSON manifests
         run: |
@@ -27,6 +30,25 @@ jobs:
 
       - name: Run the enforcement hook test suite
         run: node plugins/keel-skills/hooks/enforce-policy.test.cjs
+
+      - name: Run the checks-template test bank
+        run: python plugins/keel-skills/templates/checks/test_keel_checks.py
+
+      - name: Every command has front matter with a description
+        run: |
+          node -e "
+          const fs = require('fs');
+          const dir = 'plugins/keel-skills/commands';
+          let bad = 0;
+          for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.md'))) {
+            const t = fs.readFileSync(dir + '/' + f, 'utf8');
+            if (!/^---[\s\S]*?\bdescription:/m.test(t)) {
+              console.error('Missing description front matter: ' + dir + '/' + f); bad++;
+            }
+          }
+          if (bad) process.exit(1);
+          console.log('all commands have valid front matter');
+          "
 
       - name: Check version sync (plugin.json == marketplace.json)
         run: |
