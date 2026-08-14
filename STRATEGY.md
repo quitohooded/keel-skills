@@ -53,6 +53,37 @@ You cannot "grow like Paperclip" *and* keep a no-resale source-available license
 they fight. Paperclip grew on MIT + self-host + no account = zero friction +
 forkable. We picked growth.
 
+## Where the product is now (2026-08-14, v0.6.0)
+
+The repo shipped **the operating loop**: Keel stopped being only a brake and
+became the way a session runs. Two new skills (`workspace-hygiene`,
+`repeatable-work`), five new commands headed by `/keel-skills:onboard`, runnable
+check/state/routine templates, spec **0.3**, and this repo's own
+`AGENT_POLICY.md`.
+
+Strategically this does three things the brake alone couldn't:
+
+1. **It widens the wedge past "the day after the bad push."** The brake sells to
+   someone who already got burned. The loop sells to someone whose docs are
+   drifting and whose sessions keep restarting from zero — a much larger and
+   *earlier* group, and one that feels the pain weekly rather than once.
+2. **`onboard` attacks the real drop-off.** The metric that matters is repos
+   with a committed `AGENT_POLICY.md`, and the gap was never installing — it was
+   the blank template. A command that inspects the repo, assumes nothing, and
+   offers a 5-minute level converts far more of that gap than better docs would.
+3. **The spec gained a normative rule with teeth** (§8.1.5, per-segment command
+   matching, from a real bypass found in our own hook). A spec that only
+   restates good intentions is not a standard; one that other implementations
+   can be *wrong* against is.
+
+**The honest risk this adds:** surface area. It is the thing the Paperclip
+analysis said to reject, and this release roughly doubles what has to stay
+coherent. The mitigations are in place — every skill has to earn a permanent
+context cost (written into `CONTRIBUTING.md`), the checks template has a test
+bank with negative controls, and the repo now runs on its own policy — but the
+next release should be **narrowing, not widening**: real users, real packs, no
+new subsystems.
+
 ## Roadmap (by impact)
 
 **0–30 days — make value visible + free the distribution.** ✅ mostly done in repo:
@@ -63,7 +94,7 @@ install test; first build-in-public post.
 
 **30–90 days — first external users + concept travels beyond our repo.**
 More policy packs; a technical post on the goal/method/green-light model *as an idea*; weekly
-build-in-public on real RoadToBiz usage; open Discussions; list in plugin directories.
+build-in-public on real daily usage; open Discussions; list in plugin directories.
 - Metrics: external repos with a policy, contributed packs, organic mentions, first third-party issues.
 
 **3–6 months — the format starts being cited as a concept, not just our plugin.**

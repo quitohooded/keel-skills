@@ -3,8 +3,8 @@
 > *Read this in [Spanish / Español](README.es.md).*
 
 > A portable governance framework for running Claude agents (Claude Code, Agent
-> SDK) without breaking things or burning tokens. Three skills + one command +
-> one hook — install, configure per project, done.
+> SDK) without breaking things or burning tokens. Five skills, six commands and
+> two hooks — install, run `/keel-skills:onboard`, done.
 >
 > **Keel Skills is [Esteban Aguilar](#author)'s agent-governance methodology**,
 > distilled from operating agents in production every day — not from theory.
@@ -39,17 +39,24 @@ Keel Skills is to have it in place before that day.
 
 ## What's inside
 
-Three skills (they trigger themselves when the situation calls for it), one
-command, and one hook:
+Skills trigger themselves when the situation calls for it. Commands are things
+you run. Hooks run automatically, and one of them can stop a tool call outright.
 
 | Component | What it does |
 |-----------|--------------|
-| **`authorization-protocol`** skill | Decides whether the agent may act or must stop and ask. Sorts what looks like permission into three things — a goal, a method, and a green light (only a green light means go) — with a four-step check, risky "hot" zones, and a rule for following through on a green light you already have. |
+| **`authorization-protocol`** skill | Decides whether the agent may act or must stop and ask. Sorts what looks like permission into three things — a goal, a method, and a green light (only a green light means go) — with a four-step check, risky "hot" zones, a rule for following through on a green light you already have, and the rule for unattended runs. |
 | **`model-delegation`** skill | Pick the cheapest model that still preserves quality and risk control. Tiers by task type, max subagent depth, no self-escalation, cheapest-first tool ladder. |
-| **`context-discipline`** skill | Keep the session anchored in files, not chat. When to end a long session, what to record, how to leave a resumable handoff. |
-| **`/keel-skills:policy-init`** command | Generates your project's `AGENT_POLICY.md` by interviewing you about your hot zones and sources of truth. |
-| **`SessionStart` hook** | If your project has an `AGENT_POLICY.md`, it's injected into context at the start of every session — so the policy no longer depends on the agent *remembering* to read it. |
-| **`PreToolUse` hook** *(new in 0.4)* | The hard backstop. Inspects every tool call *before* it runs and stops a hot one (`git push`, deploy, `rm -rf`, writes to your hot paths, outward MCP calls) for explicit approval — even if the agent didn't stop itself. Logs every decision to `.keel/audit.jsonl`. |
+| **`context-discipline`** skill | Keep the session anchored in files, not chat. The two ends of a session, when to end a long one, what to record, how to leave a resumable handoff. |
+| **`workspace-hygiene`** skill *(0.6)* | Keep documents and state from aging into lies, and catch the drift anyway. State vs. history and when to cut, why a bootstrap carries no state, checks that each exist because something already broke, and what an unattended sweep may never do. |
+| **`repeatable-work`** skill *(0.6)* | Turn work you've done three times into a script instead of habit. What an agent-run tool must be, test banks with a case that *must* fail, and the capture → harvest → adopt loop. |
+| **`/keel-skills:onboard`** command *(0.6)* | **Start here.** The initiation program: it looks at what's actually in your directory — repo or not, one project or several, existing agent docs, or nothing at all — tells you what it found *and what it couldn't tell*, then builds only the level you pick. |
+| **`policy-init`** · **`session-start`** · **`session-close`** · **`hygiene`** · **`harvest`** commands | Scaffold the policy · open a session on state and checks · reconcile state and hand off · a read-only weekly sweep · review what repeated and draft the tools worth building. |
+| **`SessionStart` hook** | If your project has an `AGENT_POLICY.md`, it's injected into context at the start of every session — so the policy no longer depends on the agent *remembering* to read it. If there's no policy, a two-line nudge instead. |
+| **`PreToolUse` hook** *(0.4)* | The hard backstop. Inspects every tool call *before* it runs and stops a hot one (`git push`, deploy, `rm -rf`, writes to your hot paths, outward MCP calls) for explicit approval — even if the agent didn't stop itself. Logs every decision to `.keel/audit.jsonl`. |
+
+Plus runnable templates: a dependency-free [checks script](plugins/keel-skills/templates/checks/README.md)
+with its test bank, a state/history pair, an improvement backlog, and an
+unattended weekly-sweep prompt.
 
 ## The permission model, at a glance
 
@@ -109,14 +116,37 @@ Keel Skills ships as a single-plugin marketplace.
 /plugin install keel-skills@keel-skills
 ```
 
-Then, in your project:
+Then, in the project you want to govern:
 
 ```text
-/keel-skills:policy-init
+/keel-skills:onboard
 ```
 
-to generate the `AGENT_POLICY.md`. See [DISTRIBUTION.md](DISTRIBUTION.md) for the
-publishing paths (git repo, local path, or package).
+It **assumes nothing**: it inspects what's actually there first, tells you what
+it found and what it couldn't determine, then offers three sizes — the brake
+alone (~5 min), plus the session loop (~15), plus the maintenance loop (~30) —
+and builds only the one you choose. Level 1 is a legitimate final answer; you
+can move up later by running it again. It finishes by making the brake fire on a
+real command, because "it's set up" is a claim and not evidence.
+
+If you only want the policy file, `/keel-skills:policy-init` does that one step.
+See [DISTRIBUTION.md](DISTRIBUTION.md) for the publishing paths (git repo, local
+path, or package).
+
+## Once it's set up
+
+If you took the session loop, the rhythm is:
+
+```text
+/keel-skills:session-start     # load state, run the checks, before the work
+/keel-skills:session-close      # write state back, one line of history, hand off
+/keel-skills:hygiene            # weekly, read-only, reports but never acts
+/keel-skills:harvest            # when capacity is spare: what repeated, what to build
+```
+
+Why it's shaped this way — documents that don't age, checks that earn their
+place, unattended runs, the rule of three — is on
+[the operating loop](https://docs.estebanaguilar.me/concepts/operating-loop).
 
 ## See it in 60 seconds
 

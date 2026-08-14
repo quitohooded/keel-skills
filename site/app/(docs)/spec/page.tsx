@@ -18,7 +18,7 @@ export default function Page() {
       />
 
       <p>
-        <Pill>spec v0.2 · draft</Pill> <Pill>MIT</Pill>
+        <Pill>spec v0.3 · draft</Pill> <Pill>MIT</Pill>
       </p>
       <p>
         The Keel Skills plugin for Claude Code is the <em>reference</em>{" "}
@@ -61,8 +61,14 @@ export default function Page() {
           shallow nesting; no self-escalation.
         </li>
         <li>
-          <strong>The <code>AGENT_POLICY.md</code> format (§7)</strong> — the six
-          sections and the rules that keep them honest.
+          <strong>Unattended agents (§6.1)</strong> — with no human present, no
+          green light exists to be given, so anything needing one must not
+          happen.
+        </li>
+        <li>
+          <strong>The <code>AGENT_POLICY.md</code> format (§7)</strong> — the
+          eight sections and the rules that keep them honest, plus the
+          machine-readable block an enforcing implementation reads.
         </li>
       </ul>
 
@@ -91,6 +97,15 @@ export default function Page() {
         An implementation may add <strong>stricter</strong> rules. It must{" "}
         <strong>not</strong> relax §3–§5 below what the spec requires.
       </Callout>
+      <p>
+        An implementation that additionally <em>enforces</em> the policy with
+        deterministic code has extra requirements (§8.1), including one added in
+        0.3: <strong>shell commands must be matched per segment</strong>, so a
+        standing allowance can never clear a compound command it happens to
+        start. Matching the whole string lets{" "}
+        <code>npm run build &amp;&amp; git push --force</code> through as
+        &ldquo;approved&rdquo; — a bypass, not a looser setting.
+      </p>
 
       <H2 id="versioning">Versioning &amp; changes</H2>
       <p>
@@ -99,6 +114,18 @@ export default function Page() {
         required behavior. Implementations should declare which spec version they
         target.
       </p>
+      <ul>
+        <li>
+          <strong>0.2</strong> renamed the three permission levels to plain words
+          (goal / method / green light) without changing how they work.
+        </li>
+        <li>
+          <strong>0.3</strong> added unattended agents (§6.1), two optional
+          policy sections, and per-segment command matching. A{" "}
+          <em>reasoning</em> implementation conforming to 0.2 still conforms; an{" "}
+          <em>enforcing</em> one must adopt §8.1.5.
+        </li>
+      </ul>
       <p>
         It&apos;s a draft, and proposals to clarify, tighten, or extend it are
         welcome via issues and PRs. If you build a Keel-compatible implementation

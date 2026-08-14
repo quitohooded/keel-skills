@@ -35,15 +35,30 @@ behavior get a spec version bump (§9).
 
 ## 4. Improve the skills
 
-The three skills (`authorization-protocol`, `model-delegation`,
-`context-discipline`) are the reference implementation. When editing them:
+The skills (`authorization-protocol`, `model-delegation`, `context-discipline`,
+`workspace-hygiene`, `repeatable-work`) are the reference implementation. When
+editing them:
 
 - keep them **generic** — no project-, client-, or company-specific data ever goes
   in a skill; that belongs in the consumer's `AGENT_POLICY.md`;
 - keep each skill's concept **disjoint** from the others (don't blur authorization,
-  delegation, and context discipline together);
+  delegation, context, hygiene, and tooling together);
+- **every skill costs context in every session**, because its description is
+  loaded whether or not it triggers. A new skill has to earn that, and the bar
+  is a concept the existing five genuinely don't cover — not a subtopic of one
+  of them. Prefer extending an existing skill, or adding a command (which costs
+  only its description line and is invoked deliberately);
 - update [`CHANGELOG.md`](CHANGELOG.md) and bump the version in `plugin.json` and
   `.claude-plugin/marketplace.json` together.
+
+## 5. Improve the checks template
+
+`templates/checks/keel_checks.py` ships with a contract: read-only, no cache,
+deterministic sorted output, standard library only, safe under concurrent runs.
+Its test bank asserts the first two directly. Anything you add must preserve all
+five, come with a case in `test_keel_checks.py`, and — if it's a new check —
+exist because a **real** drift already got through undetected. Speculative checks
+are how a suite becomes something people learn to ignore.
 
 ## Ground rules
 

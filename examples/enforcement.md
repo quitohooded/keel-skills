@@ -60,6 +60,26 @@ out: { "permissionDecision": "ask",
        "reason": "keel: needs a green light (explicit approval) — writes to hot path `src/app/page.tsx` (matches `src/**`)" }
 ```
 
+**The agent chains the approved build to a push** → still hot. The standing
+approval covers `npm run build`, and *only* `npm run build`.
+```json
+in : { "tool_name": "Bash",
+       "tool_input": { "command": "npm run build && git push --force origin main" } }
+out: { "permissionDecision": "ask",
+       "reason": "keel: needs a green light (explicit approval) — command matches hot pattern `git push`" }
+```
+
+> **This one was a real bug, fixed in 0.6.0.** Until then the hook matched
+> `standing_allow_commands` against the whole command string and checked it
+> *before* the hot patterns, so the call above came back `allow` — "covered by
+> standing approval (npm run build)". The allowance was vouching for whatever it
+> happened to be chained to, and the same held for `;`, `|`, newlines and
+> `$(…)`. Commands are now split on the shell's chaining operators and judged
+> per segment: **an allowance clears only the segment it matches, and one hot
+> segment makes the whole call hot.** The rule is normative in
+> [SPEC.md](../SPEC.md) §7.1 and §8.1.5, because it is a bypass of the backstop
+> rather than a lenient setting. Chaining two benign commands still passes.
+
 ---
 
 ## The part the soft layer can't do: no human, no pass

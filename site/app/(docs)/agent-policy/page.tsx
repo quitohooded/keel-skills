@@ -85,7 +85,7 @@ export default function Page() {
             <td>3</td>
             <td><strong>Where state &amp; decisions get recorded</strong></td>
             <td>Yes</td>
-            <td>Decisions log, project-state file, per-task notes.</td>
+            <td>The state file, the history file, decisions log, per-task notes.</td>
           </tr>
           <tr>
             <td>4</td>
@@ -105,8 +105,26 @@ export default function Page() {
             <td>No</td>
             <td>Written decisions giving a green light in advance for a defined scope.</td>
           </tr>
+          <tr>
+            <td>7</td>
+            <td>Checks</td>
+            <td>No</td>
+            <td>The command that verifies this project mechanically, and when to run it.</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Unattended runs</td>
+            <td>No</td>
+            <td>What runs with no human present, and the ceiling it operates under.</td>
+          </tr>
         </tbody>
       </table>
+      <p>
+        Sections 7 and 8 arrived in spec 0.3 and are optional — an existing
+        policy stays valid without them. They&apos;re what{" "}
+        <a href="/concepts/operating-loop">the operating loop</a> reads to know
+        which command to run and what an unattended job may do.
+      </p>
 
       <H2 id="rules">Rules that keep it honest</H2>
       <ul>

@@ -1,3 +1,11 @@
+// Read from the plugin manifest rather than typed here. A version number
+// written into a page is a fact filed inside a document: nobody re-checks it,
+// and the hero pill sat at 0.4.0 through the whole 0.5.0 release. Generated
+// beats maintained.
+import plugin from "../../plugins/keel-skills/.claude-plugin/plugin.json";
+
+export const VERSION = plugin.version;
+
 export type NavItem = {
   title: string;
   href: string;
@@ -50,6 +58,12 @@ export const nav: NavGroup[] = [
         title: "Context discipline",
         href: "/concepts/context",
         blurb: "Files as source of truth; when to end a session and hand off.",
+      },
+      {
+        title: "The operating loop",
+        href: "/concepts/operating-loop",
+        blurb:
+          "Open on state, work under the check, close by writing it back — plus docs that don't age and turning repetition into tools.",
       },
     ],
   },

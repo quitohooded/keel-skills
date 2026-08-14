@@ -3,8 +3,8 @@
 > *Read this in [English](README.md).*
 
 > Un marco portable de gobernanza para correr agentes de Claude (Claude Code,
-> Agent SDK) sin romper cosas ni quemar tokens. Tres skills + un comando, listos
-> para instalar y configurar por proyecto.
+> Agent SDK) sin romper cosas ni quemar tokens. Cinco skills, seis comandos y dos
+> hooks: instalás, corrés `/keel-skills:onboard`, listo.
 >
 > **Keel Skills es la metodología de gobernanza de agentes de [Esteban Aguilar](#autor).**
 > Nace de operar agentes en producción todos los días, no de la teoría.
@@ -40,15 +40,25 @@ correspondía. La idea de Keel Skills es tenerlo puesto antes de ese día.
 
 ## Qué incluye
 
-Tres skills (se activan solas cuando la situación lo amerita), un comando y un hook:
+Las skills se activan solas cuando la situación lo amerita. Los comandos los
+corrés vos. Los hooks corren automáticamente, y uno de ellos puede frenar una
+llamada a herramienta en seco:
 
 | Componente | Para qué |
 |-----------|----------|
-| **`authorization-protocol`** | Decide si el agente puede actuar o tiene que parar y preguntar. Ordena lo que parece permiso en tres cosas — un objetivo, un método y una luz verde (solo la luz verde habilita) — con un chequeo de cuatro pasos, zonas de riesgo ("calientes") y una regla para seguir adelante con una luz verde que ya tenés. |
+| **`authorization-protocol`** | Decide si el agente puede actuar o tiene que parar y preguntar. Ordena lo que parece permiso en tres cosas — un objetivo, un método y una luz verde (solo la luz verde habilita) — con un chequeo de cuatro pasos, zonas de riesgo ("calientes"), una regla para seguir adelante con una luz verde que ya tenés, y la regla para corridas desatendidas. |
 | **`model-delegation`** | Elegir el modelo más barato que preserve calidad y riesgo. Tiers por tipo de tarea, profundidad máxima de subagentes, prohibición de auto-escalar, y escalera de herramientas más-barata-primero. |
-| **`context-discipline`** | Mantener la sesión anclada en archivos y no en el chat. Cuándo cortar una sesión larga, qué registrar y cómo dejar un punto de retomado para una sesión nueva. |
-| **`/keel-skills:policy-init`** | Genera el `AGENT_POLICY.md` de tu proyecto entrevistándote sobre tus zonas calientes y fuentes de verdad. |
-| **hook `SessionStart`** | Si tu proyecto tiene un `AGENT_POLICY.md`, lo inyecta automáticamente al contexto al abrir cada sesión. Así la política deja de depender de que el agente "se acuerde" de leerla. |
+| **`context-discipline`** | Mantener la sesión anclada en archivos y no en el chat. Las dos puntas de una sesión, cuándo cortar una larga, qué registrar y cómo dejar un punto de retomado. |
+| **`workspace-hygiene`** *(0.6)* | Que los documentos y el estado no envejezcan hasta volverse mentira, y que el drift se detecte igual. Estado vs. historia y cuándo cortar, por qué un bootstrap no lleva estado, chequeos que existen porque algo ya se rompió, y qué nunca puede hacer una barrida desatendida. |
+| **`repeatable-work`** *(0.6)* | Convertir en script lo que ya hiciste tres veces, en vez de en costumbre. Qué tiene que ser una herramienta que corre un agente, bancos de prueba con un caso que *tiene* que fallar, y el ciclo capturar → cosechar → adoptar. |
+| **`/keel-skills:onboard`** *(0.6)* | **Empezá acá.** El programa de iniciación: mira qué hay realmente en tu carpeta —repo o no, un proyecto o varios, docs de agente ya existentes, o nada—, te dice qué encontró *y qué no pudo determinar*, y construye solo el nivel que elijas. |
+| **`policy-init`** · **`session-start`** · **`session-close`** · **`hygiene`** · **`harvest`** | Generar la política · abrir sesión sobre estado y chequeos · reconciliar estado y dejar handoff · barrida semanal de solo lectura · revisar qué se repitió y redactar qué vale construir. |
+| **hook `SessionStart`** | Si tu proyecto tiene un `AGENT_POLICY.md`, lo inyecta automáticamente al contexto al abrir cada sesión. Así la política deja de depender de que el agente "se acuerde" de leerla. Si no hay política, avisa en dos líneas. |
+| **hook `PreToolUse`** *(0.4)* | La baranda dura. Inspecciona cada llamada a herramienta *antes* de que corra y frena las calientes (`git push`, deploy, `rm -rf`, escrituras a tus rutas calientes, llamadas MCP hacia afuera) pidiendo aprobación explícita — aunque el agente no se haya frenado solo. Registra cada decisión en `.keel/audit.jsonl`. |
+
+Más plantillas ejecutables: un [script de chequeos](plugins/keel-skills/templates/checks/README.md)
+sin dependencias con su banco de pruebas, el par estado/historia, la cola de
+mejoras y un prompt de barrida semanal desatendida.
 
 ## El modelo de permisos, de un vistazo
 
@@ -84,14 +94,36 @@ Keel Skills se distribuye como un marketplace de un solo plugin.
 /plugin install keel-skills@keel-skills
 ```
 
-Después, en tu proyecto:
+Después, en el proyecto que quieras gobernar:
 
 ```text
-/keel-skills:policy-init
+/keel-skills:onboard
 ```
 
-para generar el `AGENT_POLICY.md`. Ver `DISTRIBUTION.md` para las rutas de
-publicación (repo git, ruta local, o paquete).
+**No asume nada**: primero mira qué hay realmente ahí, te dice qué encontró *y qué
+no pudo determinar*, y recién entonces ofrece tres tamaños —solo el freno (~5 min),
+más el ciclo de sesión (~15), más el ciclo de mantenimiento (~30)— y construye
+únicamente el que elijas. El nivel 1 es una respuesta final legítima; podés subir
+después corriéndolo de nuevo. Termina haciendo que el freno se dispare con un
+comando real, porque "quedó configurado" es una afirmación, no una prueba.
+
+Si solo querés el archivo de política, `/keel-skills:policy-init` hace ese paso.
+Ver `DISTRIBUTION.md` para las rutas de publicación (repo git, ruta local, o paquete).
+
+## Una vez configurado
+
+Si tomaste el ciclo de sesión, el ritmo es:
+
+```text
+/keel-skills:session-start     # cargar estado y correr los chequeos, antes del trabajo
+/keel-skills:session-close      # devolver el estado a los archivos, una línea de historia
+/keel-skills:hygiene            # semanal, solo lectura: reporta pero nunca actúa
+/keel-skills:harvest            # cuando sobra capacidad: qué se repitió, qué construir
+```
+
+Por qué está armado así —documentos que no envejecen, chequeos que se ganan su
+lugar, corridas desatendidas, la regla de tres— está en
+[el ciclo operativo](https://docs.estebanaguilar.me/concepts/operating-loop).
 
 ## Cómo usarlo, en una línea
 

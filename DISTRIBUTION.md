@@ -44,7 +44,7 @@ keel-skills/
 Para publicar una versión nueva, basta con commitear y pushear:
 
 ```
-# desde C:\roadtobiz\_experimentos\keel-skills:
+# desde la raíz del repo:
 git add -A
 git commit -m "Keel Skills vX.Y.Z — <resumen>"
 git push
