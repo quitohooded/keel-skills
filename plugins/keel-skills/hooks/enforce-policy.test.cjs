@@ -22,10 +22,14 @@ fs.writeFileSync(path.join(PROJ, "AGENT_POLICY.md"), [
   "hot_paths:",
   '  - "src/**"',
   '  - "supabase/migrations/**"',
+  "hot_mcp:",
+  '  - "notion-update-page"',
   "standing_allow_commands:",
   '  - "npm run build"',
   "standing_allow_paths:",
   '  - "_borradores/**"',
+  "standing_allow_mcp:",
+  '  - "delete_draft"',
   "```",
   "",
 ].join("\n"));
@@ -67,6 +71,21 @@ const cases = [
   ["mcp execute_sql headless", { tool_name: "mcp__db__execute_sql", tool_input: {} }, { KEEL_NONINTERACTIVE: "1" }, "deny"],
   ["mcp read-ish list", { tool_name: "mcp__x__list_channels", tool_input: {} }, {}, "allow"],
   ["malformed input fails open", "__RAW__", {}, "allow"],
+
+  // --- Compound commands. A standing allowance must not vouch for what it is
+  // --- chained to. Before the per-segment split these five all returned allow.
+  ["standing allow && hot", { tool_name: "Bash", tool_input: { command: "npm run build && git push --force origin main" } }, {}, "ask"],
+  ["standing allow ; hot", { tool_name: "Bash", tool_input: { command: "npm run build; git push" } }, {}, "ask"],
+  ["standing allow | hot", { tool_name: "Bash", tool_input: { command: "npm run build | tee log && rm -rf dist" } }, {}, "ask"],
+  ["hot inside $( )", { tool_name: "Bash", tool_input: { command: "echo $(git push origin main)" } }, {}, "ask"],
+  ["hot on a second line", { tool_name: "Bash", tool_input: { command: "npm run build\ngit push" } }, {}, "ask"],
+  ["chained hot headless", { tool_name: "Bash", tool_input: { command: "npm run build && git push" } }, { KEEL_NONINTERACTIVE: "1" }, "deny"],
+  // The valve still opens: chaining two benign commands stays allowed.
+  ["standing allow && benign", { tool_name: "Bash", tool_input: { command: "npm run build && ls -la" } }, {}, "allow"],
+
+  // --- MCP refinement from the policy.
+  ["mcp hot from policy", { tool_name: "mcp__notion__notion-update-page", tool_input: {} }, {}, "ask"],
+  ["mcp standing allow beats default", { tool_name: "mcp__notes__delete_draft", tool_input: {} }, {}, "allow"],
 ];
 
 let failed = 0;

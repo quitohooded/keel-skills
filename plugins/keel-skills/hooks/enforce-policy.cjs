@@ -17,6 +17,14 @@
  * drift, and hallucinated actions — it raises assurance a lot — but real
  * isolation needs scoped credentials and a sandbox. Say so in your docs.
  *
+ * COMPOUND COMMANDS. A shell command is classified per *segment*, split on the
+ * operators that chain commands (`&&`, `||`, `;`, `|`, `&`, newline, `$(…)`,
+ * backticks). This is load-bearing, not cosmetic: matching a standing allowance
+ * against the whole string let `npm run build && git push --force` through as
+ * "covered by standing approval". A standing allowance now clears only the
+ * segment it matches, and one hot segment makes the whole call hot. Corollary:
+ * a pattern must not itself contain a shell operator — it would never match.
+ *
  * DECISION CONTRACT (Claude Code PreToolUse):
  *   stdin  = JSON { tool_name, tool_input, cwd, ... }
  *   stdout = JSON { hookSpecificOutput: {
@@ -112,7 +120,7 @@ function main() {
       return classifyPath(String(toolInput.file_path || toolInput.notebook_path || ""), policy, projectDir, toolName);
     }
     if (toolName.startsWith("mcp__")) {
-      return classifyMcp(toolName, projectDir);
+      return classifyMcp(toolName, policy, projectDir);
     }
   } catch (e) {
     // Any internal error: fail open, but record it loudly.
@@ -127,27 +135,42 @@ function main() {
 // --- Classifiers -------------------------------------------------------------
 
 function classifyCommand(command, policy, projectDir) {
-  const norm = command.toLowerCase().replace(/\s+/g, " ").trim();
-
-  // Rule 2 — standing approval (scoped) wins. SPEC §5 inheritance.
-  for (const allow of policy.standing_allow_commands) {
-    if (norm.includes(allow.toLowerCase())) {
-      audit(projectDir, { tool: "Bash", input: digest(command), verdict: "allow", rule: "standing_allow:" + allow });
-      return decide("allow", "keel: covered by standing approval (" + allow + ")");
-    }
-  }
-
-  // Rule 3 — hot command pattern.
   const hot = [...DEFAULT_HOT_COMMANDS, ...policy.hot_commands];
-  for (const pat of hot) {
-    if (norm.includes(pat.toLowerCase())) {
+  const covered = [];
+
+  // Each chained command is judged on its own. Within a segment a standing
+  // approval still wins over a hot pattern — that is the documented pressure
+  // valve (e.g. allowing `git commit`) — but it cannot vouch for its neighbours.
+  for (const seg of segments(command)) {
+    const allow = policy.standing_allow_commands.find((a) => seg.includes(a.toLowerCase()));
+    if (allow) { covered.push(allow); continue; }
+
+    const pat = hot.find((p) => seg.includes(p.toLowerCase()));
+    if (pat) {
       audit(projectDir, { tool: "Bash", input: digest(command), verdict: HOT_VERDICT, rule: "hot_command:" + pat });
       return decide(HOT_VERDICT, reasonHot("command matches hot pattern `" + pat + "`"));
     }
   }
 
+  if (covered.length) {
+    audit(projectDir, { tool: "Bash", input: digest(command), verdict: "allow", rule: "standing_allow:" + covered[0] });
+    return decide("allow", "keel: covered by standing approval (" + covered[0] + ")");
+  }
+
   audit(projectDir, { tool: "Bash", input: digest(command), verdict: "allow", rule: "no_match" });
   return decide("allow", "keel: command not in hot set");
+}
+
+// Split a shell command into the individual commands it chains, normalized for
+// matching. Quoting is deliberately ignored: a split inside a quoted string can
+// only ever produce a *stricter* verdict, never a laxer one, which is the right
+// way for a backstop to be wrong.
+function segments(command) {
+  return command
+    .toLowerCase()
+    .split(/&&|\|\||[;&|\n\r]|\$\(|`|\)/)
+    .map((s) => s.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
 }
 
 function classifyPath(filePath, policy, projectDir, toolName) {
@@ -172,10 +195,21 @@ function classifyPath(filePath, policy, projectDir, toolName) {
   return decide("allow", "keel: path not in hot set");
 }
 
-function classifyMcp(toolName, projectDir) {
+function classifyMcp(toolName, policy, projectDir) {
   const lower = toolName.toLowerCase();
-  for (const sub of DEFAULT_HOT_MCP) {
-    if (lower.includes(sub)) {
+
+  // The default list matches on substrings, so it over-catches by design
+  // (`delete_cache` reads as hot). `standing_allow_mcp` is how a project says
+  // "this specific tool is fine here" without losing the category.
+  for (const allow of policy.standing_allow_mcp) {
+    if (lower.includes(allow.toLowerCase())) {
+      audit(projectDir, { tool: toolName, verdict: "allow", rule: "standing_allow_mcp:" + allow });
+      return decide("allow", "keel: covered by standing approval (" + allow + ")");
+    }
+  }
+
+  for (const sub of [...DEFAULT_HOT_MCP, ...policy.hot_mcp]) {
+    if (lower.includes(sub.toLowerCase())) {
       audit(projectDir, { tool: toolName, verdict: HOT_VERDICT, rule: "hot_mcp:" + sub });
       return decide(HOT_VERDICT, reasonHot("MCP tool `" + toolName + "` is outward/irreversible"));
     }
@@ -187,7 +221,10 @@ function classifyMcp(toolName, projectDir) {
 // --- Policy loading ----------------------------------------------------------
 
 function loadPolicy(projectDir) {
-  const empty = { hot_paths: [], hot_commands: [], standing_allow_commands: [], standing_allow_paths: [] };
+  const empty = {
+    hot_paths: [], hot_commands: [], hot_mcp: [],
+    standing_allow_commands: [], standing_allow_paths: [], standing_allow_mcp: [],
+  };
   let text;
   try {
     text = fs.readFileSync(path.join(projectDir, "AGENT_POLICY.md"), "utf8");
