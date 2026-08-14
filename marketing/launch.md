@@ -2,16 +2,115 @@
 
 Build-in-public copy. Edit to taste, then post from your own accounts.
 
-> **Attach the demo when you post — it's what makes this land, so lead with it.**
-> Lead with the newest clip, `assets/demo-keelskills.mp4` (the *hard* brake firing
-> live); `assets/keel-demo.gif` is the older *soft*-brake clip. On X, attach it to
-> the **first** tweet; on LinkedIn, attach it to the post.
+> **Attach something visual when you post — it's what makes this land.**
+> For the **v0.6.0 angle below, the visual is the one-liner itself** (`npm run
+> build && git push --force` → `allow`) as a code screenshot: the bug *is* the
+> image, and it reads in under a second. Keep `assets/demo-keelskills.mp4` (the
+> hard brake firing live) for the second half of the thread, and
+> `assets/keel-demo.gif` (the older soft brake) for the failure-story openings
+> further down. On X, attach to the **first** tweet; on LinkedIn, to the post.
 
 ---
 
-## 🆕 v0.4.0 angle — "now it has teeth" (use this as the headline)
+## 🆕 v0.6.0 angle — "I found the bug in my own brake" (use this as the headline)
 
-**This is the freshest and sharpest hook, so lead with it.** Until v0.4.0 Keel
+**Lead with this.** It is the sharpest hook the project has had, and it works
+*because* it's uncomfortable: a guardrail tool whose author publicly documents a
+bypass he found in his own guardrail. Nobody expects that, which is exactly why
+it lands — and it is the most credible thing you can say about a safety tool.
+
+> ⚠️ **This is a skeleton — the creative voice is yours.** The beats and the
+> honest facts are below; the punch is yours to write.
+
+**The story, in one breath.** Keel's whole pitch is that it stops the agent
+before `git push`. While building v0.6 I found that a policy allowing
+`npm run build` also allowed this:
+
+```
+npm run build && git push --force origin main   →  allow
+```
+
+The standing approval was matched against the **whole** command string, and
+matched *before* the dangerous patterns. So the allowance vouched for whatever
+it happened to be chained to. Same for `;`, `|`, newlines and `$(…)`. The brake
+had a hole exactly where a brake is not allowed to have one.
+
+**Talking points (true, use freely):**
+- **The reveal:** it was found by *me*, extending my own tool, not by a user and
+  not in the wild. Say that — it's the truth and it's better than pretending
+  nobody could have hit it.
+- **The fix is the interesting part:** commands are now split on the shell's
+  chaining operators and judged per segment. An allowance clears only the
+  segment it matches; one hot segment makes the whole call hot.
+- **It went into the spec as a MUST**, not just into my code — so any other
+  implementation of the model is now *wrong* if it does what mine did. That's
+  the difference between publishing a spec and publishing a standard.
+- **Six regression tests** ship with it. The suite went 16 → 25.
+- **The honest generalization:** pattern-matching enforcement has a class of
+  bugs like this. Still a *backstop, not a sandbox*. Keep saying it.
+
+**The second half of the release — the part with the substance.** v0.6 also
+turns Keel from a brake into the way a session runs: open on state, work under
+a mechanical check, close by writing state back, sweep weekly, and turn what
+repeats into a tool. Five skills, six commands, two hooks.
+
+- **`/keel-skills:onboard`** — the setup command that **assumes nothing**. It
+  looks at what's actually in your directory (repo or not, one project or
+  several, existing agent instructions, or an empty folder), tells you what it
+  found *and what it couldn't tell*, then offers three sizes — 5, 15 or 30
+  minutes — and builds only the one you pick. Good line: *"level 1 is a
+  legitimate final answer."*
+- **Documents that don't age** — state and history in separate files, because
+  state is read to work and history is read to understand why, and they
+  shouldn't cost the same to read.
+- **Checks with three levels, not pass/fail** — a finding on a committed clean
+  file is real drift; a finding on a file you have open belongs to whoever has
+  it open. Without that split, "fix everything before you close" tells one
+  session to edit another session's work.
+- **Unattended runs** — the rule tightens rather than loosens: with no human
+  present there is no one who *could* approve, so anything needing approval
+  doesn't happen. Same line as v0.4, now written into the spec (§6.1).
+
+**Two more honest details worth using — they make the rest believable:**
+- Running the shipped checks against Keel's own repo immediately found a true
+  positive: the changelog had recorded nothing for 17 days of commits.
+- Walking a fake project through `onboard` from zero found two more defects,
+  both fixed before release: a brand-new user got red failures for doing
+  everything right, and in a monorepo the three-level split silently stopped
+  working. *"I tested the onboarding by pretending to be a stranger, and the
+  stranger had a bad time."*
+
+**Skeleton thread (rewrite in your voice):**
+
+> **1/** I build a tool whose one job is to stop an AI agent before it does
+> something irreversible. Last week I found a hole in it. Here's the hole.
+>
+> **2/** [show the one-liner: `npm run build && git push --force` → allow]
+> My policy said `npm run build` was safe. It is. The problem is what you can
+> staple to the end of something safe.
+>
+> **3/** The approval was matched against the whole command, before the
+> dangerous patterns. So "you may run the build" quietly became "you may run
+> the build and anything after it."
+>
+> **4/** Fixed: commands get split on `&&`, `;`, `|`, `$(…)` and judged one at a
+> time. An approval covers only its own command. One dangerous piece makes the
+> whole thing dangerous.
+>
+> **5/** I put the rule in the open spec as a MUST, not just in my code — any
+> other implementation that matches the whole string is now wrong, not lenient.
+>
+> **6/** Same release turns Keel into the whole loop, not just the brake:
+> [onboard / state that doesn't rot / checks / unattended runs]. Still MIT,
+> still your rules in one file. Still a backstop, not a sandbox.
+> github.com/quitohooded/keel-skills
+
+---
+
+## Earlier — v0.4.0 angle — "now it has teeth"
+
+**Superseded as the headline by v0.6.0 above, but the beats still work** as the
+middle of a thread: this is where the hard brake was introduced. Until v0.4.0 Keel
 *advised* the agent to stop — it depended on the model choosing to comply. v0.4.0
 adds a `PreToolUse` hook that *enforces* it: the action is intercepted before it
 runs and stopped regardless of what the model decided, and **denied outright** when

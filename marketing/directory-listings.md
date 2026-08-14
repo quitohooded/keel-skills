@@ -35,7 +35,12 @@ so the listings match the plugin exactly. Just open each link and paste.
 | **Keywords / tags** | agent, governance, guardrails, authorization, autonomy, delegation, cost-control, context, safety, workflow |
 
 ### One-line tagline (≈90 chars)
-> Disciplined operations for Claude agents: authorization levels, cost-aware delegation, file-grounded context.
+> Disciplined operations for Claude agents: a permission model, mechanical enforcement, and a session loop.
+
+*(The old tagline said "authorization levels", which is the pre-0.5 vocabulary
+that was deliberately renamed to goal / method / green light. Copy written once
+and pasted into directories is exactly the kind of text that keeps shipping an
+abandoned word for a year — check it against the current README each release.)*
 
 ### Short description (≈160 chars)
 > Guardrails for autonomous coding agents — a goal/method/green-light permission model the agent both reasons with *and* a hook enforces, plus cost-aware delegation.
