@@ -52,3 +52,67 @@ Everything not listed is hot **only** when the four-step check says so; under do
 ## 6. Standing approvals (optional)
 
 - `[APPROVED <date>]` `<e.g. "agent may run read-only queries and list_* tools against the linked project">`
+
+## 7. Checks (optional)
+
+- **Command:** `supabase db diff --schema public` (uncommitted schema drift) plus
+  your test suite and type generation check.
+- **When:** at the start of a session before any work, and again at the close.
+- **Reading it:** a finding on a committed, clean file is real drift and safe to
+  fix; one on a modified or untracked file may be in flight elsewhere — report it.
+- **Also worth running:** the security advisors, since RLS gaps are the failure
+  that stays invisible until it isn't.
+
+## 8. Unattended runs (optional)
+
+Any scheduled job or CI step runs with **no human present**, so no green light
+can be given. In particular: **no migration is ever applied by an unattended
+run**, not even to a branch — applying schema is the irreversible action this
+whole policy is built around. It may diff, lint, generate types, and report.
+
+## 9. Machine-readable block
+
+Read by the `PreToolUse` enforcement hook.
+
+```keel-policy
+hot_paths:
+  - "supabase/migrations/**"
+  - "supabase/config.toml"
+  - "supabase/functions/**"
+  - "supabase/seed.sql"
+  - "**/*.types.ts"
+  - ".env*"
+hot_commands:
+  - "supabase db push"
+  - "supabase db reset"
+  - "supabase migration up"
+  - "supabase functions deploy"
+  - "supabase link"
+  - "supabase secrets"
+  - "psql"
+  - "drop table"
+  - "drop policy"
+  - "truncate"
+  - "git push"
+hot_mcp:
+  - "apply_migration"
+  - "execute_sql"
+  - "deploy_edge_function"
+  - "merge_branch"
+  - "delete_branch"
+  - "pause_project"
+standing_allow_mcp:
+  - "list_tables"
+  - "list_migrations"
+  - "get_advisors"
+  - "generate_typescript_types"
+```
+
+> `execute_sql` is hot even though it is often used read-only: the tool name
+> cannot tell a `SELECT` from a `DELETE`, and this is the one place where being
+> wrong is unrecoverable. The read-only MCP tools are allowed by name instead,
+> which is the narrow, recorded way to open that valve.
+>
+> Migration files are listed as hot paths *and* the apply commands are hot
+> separately — writing a migration and running it are two different decisions,
+> and only the second one is irreversible.

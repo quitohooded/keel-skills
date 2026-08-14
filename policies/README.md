@@ -14,6 +14,7 @@ you'd rather start from a known-good baseline and edit.
 | [`web-app-deploy/`](web-app-deploy/AGENT_POLICY.md) | Any web app with a build + deploy and some client-facing surface. The generic baseline. |
 | [`nextjs-vercel/`](nextjs-vercel/AGENT_POLICY.md) | A Next.js / Astro / SvelteKit app deployed on Vercel (or similar). |
 | [`supabase/`](supabase/AGENT_POLICY.md) | Backed by Supabase / Postgres with migrations, RLS, and edge functions. |
+| [`solo-workspace/`](solo-workspace/AGENT_POLICY.md) | Several projects under one root, run by one person with agents — often with more than one session open at once. |
 
 ## Contributing a pack
 

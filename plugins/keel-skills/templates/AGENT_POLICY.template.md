@@ -37,11 +37,16 @@ still current) runs without a new green light.
 
 ## 3. Where state and decisions get recorded
 
-When a session reaches a decision or a new verified state, write it here:
+When a session reaches a decision or a new verified state, write it here. State
+is read to work; history is read to understand *why*. Different frequencies, so
+different files.
 
-- **Decisions log:** `<path>`
-- **Project state / status file:** `<path>`
-- **Per-task notes:** `<path or convention>`
+- **Project state (what is true now, what is open):** `<STATE.md>`
+- **History (what happened, dated):** `<CHANGELOG.md>`
+- **Decisions log:** `<docs/decisions/>`
+- **Improvement backlog:** `<IMPROVEMENTS.md>` — writing here is free; adopting
+  an item needs a green light
+- **Per-task notes / drafts:** `<path or convention>`
 
 ## 4. Model tier overrides (optional)
 
@@ -68,14 +73,43 @@ must state its scope explicitly so the agent never has to guess it.
 
 - `[APPROVED <date>]` `<action + exact scope it covers>`
 
-## 7. Machine-readable block (optional — powers the enforcement hook)
+## 7. Checks (optional)
+
+The mechanical checks that catch drift a written rule didn't prevent. Named
+here so `/keel-skills:session-start` and `/keel-skills:session-close` know what
+to run.
+
+- **Command:** `<python scripts/keel_checks.py>`
+- **When:** at the start of a session **before any work** (drift from the last
+  session should surface before you build on it) and again at the close.
+- **How to read it:** `FAIL` = the file is committed and clean, so it's real
+  drift — safe to fix. `WARN` = the file is modified or untracked, so someone
+  may have it in flight — report, don't fix what isn't yours. `info` = needs
+  judgment.
+
+A starter script and its test bank are in
+[`templates/checks/`](checks/README.md).
+
+## 8. Unattended runs (optional)
+
+Scheduled or CI runs with no human present. **No human means no green light is
+available**, so anything needing one cannot happen — not "proceed carefully".
+
+- **What runs unattended:** `<the weekly hygiene sweep, cron, in words>`
+- **Ceiling:** read and report only. No commit, push, deploy or send; nothing
+  deleted by inference; nothing marked approved; nothing "fixed".
+- Write these limits into the routine's **own prompt** — every run starts with
+  no memory of any conversation. Template:
+  [`templates/routines/weekly-hygiene.md`](routines/weekly-hygiene.md).
+
+## 9. Machine-readable block (optional — powers the enforcement hook)
 
 The prose above is for the agent to *reason* with. The `PreToolUse` enforcement
 hook (`enforce-policy.cjs`) is deterministic code, so it reads a concrete,
 machine-readable subset from a fenced ` ```keel-policy ` block. Keep the two in
 sync. Flat lists only (no nesting). Anything not listed here still falls under the
 agent's four-step check; this block just adds a *hard* backstop for the concrete
-cases. See `SPEC.md` §7 for the format.
+cases. See `SPEC.md` §7.1 for the format.
 
 ```keel-policy
 hot_paths:
@@ -84,10 +118,14 @@ hot_paths:
 hot_commands:
   - "git push"
   - "vercel deploy"
+hot_mcp:
+  - "notion-update-page"
 standing_allow_commands:
   - "npm run build"
 standing_allow_paths:
-  - "_borradores/**"
+  - "_drafts/**"
+standing_allow_mcp:
+  - "delete_temp_file"
 ```
 
 > The hook ships with SPEC §4 defaults (`git push`, deploy, `rm -rf`, schema
@@ -95,3 +133,11 @@ standing_allow_paths:
 > at all. This block *refines* — it never removes a default category. In a
 > non-interactive run (CI, `KEEL_NONINTERACTIVE=1`) a hot action that would prompt
 > for approval is denied instead, since no human is present to give a green light.
+>
+> **Commands are matched per segment.** A standing allowance clears only the
+> command it matches, never what that command is chained to: `npm run build &&
+> git push` stays hot. A pattern must therefore not contain a shell operator —
+> it would never match anything.
+>
+> **Placeholders match nothing.** Leaving `<e.g. src/**>` in the block is the
+> most common way a policy looks configured while enforcing nothing.

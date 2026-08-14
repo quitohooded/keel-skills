@@ -52,3 +52,46 @@ Defaults from the `model-delegation` skill apply unless overridden here.
 ## 6. Standing approvals (optional)
 
 - `[APPROVED <date>]` `<action + exact scope it covers>`
+
+## 7. Checks (optional)
+
+- **Command:** `<npm test && npm run build — or your project's equivalent>`
+- **When:** at the start of a session, before any work, and again at the close.
+- **Reading it:** a finding on a committed, clean file is real drift and safe to
+  fix; a finding on a modified or untracked file may belong to another session —
+  report it rather than fixing it.
+
+## 8. Unattended runs (optional)
+
+Anything scheduled or in CI runs with **no human present**, so no green light can
+be given: it reads, reports, and stops. No commit, push, deploy or send; nothing
+deleted by inference; nothing "fixed". Write these limits into the job's own
+prompt — each run starts with no memory of any conversation.
+
+## 9. Machine-readable block
+
+Read by the `PreToolUse` enforcement hook. **Replace the angle-bracket entries
+with real paths before relying on it** — a placeholder matches nothing.
+
+```keel-policy
+hot_paths:
+  - "src/**"
+  - "app/**"
+  - "content/**"
+  - "public/**"
+  - ".github/workflows/**"
+hot_commands:
+  - "git push"
+  - "git reset --hard"
+  - "deploy"
+  - "npm publish"
+standing_allow_commands:
+  - "npm run build"
+  - "npm test"
+  - "npm ci"
+```
+
+> These refine the SPEC §4 defaults; they never remove a category. `git commit`
+> stays gated by default — add it to `standing_allow_commands` if that friction
+> doesn't fit your workflow, as an explicit recorded choice. A standing
+> allowance clears only the command it matches, never what it is chained to.

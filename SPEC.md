@@ -1,11 +1,19 @@
 # Keel Agent Governance Specification
 
-- **Spec version:** 0.2 (draft)
+- **Spec version:** 0.3 (draft)
 - **Status:** open, runtime-neutral
 - **License of this document:** MIT (same as the project); you may implement it freely.
 - **Maintainer:** Esteban Aguilar — github.com/quitohooded
 
-> **Note on terms (0.2).** This version replaces the old code names L1 / L2 / L3
+> **What 0.3 adds.** Unattended agents (§6.1) — when no human is present, no
+> green light exists to be given, so anything requiring one MUST NOT happen. Two
+> new optional policy sections (§7, rows 7–8), two new keys and a **normative
+> per-segment matching rule** for the machine-readable block (§7.1), and a
+> matching requirement for enforcing implementations (§8.1). Nothing in §2–§5
+> changed, so a 0.2 implementation stays conforming; §8.1.5 is the one addition
+> an *enforcing* implementation must adopt.
+>
+> **Note on terms (0.2).** That version replaced the old code names L1 / L2 / L3
 > with plain words: a **goal**, a **method**, and a **green light**. Same model,
 > readable names. If you saw the 0.1 draft: L1 = a goal, L2 = a method, L3 = a
 > green light.
@@ -132,6 +140,30 @@ An implementation that supports subagents SHOULD enforce:
 - Cheapest-capable model selection; the cheapest tier never spawns subagents;
   maximum nesting depth 2; no self-escalation.
 
+### 6.1 Unattended agents
+
+An **unattended run** is any execution with no human able to answer in real time:
+a scheduled routine, a CI job, a background or headless agent.
+
+In an unattended run there is **no party who could give a green light**.
+Therefore a conforming implementation MUST treat every action that requires one
+(§3.2, §3.3, and anything reached through the doubt rule) as **unavailable**,
+not as permitted-with-care. Specifically, an unattended run:
+
+1. MUST NOT commit, push, deploy, publish, send, charge, or delete.
+2. MUST NOT mark anything approved or confirmed (§4).
+3. MUST NOT repair, refactor, or redesign what it finds broken — it reports with
+   a recommendation.
+4. MAY read, measure, analyse, and write clearly-labeled proposals (§3.1).
+
+An implementation SHOULD require these limits to be stated **in the unattended
+job's own instructions**, because such a run begins with no access to any prior
+conversation: a limit agreed once interactively does not exist for it.
+
+Following through (§5) does **not** lift this. A standing approval may cover an
+unattended action only if it names that unattended context explicitly in its
+scope.
+
 ---
 
 ## 7. The `AGENT_POLICY.md` format
@@ -144,10 +176,12 @@ brief; empty optional sections may be omitted):
 |---|---------|----------|---------|
 | 1 | **Hot zones** | yes | Concrete paths/surfaces/actions that need a green light. |
 | 2 | **Source-of-truth files** | yes | Files where only following-through runs without a green light. |
-| 3 | **Where state and decisions get recorded** | yes | Decisions log, project-state file, per-task notes. |
+| 3 | **Where state and decisions get recorded** | yes | The state file, the history file, decisions log, per-task notes. |
 | 4 | **Model tier overrides** | no | Project-specific overrides of the delegation defaults. |
 | 5 | **Definitions for this project** | no | Pin down "undoable", "internal", "release", etc. |
 | 6 | **Standing approvals** | no | Written decisions that grant a green light in advance for a defined scope. Each MUST state its scope explicitly. |
+| 7 | **Checks** | no | The command that verifies this project mechanically, and when to run it. |
+| 8 | **Unattended runs** | no | What runs with no human present, and the ceiling it operates under (§6.1). |
 
 Rules:
 
@@ -174,18 +208,39 @@ hot_paths:
   - "src/**"
 hot_commands:
   - "git push"
+hot_mcp:
+  - "notion-update-page"
 standing_allow_commands:
   - "npm run build"
 standing_allow_paths:
-  - "_borradores/**"
+  - "_drafts/**"
+standing_allow_mcp:
+  - "delete_temp_file"
 ```
 
-- `hot_paths` / `hot_commands` — glob paths and command substrings that are hot.
+- `hot_paths` / `hot_commands` / `hot_mcp` — glob paths, command substrings, and
+  tool-name substrings that are hot.
 - `standing_allow_*` — scoped exceptions, the machine-readable form of §7.6.
 - The block **refines** the §4 defaults; it MUST NOT be read as removing a default
   category. Anything not in the block still falls under the four-step check (§3).
 - The block is **optional**. Its absence means the enforcing layer runs on §4
   defaults alone; the reasoning layer (the LLM) is unaffected either way.
+
+**Matching rules (normative).**
+
+- A **shell command MUST be matched per segment**, where segments are the
+  individual commands separated by the shell's chaining and substitution
+  operators (`&&`, `||`, `;`, `|`, `&`, newline, command substitution). A
+  `standing_allow_commands` entry clears **only the segment it matches** and
+  MUST NOT clear the rest of a compound command. If any segment is hot, the
+  whole call is hot. *(Matching the whole string instead lets
+  `npm run build && git push --force` pass as "covered by a standing
+  approval" — the allowance vouching for what it was chained to.)*
+- It follows that a pattern MUST NOT itself contain a chaining operator; such a
+  pattern can never match a segment.
+- Matching is case-insensitive and on **substrings**, so it over-catches by
+  design. `standing_allow_*` is the mechanism for narrowing it, and narrowing
+  is a recorded choice rather than a silent one.
 
 ---
 
@@ -216,10 +271,27 @@ risky ones that lack a green light. An enforcing implementation:
    where *ask* is the request for a green light (an explicit human-approval prompt).
 2. Treats the §4 defaults as hot even with no machine-readable block (§7.1) present.
 3. In a non-interactive context (no human able to give a green light), **denies** any
-   action it would otherwise have asked about.
+   action it would otherwise have asked about — the mechanical face of §6.1.
 4. Is understood to be a **backstop, not a cage** — it raises assurance against
    accident, drift, and hallucination, but cannot contain an adversarial agent. Real
    isolation (scoped credentials, sandboxing) is complementary, not replaced.
+5. **Matches shell commands per segment** (§7.1). A standing allowance MUST NOT
+   clear a compound command on the strength of one matching segment. *(New in
+   0.3, and the one change an existing enforcing implementation has to make: a
+   whole-string match is a bypass, not a looser policy.)*
+
+It SHOULD additionally **fail open on malformed input** — a backstop that wedges
+the workflow when its own contract is violated gets removed, and then there is
+no backstop at all.
+
+**Known limits of pattern-based enforcement.** State them in your docs rather
+than letting users infer more assurance than exists:
+
+- Indirection defeats command matching (`g=push; git $g`).
+- A file written by a shell command rather than a file-writing tool is matched
+  as a *command*, not against `hot_paths`.
+- Substring matching cannot see intent: it over-catches, and narrowing it is a
+  policy decision, not an implementation detail.
 
 The reference enforcing implementation is the Keel Skills `PreToolUse` hook
 (`enforce-policy.cjs`).
@@ -229,9 +301,16 @@ The reference enforcing implementation is the Keel Skills `PreToolUse` hook
 ## 9. Versioning
 
 This spec uses `MAJOR.MINOR`. A MINOR bump adds or clarifies without breaking a
-conforming implementation; a MAJOR bump may change required behavior. The 0.2 bump
-renamed the three permission levels (goal / method / green light) without changing
-how they work. Implementations SHOULD declare which spec version they target.
+conforming implementation; a MAJOR bump may change required behavior.
+
+- **0.2** renamed the three permission levels (goal / method / green light)
+  without changing how they work.
+- **0.3** added unattended agents (§6.1), two optional policy sections, and the
+  per-segment command-matching rule (§7.1, §8.1.5). A *reasoning* implementation
+  conforming to 0.2 still conforms; an *enforcing* one must adopt §8.1.5, since
+  whole-string matching is a bypass rather than a laxer setting.
+
+Implementations SHOULD declare which spec version they target.
 
 ---
 
