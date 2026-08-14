@@ -6,10 +6,13 @@ description: >-
   getting long, context is piling up, you're unsure what the current state of a
   project actually is, or you need to hand off work so a future session can pick it
   up. Establishes files as the source of truth, gives a rule for when to stop
-  expanding a session and record state instead, and shows how to leave a resumable
+  expanding a session and record state instead, covers what to do at the two ends
+  of a session (read state and run checks before working; reconcile state, log one
+  line of history and hand off at the end), and shows how to leave a resumable
   pointer so a fresh session can continue from source files alone. Triggers on:
   long session, context bloat, running out of context, source of truth, session
-  handoff, where did we leave off, resume work, summarize and continue later.
+  handoff, where did we leave off, resume work, summarize and continue later,
+  starting a session, wrapping up, closing out.
 ---
 
 # Context Discipline
@@ -58,6 +61,39 @@ When handing off, leave (in files, not just the chat):
 - What the current state is and how it was verified.
 - What the next concrete step is.
 - Which files to read first to reconstruct context.
+
+## The two ends of a session
+
+A session that reads state at the start and writes it back at the end is the
+mechanism that makes "files are the source of truth" actually hold. Both ends
+matter, and the opening one is the one people skip.
+
+**Opening.** Read the permission rules, then the state file, then only the
+docs for the area you're about to touch — not all of them. Then **run the
+project's checks before doing any work**, not after: if the previous session
+left drift, you want it now, not once you've built on top of it. The
+`AGENT_POLICY.md` names which files and which command; `/keel-skills:session-start`
+runs it.
+
+**Closing.** Reconcile what happened into the files: resolved items move to
+history, new verified facts go where they belong, open questions get recorded
+as open. Then re-run the checks, and leave a short handoff.
+`/keel-skills:session-close` runs it.
+
+Two rules that keep the closing from becoming its own problem:
+
+- **One line of history per close.** The reasoning belongs in the document it
+  is about — the decision, the process doc, the draft — not in the history
+  entry. History entries that grow into essays are how a changelog gains tens
+  of kilobytes a month and stops being read.
+- **The close records; it does not build.** No new work, no reopening
+  decisions, no redesigning the process. If the close finds something worth
+  doing, it writes it down as open and stops.
+
+Anything the close writes must be **verified against a file or a tool**. A
+state file that reports unverified claims as fact is worse than one that admits
+a gap. (The `workspace-hygiene` skill covers how to shape those files so they
+don't rot.)
 
 ## The one thing you must never do
 

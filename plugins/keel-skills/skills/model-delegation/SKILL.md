@@ -79,6 +79,10 @@ cleanup, the same report — stop repeating it by hand and burning context. Turn
 into a **reusable tool, script, or documented procedure**, then call that. Manual
 repetition is both a cost leak and an error source.
 
+> The threshold is **three**, and building the tool has its own rules (what an
+> agent-run script must be, how to test it, who gets to adopt it). See the
+> `repeatable-work` skill.
+
 ## How to apply this in one line
 
 > Cheapest model that can do it well; shallow delegation (max depth 2, no

@@ -146,6 +146,24 @@ to the parent agent acting on a human's green light). Handing work to a subagent
 never creates permission out of thin air. (See the `model-delegation` skill for the
 delegation rules.)
 
+## Unattended runs: no human present means no green light available
+
+When you are running with nobody watching — a scheduled routine, a CI job, a
+background agent — the rule doesn't get looser, it gets **stricter**: there is
+no one who *could* give a green light, so anything that needs one **cannot
+happen**. Not "proceed carefully" — it does not happen.
+
+An unattended run may look, measure, and **report with a recommendation**. It
+must not commit, push, deploy, send, publish, delete by inference, mark
+anything approved, or "fix" what it finds broken. If the job needs any of
+those, it was scoped wrong, and the work goes back to a session with a human in
+it. (The enforcement hook does this mechanically too — a hot action degrades
+from *ask* to *deny* when no human can answer.)
+
+Write those limits into the routine's own prompt: **every run starts with no
+memory of any conversation**, so a limit agreed once in chat does not exist for
+it. The `workspace-hygiene` skill covers the routine pattern.
+
 ## The enforcement backstop (this skill is the thinking layer)
 
 This skill is the **soft** layer: it makes you run the check yourself. The plugin
