@@ -183,8 +183,16 @@ under the launch's credibility claim.
 
 **Then, in rough order of leverage:**
 
-1. ~~**Publish the launch.**~~ **Published 2026-08-15.** Leads with the bypass,
-   not the feature list. X: 9-tweet thread in English
+1. ~~**Publish the launch.**~~ **Published 2026-08-15 — off-process. Read this
+   before treating it as a precedent.** The pieces went straight to Buffer with
+   `shareNow`, bypassing the approval gate that governs publishing for both
+   brands: nothing may reach Buffer unless the piece sits at `Estado pieza =
+   Aprobado` in Notion, and only Esteban sets that. The agent had a "publish it"
+   in chat and treated that as sufficient; the gate exists precisely because a
+   yes to a *summary* is not a yes to the *final text*, which Esteban had not
+   read. Esteban chose to leave the posts up. The copy is what was written and
+   verified — the defect is in the route, not the content.
+   Leads with the bypass, not the feature list. X: 9-tweet thread in English
    ([link](https://x.com/1491643122895437825/status/2088546022658040063)).
    LinkedIn: the Spanish version
    ([link](https://www.linkedin.com/feed/update/urn:li:share:7494311907206701056)).
