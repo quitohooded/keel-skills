@@ -183,10 +183,18 @@ under the launch's credibility claim.
 
 **Then, in rough order of leverage:**
 
-1. **Publish the launch.** `marketing/launch.md` has the 0.6 angle written and
-   ready — it leads with the bypass found in our own brake, not with the feature
-   list, because a guardrail author publishing a hole in his own guardrail is the
-   most credible thing available and nobody expects it. Esteban's call and voice.
+1. ~~**Publish the launch.**~~ **Published 2026-08-15.** Leads with the bypass,
+   not the feature list. X: 9-tweet thread in English
+   ([link](https://x.com/1491643122895437825/status/2088546022658040063)).
+   LinkedIn: the Spanish version
+   ([link](https://www.linkedin.com/feed/update/urn:li:share:7494311907206701056)).
+   Both carry `assets/launch-0.6-oneliner.png` with alt text.
+   **Neither uses the "I turned the safety off and it still braked" line** — see
+   the verification gaps above; that claim was tested and did not reproduce.
+   *The next number to watch is traffic, not stars: the pre-launch baseline was
+   1 unique visitor in 14 days, so anything at all is signal. `gh api
+   repos/quitohooded/keel-skills/traffic/views` — and the endpoint only retains
+   14 days, so it has to be read within the window or it's gone.*
 2. ~~**Cut a GitHub Release** for `v0.6.0`.~~ **Done 2026-08-14** —
    [`v0.6.0`](https://github.com/quitohooded/keel-skills/releases/tag/v0.6.0),
    marked latest, leading with the bypass rather than the feature list.
