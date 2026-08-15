@@ -4,6 +4,52 @@ Keel Skills is MIT-licensed and wants to become a shared standard for governing 
 agents. The two highest-value contributions are **policy packs** and
 **implementations for other runtimes**. Both are easy to start.
 
+## 0. The narrowing rule — read this before proposing anything new
+
+**This project grows by getting narrower, not wider.** Every component added here
+is paid for by every user in every session, forever, whether or not they use it.
+The cost is permanent; the benefit is occasional. That asymmetry is the whole
+reason this section exists.
+
+v0.6.0 roughly doubled the surface that has to stay coherent — five skills, six
+commands, two hooks, a runnable checks script, a spec. That was a deliberate bet,
+not a licence to keep going. **From v0.7 onward the default answer to "let's add a
+component" is no.** What the project needs next is not more mechanism; it is real
+users, real policy packs, and the existing mechanism proven in someone else's repo.
+
+**The gate.** A proposal that adds a skill, a command, a hook, a template, or a
+spec section has to clear all four:
+
+1. **A real failure caused it.** Something actually went wrong — in this repo or a
+   user's — and the existing surface could not have caught it. "Someone might want
+   this" is not a cause. Speculative components are how a framework becomes
+   something people learn to route around.
+2. **No existing piece can absorb it.** Extending a skill, adding a section to an
+   existing one, or making a command do one more thing beats a new component
+   almost every time. Say explicitly which existing piece you considered and why
+   it doesn't fit.
+3. **It states what it costs.** A skill costs context in every session because its
+   description loads whether or not it triggers (§4). A command costs its
+   description line. A spec section costs every implementer. Name the price.
+4. **Something comes out, or the total is argued.** If the surface only ever
+   grows, the gate isn't a gate. Either retire something, or make the case that
+   the total is still small enough to hold in one head.
+
+Fail any one → the proposal is a **no**, or it becomes documentation, an example,
+or a policy pack instead. Those three are the growth paths that cost nothing
+permanent, and they're where contributions are actually wanted.
+
+**What this does not block:** fixing bugs, tightening the spec, sharpening wording,
+adding test cases, adding policy packs, writing examples, and building
+implementations for other runtimes. Narrowing is about new *surface*, not new
+*work*.
+
+> The precedent this comes from: the Paperclip analysis this repo's strategy is
+> built on named "12 subsystems of surface area for a one-person team" as the
+> single thing not to copy — and v0.6 drifted toward it anyway. The rule is
+> written down here, in the file contributors read, precisely because it was
+> already known and still nearly lost.
+
 ## 1. Add a policy pack (easiest, very useful)
 
 A policy pack is a ready-made `AGENT_POLICY.md` for a stack that isn't covered yet
