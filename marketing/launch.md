@@ -107,6 +107,197 @@ repeats into a tool. Five skills, six commands, two hooks.
 
 ---
 
+## ✍️ v0.6.0 — final copy, ready to post (written 2026-08-14)
+
+Written from the skeleton above. **Read it before it goes out** — it's your name
+and your voice, and nobody else can sign off on that. Change anything that
+doesn't sound like you; the facts are all checked and are the part not to move.
+
+**The visual for post 1 is the one-liner as a code screenshot** — dark background,
+monospace, two lines, nothing else:
+
+```
+npm run build && git push --force origin main
+
+→ allow
+```
+
+### X / Twitter thread (EN — primary market)
+
+> **1/**
+> I build a tool whose only job is to stop an AI agent before it does something it
+> can't undo.
+>
+> Last week I found a hole in it.
+>
+> Here's the hole.
+>
+> *(attach the code screenshot)*
+
+> **2/**
+> My policy said `npm run build` is safe.
+>
+> It is. The problem is what you can staple to the end of something safe.
+>
+> `npm run build && git push --force origin main` → allow
+
+> **3/**
+> The approval was matched against the whole command string. And matched *before*
+> the dangerous patterns.
+>
+> So "you may run the build" quietly became "you may run the build, and whatever
+> comes after it."
+>
+> Same with `;`, `|`, newlines, `$(…)`.
+
+> **4/**
+> A brake is not allowed to have a hole there. That's the one place it can't have one.
+>
+> Nobody hit this in the wild. I found it myself, extending my own tool.
+>
+> I'd rather tell you that than wait for someone else to find it.
+
+> **5/**
+> The fix: the command gets split on `&&`, `;`, `|`, `$(…)` and each piece is
+> judged on its own.
+>
+> An approval clears only its own piece. One dangerous piece makes the whole call
+> dangerous.
+>
+> Chaining two harmless commands still works.
+
+> **6/**
+> And it went into the open spec as a MUST — not just into my code.
+>
+> Any other implementation that matches the whole string is now *wrong*, not
+> lenient.
+>
+> That's the difference between publishing a spec and publishing a standard.
+
+> **7/**
+> Six regression tests ship with it. The suite went 16 → 25.
+>
+> I also ran the release's own checks against my repo and it immediately caught
+> me: the changelog had recorded nothing for 17 days of commits.
+
+> **8/**
+> Same release turns Keel into the whole loop, not just the brake.
+>
+> Setup that assumes nothing about your repo. State that doesn't rot. Checks with
+> three levels instead of pass/fail. And headless runs that **deny** instead of
+> asking — nobody's there to say yes.
+
+> **9/**
+> Still MIT. Still your rules in one file you control. Still a backstop, not a
+> sandbox — it catches accidents and drift, not an adversarial agent.
+>
+> github.com/quitohooded/keel-skills
+
+### LinkedIn (EN)
+
+> **I found the bug in my own brake.**
+>
+> I build a small open-source tool called Keel. Its only job is to stop an AI
+> coding agent before it does something irreversible — push, deploy, delete,
+> send. Last week, while building the next version, I found a hole in it.
+>
+> My policy said `npm run build` was safe to run without asking. It is. The
+> problem is what you can staple to the end of something safe:
+>
+> `npm run build && git push --force origin main` → allowed.
+>
+> The standing approval was matched against the whole command string, and matched
+> before the dangerous patterns. So "you may run the build" had quietly become
+> "you may run the build, and whatever comes after it." The same held for `;`,
+> `|`, newlines and `$(…)`.
+>
+> A guardrail is allowed to be incomplete. It is not allowed to be incomplete
+> *there*.
+>
+> Nobody hit this in the wild — no user reported it, it never caused damage. I
+> found it myself, extending my own tool. I'm saying so publicly because the
+> alternative is a safety tool whose author only publishes the parts that went
+> well, and you shouldn't trust that tool.
+>
+> The fix is the interesting part. Commands are now split on the shell's chaining
+> operators and judged one segment at a time: an approval clears only the segment
+> it matches, and one hot segment makes the whole call hot. Six regression tests
+> ship with it.
+>
+> And it went into the open spec as a MUST, not just into my code — so any other
+> implementation of the model is now wrong if it does what mine did. That's the
+> difference between publishing a spec and publishing a standard.
+>
+> The same release does more than fix that: Keel stops being only a brake and
+> becomes the way a session runs — setup that assumes nothing about your repo,
+> state that doesn't rot, checks with three levels instead of pass/fail, and
+> unattended runs that deny rather than ask, because with no human present there
+> is nobody who *could* approve.
+>
+> It's MIT, self-hosted, and everything specific to your project lives in one
+> `AGENT_POLICY.md` you control — the tool has none of your data inside.
+>
+> Still honest about what it is: a backstop, not a sandbox. It catches accidents,
+> drift and hallucinated actions. It does not contain an adversarial agent. And
+> pattern-matching enforcement has a whole class of bugs like the one above — I
+> just fixed the one I found.
+>
+> → github.com/quitohooded/keel-skills
+
+### Versión en español (tus canales)
+
+> **Encontré el bug en mi propio freno.**
+>
+> Tengo una herramienta open source, Keel. Hace una sola cosa: frenar a un agente
+> de IA antes de que haga algo que no se puede deshacer — pushear, deployar,
+> borrar, enviar. La semana pasada, armando la versión nueva, encontré un agujero
+> adentro.
+>
+> Mi política decía que `npm run build` se puede correr sin preguntar. Y se puede.
+> El problema es lo que le podés pegar atrás:
+>
+> `npm run build && git push --force origin main` → permitido.
+>
+> El permiso se comparaba contra el comando entero, y se comparaba *antes* que los
+> patrones peligrosos. Así que "podés correr el build" se había convertido, sin
+> que nadie lo decidiera, en "podés correr el build y lo que venga después".
+> Igual con `;`, `|`, saltos de línea y `$(…)`.
+>
+> Un freno puede estar incompleto. Lo que no puede es estar incompleto **ahí**.
+>
+> Nadie lo encontró en producción. No lo reportó ningún usuario, no rompió nada.
+> Lo encontré yo, extendiendo mi propia herramienta. Lo cuento porque la
+> alternativa es una herramienta de seguridad cuyo autor publica solo lo que le
+> salió bien, y a esa herramienta no le tendrías que creer.
+>
+> Lo interesante es el arreglo. Ahora el comando se parte en los operadores del
+> shell y se juzga por pedazo: un permiso habilita solo el pedazo que le
+> corresponde, y un solo pedazo peligroso vuelve peligrosa la llamada entera.
+> Van seis tests de regresión con eso.
+>
+> Y quedó en el spec abierto como un MUST, no solo en mi código: cualquier otra
+> implementación del modelo que haga lo que hacía la mía ahora está *mal*, no
+> "permisiva". Esa es la diferencia entre publicar un spec y publicar un estándar.
+>
+> La misma versión hace más que arreglar eso. Keel deja de ser solo un freno y
+> pasa a ser la forma en que corre una sesión: un setup que no asume nada de tu
+> repo, estado que no se pudre, chequeos con tres niveles en vez de pasa/no pasa,
+> y corridas sin humano que **niegan** en lugar de preguntar — si no hay nadie,
+> no hay quien pueda decir que sí.
+>
+> Es MIT, self-hosted, y todo lo específico de tu proyecto vive en un solo
+> `AGENT_POLICY.md` que controlás vos. La herramienta no tiene ningún dato tuyo
+> adentro.
+>
+> Y sigo siendo honesto con lo que es: un backstop, no un sandbox. Agarra
+> accidentes, drift y acciones alucinadas. No contiene a un agente adversarial.
+> La verificación por patrones tiene toda una familia de bugs como este; yo
+> arreglé el que encontré.
+>
+> → github.com/quitohooded/keel-skills
+
+---
+
 ## Earlier — v0.4.0 angle — "now it has teeth"
 
 **Superseded as the headline by v0.6.0 above, but the beats still work** as the

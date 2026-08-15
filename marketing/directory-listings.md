@@ -157,9 +157,26 @@ Notes on how approval works:
 
 - **What it asks for:** plugin name, description, repo URL, author, category,
   and the source commit. All of that is in the table above.
-- **Source block** (if the form asks for structured source / a commit SHA, the
-  current `main` HEAD is what they pin — get it with `git rev-parse HEAD` in the
-  repo and paste it as the `sha`):
+
+> ⚠️ **Get the SHA with `git rev-parse origin/main`, not `git rev-parse HEAD`.**
+> They are not the same thing whenever the local branch is ahead, and they were
+> not the same on 2026-08-14. The catalog pins a commit it can *fetch*; a local
+> unpushed SHA fails validation with an error that looks like a broken repo
+> rather than a wrong paste.
+
+**Verified state for the 0.6.0 resubmission — 2026-08-14:**
+
+| What | Value |
+|---|---|
+| `origin/main` SHA to pin | `7bce4e567b3894d1532c238c7abc7a5ee7dd64c8` |
+| Version in both manifests | `0.6.0` (checked, they agree) |
+| `claude plugin validate .` | ✅ passed |
+| GitHub Release | [`v0.6.0`](https://github.com/quitohooded/keel-skills/releases/tag/v0.6.0), marked latest |
+
+*Re-check all four before pasting if any commit landed after that date — the SHA
+is the one field here that goes stale silently.*
+
+- **Source block** (if the form asks for structured source / a commit SHA):
 
   ```json
   {
@@ -170,11 +187,16 @@ Notes on how approval works:
     "source": {
       "source": "github",
       "url": "https://github.com/quitohooded/keel-skills.git",
-      "ref": "main"
+      "ref": "main",
+      "sha": "7bce4e567b3894d1532c238c7abc7a5ee7dd64c8"
     },
-    "homepage": "https://github.com/quitohooded/keel-skills"
+    "homepage": "https://docs.estebanaguilar.me"
   }
   ```
+
+  *(`homepage` was `github.com/quitohooded/keel-skills` here while the table
+  above said to use the docs site — the two disagreed. Aligned to the docs site
+  on 2026-08-14; the repo URL stays the fallback if a form rejects the domain.)*
 
 ---
 
