@@ -113,14 +113,14 @@ Written from the skeleton above. **Read it before it goes out** — it's your na
 and your voice, and nobody else can sign off on that. Change anything that
 doesn't sound like you; the facts are all checked and are the part not to move.
 
-**The visual for post 1 is the one-liner as a code screenshot** — dark background,
-monospace, two lines, nothing else:
+**The visual for post 1 is done and lives in the repo:**
+[`assets/launch-0.6-oneliner.png`](../assets/launch-0.6-oneliner.png) — 1600×900,
+dark, monospace, two lines and nothing else. The safe half of the command stays
+neutral, `git push --force origin main` is red, the verdict is green. That colour
+split *is* the argument: the contradiction lands before the caption is read.
 
-```
-npm run build && git push --force origin main
-
-→ allow
-```
+Regenerate or restyle it with `assets/launch-0.6-oneliner.py`, which renders at
+2× and downsamples, so the text stays crisp after a platform re-encodes it.
 
 ### X / Twitter thread (EN — primary market)
 
