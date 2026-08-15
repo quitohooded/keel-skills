@@ -141,17 +141,68 @@ source of defects, and the same exercise already paid twice.
    ready — it leads with the bypass found in our own brake, not with the feature
    list, because a guardrail author publishing a hole in his own guardrail is the
    most credible thing available and nobody expects it. Esteban's call and voice.
-2. **Cut a GitHub Release** for `v0.6.0`. The tag is pushed; a Release with notes
-   is a separate, manual step and is what most people actually see.
+2. ~~**Cut a GitHub Release** for `v0.6.0`.~~ **Done 2026-08-14** —
+   [`v0.6.0`](https://github.com/quitohooded/keel-skills/releases/tag/v0.6.0),
+   marked latest, leading with the bypass rather than the feature list.
+   *(Housekeeping found while doing it: the `v0.3.0` release is still a **draft**
+   and has been since 2026-06-19, so the public release list skips from 0.4.0 to
+   0.6.0. Publish it or delete it — either is fine, a permanent draft is not.)*
 3. **Resubmit the directory listings** with 0.6.0 — `marketing/directory-listings.md`
    is current, including a tagline that had been shipping pre-0.5 vocabulary.
 4. **Get one external user with a committed `AGENT_POLICY.md`.** Still the metric
-   that matters, and still zero. Everything above is in service of it.
+   that matters, and **still zero — now measured rather than assumed (2026-08-14).**
+
+   **What the numbers say.** 2 stars, **0 forks, 0 issues**. Repository traffic
+   over the trailing 14 days: **2 views from 1 unique visitor**, 5 clones from 5
+   uniques. GitHub code search finds no repo carrying the `keel-policy` block —
+   though see the caveat below before trusting that one.
+
+   **This reframes the bottleneck, and the reframe matters more than the number.**
+   The strategy above assumed the drop-off was *the blank template*, which is why
+   `onboard` was built and why it got the largest share of 0.6. That assumption
+   was never tested against traffic. At **1 unique visitor in two weeks**, no
+   onboarding improvement can move the metric, because essentially nobody is
+   arriving to be onboarded. `onboard` is not wasted — it removes the *next*
+   obstacle — but it was built for a funnel stage the project has not reached.
+   **The binding constraint is distribution, not conversion.** Items 1–3 are not
+   "in service of" item 4 in a soft sense; they are the only things that can move
+   it at all right now.
+
+   **Caveat on the measurement method, so it isn't over-trusted.** GitHub code
+   search returns **0 results for a term that is definitely in this repo**
+   (`repo:quitohooded/keel-skills keel-policy` → 0), so the repo is not indexed —
+   and an instrument that cannot find the source repo cannot be trusted to find
+   an adopter either. Treat the code-search figure as a floor, not a count. The
+   trustworthy signals are forks, issues and traffic, all pulled from the API:
+
+   ```
+   gh repo view quitohooded/keel-skills --json stargazerCount,forkCount,issues
+   gh api repos/quitohooded/keel-skills/traffic/clones
+   gh api repos/quitohooded/keel-skills/traffic/views
+   ```
+
+   *(Traffic endpoints only retain 14 days. If this number is ever going to be a
+   trend rather than a snapshot, it has to be sampled on a schedule — otherwise
+   every future reading is another isolated dot.)*
 
 **The discipline for the next release: narrow, don't widen.** v0.6 roughly
 doubled the surface that has to stay coherent, which is the one thing the
 Paperclip analysis explicitly said to reject. Real users, real packs, no new
-subsystems. If a v0.7 idea is a new component, the answer is probably no.
+subsystems.
+
+This is no longer only a note here. It is a **four-part gate in
+[`CONTRIBUTING.md`](CONTRIBUTING.md) §0**, binding on anyone — including a future
+session of this project — proposing a skill, command, hook, template or spec
+section: a real failure caused it · no existing piece can absorb it · it states
+its permanent cost · something comes out or the total is argued. Fail one and the
+answer is no, or it becomes documentation, an example, or a policy pack instead.
+
+*It was moved there on purpose.* A rule that lives only in the state file is read
+when someone wants to know where the project stands, not when someone is about to
+add a component — and it ages out with the release it was written for. The method
+file is where a contributor already is. This is `workspace-hygiene`'s own doctrine
+applied to itself: state in the state file, rules in the file that governs the
+work.
 
 **Standing constraints on any agent working here** — the repo's own
 `AGENT_POLICY.md` is authoritative, but two are worth repeating: commit, push,
