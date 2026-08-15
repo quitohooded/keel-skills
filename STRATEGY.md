@@ -115,10 +115,48 @@ moment of the burn (the bad push, the broken deploy, the absurd token bill); the
 demo does this. (2) **keep distribution frictionless** — MIT + one-command install.
 If those two hold for 90 days, the standard play has a real shot.
 
-## What only Esteban can do (out of agent scope)
+## What's next (state as of 2026-08-14, after v0.6.0 shipped)
 
-- `git push` the `strategy/v0.3-reposition` branch / merge to `main` (outward, needs a green light).
-- Record the demo GIF (`examples/demo-script.md`) and embed it in the README.
-- Run the interactive `/plugin marketplace add … → install → policy-init` end-to-end test.
-- Publish the build-in-public post and list the plugin in directories.
-- Cut a GitHub release for the version tag.
+*Everything in the previous version of this section was from the 0.3 era and four
+of its five items were already done — a closed item sitting in a state file, the
+exact failure `workspace-hygiene` describes. Replaced, not appended to.*
+
+**The honest gap in v0.6.0's verification — read this first.** The code is
+tested: 25 hook cases, 13 checks cases, the site builds, the repo passes its own
+checks. But the **five new commands are prompts, and prompts were never executed
+by the plugin runtime** — the install used while building 0.6 was still 0.5.0, so
+`onboard`, `session-start`, `session-close`, `hygiene` and `harvest` have never
+run as commands. What *was* verified is the layer underneath them: a synthetic
+project was walked through onboarding by hand in both the "realistic repo" and
+"empty folder" cases, and that found two real defects. So the templates and the
+flow are exercised; the command plumbing is not.
+
+**First thing a next session should do:** update the local install to 0.6.0 and
+actually run the five commands on a real project. That is the cheapest remaining
+source of defects, and the same exercise already paid twice.
+
+**Then, in rough order of leverage:**
+
+1. **Publish the launch.** `marketing/launch.md` has the 0.6 angle written and
+   ready — it leads with the bypass found in our own brake, not with the feature
+   list, because a guardrail author publishing a hole in his own guardrail is the
+   most credible thing available and nobody expects it. Esteban's call and voice.
+2. **Cut a GitHub Release** for `v0.6.0`. The tag is pushed; a Release with notes
+   is a separate, manual step and is what most people actually see.
+3. **Resubmit the directory listings** with 0.6.0 — `marketing/directory-listings.md`
+   is current, including a tagline that had been shipping pre-0.5 vocabulary.
+4. **Get one external user with a committed `AGENT_POLICY.md`.** Still the metric
+   that matters, and still zero. Everything above is in service of it.
+
+**The discipline for the next release: narrow, don't widen.** v0.6 roughly
+doubled the surface that has to stay coherent, which is the one thing the
+Paperclip analysis explicitly said to reject. Real users, real packs, no new
+subsystems. If a v0.7 idea is a new component, the answer is probably no.
+
+**Standing constraints on any agent working here** — the repo's own
+`AGENT_POLICY.md` is authoritative, but two are worth repeating: commit, push,
+tag and deploy each need an explicit green light *every time* (this repo
+deliberately declines the `git commit` standing approval the template
+recommends, because in a public repo the commit is the last cheap moment to
+catch something), and nothing about anyone's private workspace or other projects
+belongs in this repo, in any file, ever.
