@@ -144,9 +144,17 @@ source of defects, and the same exercise already paid twice.
 2. ~~**Cut a GitHub Release** for `v0.6.0`.~~ **Done 2026-08-14** —
    [`v0.6.0`](https://github.com/quitohooded/keel-skills/releases/tag/v0.6.0),
    marked latest, leading with the bypass rather than the feature list.
-   *(Housekeeping found while doing it: the `v0.3.0` release is still a **draft**
-   and has been since 2026-06-19, so the public release list skips from 0.4.0 to
-   0.6.0. Publish it or delete it — either is fine, a permanent draft is not.)*
+   *(Housekeeping found while doing it: the `v0.3.0` release had been a **draft**
+   since 2026-06-19. **Deleted 2026-08-14, tag kept.** Publishing it would have
+   put retired vocabulary on the public releases page — its body describes the
+   L1/L2/L3 model that 0.5 deliberately renamed to goal / method / green light,
+   and it links `examples/l3-brake.md`, which is now `green-light-brake.md` and
+   would have 404'd. Rewriting the body to current vocabulary would have been
+   worse: 0.3.0 genuinely shipped L1/L2/L3, and a release note that lies about
+   what it released is not a fix. Nothing was lost — the draft was never public,
+   the tag still exists, and `CHANGELOG.md` is this repo's declared history of
+   record (`AGENT_POLICY.md` §3), so the draft was a second, drifting copy of a
+   history that already had a home.)*
 3. **Resubmit the directory listings** with 0.6.0 — `marketing/directory-listings.md`
    is current, including a tagline that had been shipping pre-0.5 vocabulary.
 4. **Get one external user with a committed `AGENT_POLICY.md`.** Still the metric
