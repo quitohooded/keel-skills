@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Keel Skills — Documentation",
     description:
-      "Guardrails for autonomous coding agents: authorization levels, cost-aware delegation, file-grounded context.",
+      "Guardrails for autonomous coding agents: a goal/method/green-light permission model, cost-aware delegation, file-grounded context.",
   },
 };
 
