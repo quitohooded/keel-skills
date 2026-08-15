@@ -168,7 +168,7 @@ Notes on how approval works:
 
 | What | Value |
 |---|---|
-| `origin/main` SHA to pin | `7bce4e567b3894d1532c238c7abc7a5ee7dd64c8` |
+| `origin/main` SHA to pin | `1b9c65459e795f3e92aacc7accc35a3158002c78` |
 | Version in both manifests | `0.6.0` (checked, they agree) |
 | `claude plugin validate .` | ✅ passed |
 | GitHub Release | [`v0.6.0`](https://github.com/quitohooded/keel-skills/releases/tag/v0.6.0), marked latest |
@@ -188,7 +188,7 @@ is the one field here that goes stale silently.*
       "source": "github",
       "url": "https://github.com/quitohooded/keel-skills.git",
       "ref": "main",
-      "sha": "7bce4e567b3894d1532c238c7abc7a5ee7dd64c8"
+      "sha": "1b9c65459e795f3e92aacc7accc35a3158002c78"
     },
     "homepage": "https://docs.estebanaguilar.me"
   }
