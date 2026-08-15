@@ -168,13 +168,20 @@ Notes on how approval works:
 
 | What | Value |
 |---|---|
-| `origin/main` SHA to pin | `1b9c65459e795f3e92aacc7accc35a3158002c78` |
-| Version in both manifests | `0.6.0` (checked, they agree) |
-| `claude plugin validate .` | ✅ passed |
+| `origin/main` SHA to pin | **run the command below** — do not trust a number written here |
+| Version in both manifests | `0.6.0` (checked 2026-08-14, they agree) |
+| `claude plugin validate .` | ✅ passed 2026-08-14 |
 | GitHub Release | [`v0.6.0`](https://github.com/quitohooded/keel-skills/releases/tag/v0.6.0), marked latest |
 
-*Re-check all four before pasting if any commit landed after that date — the SHA
-is the one field here that goes stale silently.*
+```
+git rev-parse origin/main
+```
+
+*This field used to be a literal SHA. It was wrong within an hour, twice: the
+commit that pinned it changed `main`, and so did the commit that re-pinned it.
+A value that every commit invalidates cannot be maintained by hand — the only
+stable thing to write down is how to derive it. The other three rows are safe to
+write down because a commit doesn't change them; re-check them at each release.*
 
 - **Source block** (if the form asks for structured source / a commit SHA):
 
@@ -188,7 +195,7 @@ is the one field here that goes stale silently.*
       "source": "github",
       "url": "https://github.com/quitohooded/keel-skills.git",
       "ref": "main",
-      "sha": "1b9c65459e795f3e92aacc7accc35a3158002c78"
+      "sha": "<paste `git rev-parse origin/main` here>"
     },
     "homepage": "https://docs.estebanaguilar.me"
   }
