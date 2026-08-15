@@ -121,19 +121,65 @@ If those two hold for 90 days, the standard play has a real shot.
 of its five items were already done — a closed item sitting in a state file, the
 exact failure `workspace-hygiene` describes. Replaced, not appended to.*
 
-**The honest gap in v0.6.0's verification — read this first.** The code is
-tested: 25 hook cases, 13 checks cases, the site builds, the repo passes its own
-checks. But the **five new commands are prompts, and prompts were never executed
-by the plugin runtime** — the install used while building 0.6 was still 0.5.0, so
-`onboard`, `session-start`, `session-close`, `hygiene` and `harvest` have never
-run as commands. What *was* verified is the layer underneath them: a synthetic
-project was walked through onboarding by hand in both the "realistic repo" and
-"empty folder" cases, and that found two real defects. So the templates and the
-flow are exercised; the command plumbing is not.
+**The verification gap is closed — 2026-08-15.** The local install was updated
+0.5.0 → 0.6.0 and all five commands were run by the plugin runtime, on this repo
+and on a synthetic Next+Supabase project. The command plumbing works: template
+paths resolve, `onboard` chains into `policy-init`, and a level-1 policy written
+by following the interview came out concrete, with a filled `keel-policy` block
+and no placeholders.
 
-**First thing a next session should do:** update the local install to 0.6.0 and
-actually run the five commands on a real project. That is the cheapest remaining
-source of defects, and the same exercise already paid twice.
+**What the run verified positively:**
+
+- **The enforcement hook fires and logs.** 168 decisions recorded that day —
+  147 `allow`, 21 `ask` — in `.keel/audit.jsonl`.
+- **Per-segment compound matching works in production**, not just in the test
+  bank. `git add X && git commit -F - <<EOF` was correctly judged hot on the
+  `git commit` segment. That is the 0.6.0 headline fix, confirmed live.
+- **`hot_mcp` works in production** — Supabase `execute_sql` / `apply_migration`
+  and Vercel deploy calls were all intercepted by rule.
+
+**Three gaps the run found. All three are open.**
+
+1. **`ask` did not stop anything.** All 21 hot verdicts were `ask`, and every
+   one of those actions proceeded — commits and pushes included — with no
+   approval prompt ever reaching the human. The hook did its job and returned
+   `ask`; whether that becomes a stop is up to the harness's permission
+   settings. **This directly contradicts the "spicy angle" in
+   `marketing/launch.md`** — *"I turned the safety off and it still braked"* —
+   which that file already flags as *observed once, verify before headlining*.
+   The verification has now been attempted and came back **negative**. Do not
+   use that line until it is reproduced deliberately.
+2. **"No human present" is detected only by env var.** `HOT_VERDICT` degrades
+   `ask` → `deny` when `KEEL_NONINTERACTIVE` or `CI` is truthy. A
+   non-interactive Claude Code session sets neither, so it is invisible to the
+   hook and gets `ask` — the verdict that, per gap 1, stops nothing. SPEC §6.1
+   states as a **MUST** that with no human present anything needing a green
+   light must not happen, and the reference implementation cannot currently tell
+   that case apart. The hook's own comment concedes the point ("detecting
+   headless reliably from a hook is an open problem"), but **SPEC §8.1's
+   known-limits list does not mention it** — it lists indirection, shell-written
+   files, and substring matching. A limit the spec makes normative and the
+   implementation cannot meet belongs on that list.
+3. **The policy is resolved from the session's working directory**, not from the
+   project being worked on. Running this session from the workspace root meant
+   `SessionStart` reported "no `AGENT_POLICY.md`" while working inside a repo
+   that has one, and the audit log landed at the workspace root rather than the
+   project. `session-start` §1 says a missing injection means the hook isn't
+   running — here it was running fine and looking somewhere else, so the
+   command's own diagnosis points the reader at the wrong cause.
+
+**Two documentation mismatches, smaller:**
+
+- `harvest` §1 says to read the improvement backlog the policy names. This
+  repo's `AGENT_POLICY.md` §3 names no backlog, so the command's first step has
+  nothing to open.
+- `session-close` §2 asks for one dated line in the history file. This repo's
+  history is `CHANGELOG.md`, which is release-scoped by policy ("one entry per
+  release"), and has no place for a session line. One of the two has to give.
+
+**First thing a next session should do:** gap 1, then gap 2 — they are the same
+question (what makes a verdict actually stop something) and they sit directly
+under the launch's credibility claim.
 
 **Then, in rough order of leverage:**
 
