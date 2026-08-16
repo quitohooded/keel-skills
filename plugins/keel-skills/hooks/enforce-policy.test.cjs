@@ -72,6 +72,41 @@ const cases = [
   ["mcp read-ish list", { tool_name: "mcp__x__list_channels", tool_input: {} }, {}, "allow"],
   ["malformed input fails open", "__RAW__", {}, "allow"],
 
+  // --- The approval channel. `ask` only brakes if somebody can answer it.
+  // Measured 2026-08-16: under bypassPermissions an `ask` is inert and the
+  // action runs, while a `deny` blocks. These cases pin that distinction.
+  ["bypassPermissions denies hot command",
+    { tool_name: "Bash", tool_input: { command: "git push origin main" }, permission_mode: "bypassPermissions" }, {}, "deny"],
+  ["bypassPermissions denies hot path",
+    { tool_name: "Write", tool_input: { file_path: "src/app/page.tsx" }, permission_mode: "bypassPermissions" }, {}, "deny"],
+  ["bypassPermissions denies hot mcp",
+    { tool_name: "mcp__x__deploy_to_vercel", tool_input: {}, permission_mode: "bypassPermissions" }, {}, "deny"],
+  ["dontAsk denies hot command",
+    { tool_name: "Bash", tool_input: { command: "rm -rf build/" }, permission_mode: "dontAsk" }, {}, "deny"],
+
+  // Negative controls: the degrade must not swallow everything. A closed
+  // channel changes the verdict for HOT actions only — it never makes a benign
+  // call hot, and it never overrides a standing approval.
+  ["bypassPermissions still allows benign",
+    { tool_name: "Bash", tool_input: { command: "ls -la" }, permission_mode: "bypassPermissions" }, {}, "allow"],
+  ["bypassPermissions still honours standing allow",
+    { tool_name: "Bash", tool_input: { command: "npm run build" }, permission_mode: "bypassPermissions" }, {}, "allow"],
+  ["bypassPermissions still allows read-only",
+    { tool_name: "Read", tool_input: { file_path: "src/x.ts" }, permission_mode: "bypassPermissions" }, {}, "allow"],
+
+  // Modes where prompting still works keep asking. Denying here would fire the
+  // brake on a healthy state, which is the failure mode the repo already names.
+  ["default mode still asks",
+    { tool_name: "Bash", tool_input: { command: "git push origin main" }, permission_mode: "default" }, {}, "ask"],
+  ["acceptEdits still asks",
+    { tool_name: "Bash", tool_input: { command: "git push origin main" }, permission_mode: "acceptEdits" }, {}, "ask"],
+  ["auto still asks",
+    { tool_name: "Bash", tool_input: { command: "git push origin main" }, permission_mode: "auto" }, {}, "ask"],
+  ["absent permission_mode still asks",
+    { tool_name: "Bash", tool_input: { command: "git push origin main" } }, {}, "ask"],
+  ["unknown permission_mode still asks",
+    { tool_name: "Bash", tool_input: { command: "git push origin main" }, permission_mode: "some-future-mode" }, {}, "ask"],
+
   // --- Compound commands. A standing allowance must not vouch for what it is
   // --- chained to. Before the per-segment split these five all returned allow.
   ["standing allow && hot", { tool_name: "Bash", tool_input: { command: "npm run build && git push --force origin main" } }, {}, "ask"],
@@ -96,7 +131,13 @@ for (const [name, input, env, expected] of cases) {
       const out = execFileSync("node", [HOOK], { input: "not json", env: childEnv({}), encoding: "utf8" });
       got = JSON.parse(out).hookSpecificOutput.permissionDecision;
     } else {
-      got = run({ tool_name: input.tool_name, tool_input: input.tool_input, cwd: PROJ }, env);
+      // Spread the case, don't rebuild it. This line used to pick out
+      // `tool_name` and `tool_input` by hand, which silently dropped every
+      // other field the harness sends — so a case about `permission_mode`
+      // could be written, run, and pass against the old behaviour, because the
+      // field never reached the hook. A bank that cannot express an input
+      // cannot verify anything about it.
+      got = run({ ...input, cwd: PROJ }, env);
     }
   } catch (e) {
     got = "ERROR:" + e.message;

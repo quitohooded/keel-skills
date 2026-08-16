@@ -81,12 +81,38 @@ const FILE_WRITE_TOOLS = new Set([
   "Write", "Edit", "MultiEdit", "NotebookEdit",
 ]);
 
-// Headless / non-interactive: `ask` can't be answered, so it must degrade to deny.
-// Detecting headless reliably from a hook is an open problem — this is pragmatic.
-const NONINTERACTIVE =
+// `ask` is a brake only if somebody can answer it. Two different ways the
+// approval channel is closed, and conflating them is what let this hook be
+// inert for a year:
+//
+//   1. Nobody is there at all — CI, a scheduled run. Env vars are the signal.
+//   2. Somebody IS there, but turned the prompts off (`permission_mode`).
+//      This is NOT "no human present"; it is a human who chose not to be
+//      interrupted. The green light still cannot be given, because the channel
+//      that would carry it is closed.
+//
+// Either way a hot action must not proceed on an approval that cannot arrive
+// (SPEC §6.1).
+//
+// Verified 2026-08-16 by executing it, not by reading: under
+// `bypassPermissions` an `ask` is **inert** — the action runs anyway — while a
+// `deny` blocks. That measurement is the whole reason case 2 exists. The
+// harness has been handing us `permission_mode` on every call the entire time;
+// nothing needed to be added to the contract, only read.
+const HEADLESS_ENV =
   truthy(process.env.KEEL_NONINTERACTIVE) || truthy(process.env.CI);
 
-const HOT_VERDICT = NONINTERACTIVE ? "deny" : "ask";
+// Modes in which the harness will not surface an approval prompt.
+// Deliberately NOT listed: `default` (prompts), and `auto` / `acceptEdits`,
+// where prompting still happens for commands. Denying there would fire the
+// brake on healthy states, and an alarm that always sounds is worse than none.
+// What that leaves uncovered is disclosed in SPEC §8.1 rather than guessed at
+// here — see the `acceptEdits` note.
+const MODES_WITHOUT_PROMPT = new Set(["bypasspermissions", "dontask"]);
+
+// Refined per call in main(), once the input is parsed.
+let CHANNEL_CLOSED = HEADLESS_ENV;
+let HOT_VERDICT = CHANNEL_CLOSED ? "deny" : "ask";
 
 main();
 
@@ -104,6 +130,14 @@ function main() {
   const toolInput = input.tool_input || {};
   const projectDir =
     process.env.CLAUDE_PROJECT_DIR || input.cwd || process.cwd();
+
+  // Is there a channel an approval could come back through? An absent
+  // `permission_mode` is treated as open: an older or different harness that
+  // does not send the field should keep getting `ask`, not have every hot
+  // action hard-denied by a hook that guessed.
+  const mode = String(input.permission_mode || "").toLowerCase();
+  CHANNEL_CLOSED = HEADLESS_ENV || MODES_WITHOUT_PROMPT.has(mode);
+  HOT_VERDICT = CHANNEL_CLOSED ? "deny" : "ask";
 
   // Rule 1 — read-only tools are always free.
   if (READONLY_TOOLS.has(toolName)) {
@@ -266,10 +300,21 @@ function decide(permissionDecision, permissionDecisionReason) {
   process.exit(0);
 }
 
+// A blocked action has to say how to get unblocked. A `deny` cannot be answered
+// in the moment, so a message that only announces the block leaves the reader
+// with no move except turning the hook off — which is the worst outcome
+// available to a guardrail.
 function reasonHot(why) {
-  return NONINTERACTIVE
-    ? "keel: BLOCKED (no human present to give a green light) — " + why
-    : "keel: needs a green light (explicit approval) — " + why;
+  if (!CHANNEL_CLOSED) {
+    return "keel: needs a green light (explicit approval) — " + why;
+  }
+  return (
+    "keel: BLOCKED — " + why +
+    ". No approval prompt can reach a human here (headless run, or permission " +
+    "prompts are off), so the green light cannot be given. To proceed: declare " +
+    "it under standing_allow_* in AGENT_POLICY.md, or re-run with permission " +
+    "prompts enabled."
+  );
 }
 
 function audit(projectDir, record) {
