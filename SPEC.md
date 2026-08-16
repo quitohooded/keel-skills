@@ -1,9 +1,23 @@
 # Keel Agent Governance Specification
 
-- **Spec version:** 0.3 (draft)
+- **Spec version:** 0.4 (draft)
 - **Status:** open, runtime-neutral
 - **License of this document:** MIT (same as the project); you may implement it freely.
 - **Maintainer:** Esteban Aguilar — github.com/quitohooded
+
+> **What 0.4 adds.** A closed approval channel (§6.2). 0.3 required an
+> *unattended* run to deny what it cannot get approved; 0.4 generalises that to
+> any state where the approval prompt will not reach a human — including an
+> attended session whose prompts are switched off. An implementation that emits
+> an "ask" the host silently ignores, and then lets the action run, is **not
+> conforming**: it reports a brake it does not apply. Plus the matching
+> known-limit disclosure in §8.1. Nothing in §2–§5 changed; §6.2 is the one
+> addition an *enforcing* implementation must adopt.
+>
+> *This was found in the reference implementation, which had the defect from the
+> day the hook shipped: it degraded correctly in CI and not at all in an
+> interactive session with prompts off — the case covering most of the
+> irreversible actions people actually take.*
 
 > **What 0.3 adds.** Unattended agents (§6.1) — when no human is present, no
 > green light exists to be given, so anything requiring one MUST NOT happen. Two
@@ -164,6 +178,41 @@ Following through (§5) does **not** lift this. A standing approval may cover an
 unattended action only if it names that unattended context explicitly in its
 scope.
 
+### 6.2 When the approval channel is closed
+
+An unattended run is one case of a more general condition: **the green light
+cannot arrive**. The other case is a human who *is* present but has turned the
+approval prompts off — a "bypass" or "don't ask" mode in the host runtime.
+
+The two are not the same situation and MUST NOT be described as one. In the
+second there is a person who could be asked by other means, and who made a
+deliberate choice about being interrupted. But the consequence for a hot action
+is identical, because the channel that would carry the approval is closed.
+
+A conforming enforcing implementation MUST therefore apply §6.1's rule whenever
+it can determine that no approval prompt will reach a human — whatever the
+cause. Two requirements follow:
+
+1. An implementation MUST NOT let an unanswerable request for approval stand in
+   for an approval. If it emits an "ask" the host will not surface, and the
+   action then proceeds, the implementation is **not conforming**: it is
+   reporting a brake it does not apply.
+2. It MUST read that state from the host wherever the host exposes it, rather
+   than inferring it from the environment alone. Where the state cannot be
+   determined, it MUST default to asking rather than denying, and MUST disclose
+   the gap (§8.1).
+
+Requirement 1 is normative because the failure is **silent**. The decision log
+records `ask`, the audit trail records `ask`, the operator reads both as a brake
+that engaged — and the action happened anyway. Nothing in the system reports a
+problem. An implementation that degrades correctly in CI can still fail this
+requirement completely in an interactive session, which is where most of the
+irreversible actions actually occur.
+
+A blocked action SHOULD say how to become unblocked — a standing approval that
+would cover it, or the setting that would reopen the channel. A block with no
+route out teaches the operator to remove the guardrail.
+
 ---
 
 ## 7. The `AGENT_POLICY.md` format
@@ -292,6 +341,15 @@ than letting users infer more assurance than exists:
   as a *command*, not against `hot_paths`.
 - Substring matching cannot see intent: it over-catches, and narrowing it is a
   policy decision, not an implementation detail.
+- **Whether an "ask" will actually reach a human is only as good as what the
+  host reports** (§6.2). An implementation can cover the modes it can name and
+  no others. In the reference implementation that means: fully covered where the
+  host reports a bypass-style mode or a headless environment; **not** covered
+  where a mode auto-approves only *part* of the surface — an edits-accepting
+  mode leaves `hot_paths` unenforced while `hot_commands` still prompts, so the
+  brake is half-engaged and says nothing about it. State which modes you cover.
+  This limit was itself undisclosed until 2026-08-16, and its absence is what
+  let the reference implementation run inert under a bypass mode.
 
 The reference enforcing implementation is the Keel Skills `PreToolUse` hook
 (`enforce-policy.cjs`).
