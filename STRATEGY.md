@@ -138,7 +138,15 @@ and no placeholders.
 - **`hot_mcp` works in production** — Supabase `execute_sql` / `apply_migration`
   and Vercel deploy calls were all intercepted by rule.
 
-**Three gaps the run found. All three are open.**
+**Three gaps the run found. Gaps 1 and 2 are closed in 0.7.0 — 2026-08-16.**
+They were one question, and the answer turned out to be a field the runtime had
+been sending on every call and the hook never read: `permission_mode`. Under a
+bypass-style mode an `ask` is inert and a `deny` blocks (measured, not
+reasoned), so a closed approval channel now degrades to `deny` exactly as
+headless does. Spec 0.4 §6.2 makes it normative, §8.1 discloses what is still
+uncovered, and the bank went 25 → 37 — including a fix to the bank itself, which
+had been silently dropping every stdin field it did not name and so could never
+have caught this. **Gap 3 stays open.**
 
 1. **`ask` did not stop anything.** All 21 hot verdicts were `ask`, and every
    one of those actions proceeded — commits and pushes included — with no
@@ -177,9 +185,16 @@ and no placeholders.
   history is `CHANGELOG.md`, which is release-scoped by policy ("one entry per
   release"), and has no place for a session line. One of the two has to give.
 
-**First thing a next session should do:** gap 1, then gap 2 — they are the same
-question (what makes a verdict actually stop something) and they sit directly
-under the launch's credibility claim.
+**First thing a next session should do:** gap 3, the smallest of the three and
+now the only one left in the enforcement layer — the policy and the audit log
+resolve against the session's working directory, so running from a parent
+workspace silently governs a subproject with the wrong policy. Then decide
+whether 0.7.0 gets its own launch beat: *"the brake I shipped wasn't engaging in
+the mode I run it in"* is the same shape of story as the 0.6 bypass, told a
+second time, and a second one lands differently — either as proof the honesty
+is a practice rather than a pose, or as a pattern of shipping enforcement that
+was never exercised. That call is Esteban's and it is worth making deliberately
+rather than by default.
 
 **Then, in rough order of leverage:**
 
