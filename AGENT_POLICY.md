@@ -4,7 +4,7 @@
 > is a diet book by someone who doesn't cook, so this file is both the real
 > configuration for this repo and the worked example the docs point at.
 >
-> Format: [`SPEC.md`](SPEC.md) §7 · targets **spec 0.3**.
+> Format: [`SPEC.md`](SPEC.md) §7 · targets **spec 0.4**.
 
 ## 1. Hot zones (need a green light before any change)
 

@@ -2,6 +2,79 @@
 
 All notable changes to the Keel Skills plugin are documented here.
 
+## [0.7.0] — 2026-08-16
+
+**The brake was inert in the mode most people run.** This release contains no
+new surface — it makes the surface that already existed actually engage. If you
+run Claude Code with permission prompts off, upgrade: until now Keel was
+reporting stops it was not performing.
+
+### Fixed — an `ask` nobody could answer let the action through
+
+The hook returns `ask` for a hot action, which is the request for a green light.
+That is a brake **only if a human can answer it**. It detected "nobody can
+answer" from `KEEL_NONINTERACTIVE` / `CI` alone — the headless case — and had no
+idea about the far more common one: an attended session with permission prompts
+switched off.
+
+Measured, not reasoned about:
+
+```
+permission_mode = bypassPermissions
+  ask   →  inert; the action runs anyway
+  deny  →  blocks
+```
+
+So every hot action in such a session — `git push`, writes to hot paths,
+outward MCP calls — was logged as `ask` and then simply happened. The decision
+log said the brake engaged. It had not. **The defect was present from the day
+the hook shipped in 0.4.0.**
+
+The fix is to read a field the runtime was already sending on every call:
+`permission_mode`. When it names a mode that will not surface a prompt
+(`bypassPermissions`, `dontAsk`), a hot action degrades to `deny`, exactly as it
+does headless. Nothing had to be added to the hook contract — only read.
+
+**Deliberately not covered, and now disclosed rather than guessed:** modes that
+auto-approve only part of the surface. Under an edits-accepting mode, writes to
+`hot_paths` are auto-accepted while `hot_commands` still prompts, so the brake
+is half-engaged. That is in the spec's known-limits list (§8.1) instead of being
+hard-coded on an assumption — denying in modes where prompting still works would
+fire the brake on healthy states, and an alarm that always sounds is worse than
+none.
+
+A blocked action now also says **how to get unblocked** (a standing approval, or
+re-running with prompts on). A block with no route out teaches people to remove
+the guardrail.
+
+### Fixed — the test bank could not express the input
+
+The runner rebuilt each case's stdin from `tool_name` and `tool_input` and
+silently dropped every other field. A case about `permission_mode` could be
+written, run, and *pass against the broken behaviour*, because the field never
+reached the hook. It now spreads the case through. **A bank that cannot express
+an input cannot verify anything about it** — and this one had been quietly
+narrowing every case for as long as it existed.
+
+Suite 25 → 37, including negative controls that a closed channel must not
+swallow benign commands, standing approvals, or read-only tools. Confirmed by
+reverting the fix and watching exactly the four new cases go red.
+
+### Added — spec 0.4
+
+- **§6.2 When the approval channel is closed.** Generalises §6.1: an unattended
+  run is one case of "the green light cannot arrive"; a human who turned the
+  prompts off is another. They are **not** the same situation and the spec says
+  so — but the consequence for a hot action is identical. An implementation that
+  emits an unanswerable `ask` and lets the action proceed is not conforming.
+  Implementations MUST read the state from the host where the host exposes it,
+  MUST default to asking where they cannot tell, and SHOULD tell a blocked
+  action how to become unblocked.
+- **§8.1** — the matching known-limit: whether an `ask` reaches a human is only
+  as good as what the host reports, and partial-approval modes leave the brake
+  half-engaged. The absence of this disclosure is what let the reference
+  implementation run inert.
+
 ## [0.6.0] — 2026-08-14
 
 The operating loop. Keel stops being only a brake and becomes the way a session
