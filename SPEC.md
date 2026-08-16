@@ -5,6 +5,15 @@
 - **License of this document:** MIT (same as the project); you may implement it freely.
 - **Maintainer:** Esteban Aguilar — github.com/quitohooded
 
+> **What 0.4 adds, part two.** Where the policy is read from (§7.2). A session
+> opened above the project — a workspace, a monorepo — never read the
+> subproject's own policy, and could not have matched its globs if it had. The
+> governing policy is now the nearest one above the file, with the session root
+> as the fallback, and a subproject may loosen a rule only by declaring a
+> standing allowance rather than by silence. Actions that carry no file target
+> (commands, MCP calls) still resolve at the session root, and §7.2 says so
+> instead of leaving it to be discovered.
+>
 > **What 0.4 adds.** A closed approval channel (§6.2). 0.3 required an
 > *unattended* run to deny what it cannot get approved; 0.4 generalises that to
 > any state where the approval prompt will not reach a human — including an
@@ -290,6 +299,40 @@ standing_allow_mcp:
 - Matching is case-insensitive and on **substrings**, so it over-catches by
   design. `standing_allow_*` is the mechanism for narrowing it, and narrowing
   is a recorded choice rather than a silent one.
+
+### 7.2 Where the policy is read from
+
+A session is often opened **above** the project being edited: a workspace of
+several repositories, a monorepo, a parent directory holding both. 0.3 said only
+that an implementation reads `AGENT_POLICY.md` "from the project root", which is
+silent about that case — and silence here fails toward the unsafe side twice
+over. A subproject's own policy is never read, and its globs could not match even
+if it were: the policy writes `src/**` while the session sees
+`packages/api/src/**`.
+
+For an action with a **file target**, a conforming implementation:
+
+1. MUST resolve the target to an absolute path **once**, against the session
+   root, before matching anything. A relative tool path is relative to the
+   session root; re-resolving it against some other directory nests it twice.
+2. MUST evaluate against the **nearest** `AGENT_POLICY.md` at or above the
+   target, bounded by the session root, with globs matched relative to *that*
+   policy's directory.
+3. MUST fall back to the session-root policy for what the nearest one does not
+   mention, so a subproject cannot loosen a rule by merely existing.
+4. MAY let a nearer policy override a broader one, but **only through an
+   explicit standing allowance**. A project may relax a rule about its own
+   files; it may not do so by silence.
+5. MUST NOT walk above the session root. A target outside it has no governing
+   policy in scope, and searching upward would attach an unrelated one.
+
+**Known limit, and it is not small.** This applies to actions that *name* a
+file. A shell command and an MCP call carry no target path, so they are
+classified against the session-root policy alone. In a workspace of several
+projects, a command's hot patterns are therefore the outer project's — which is
+usually the safer direction, since the outer policy is the broader one, but it
+means a subproject cannot declare a command hot for itself. Implementations
+SHOULD say which of the two they do.
 
 ---
 
