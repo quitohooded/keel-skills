@@ -209,24 +209,78 @@ function segments(command) {
 
 function classifyPath(filePath, policy, projectDir, toolName) {
   if (!filePath) return decide("allow", "keel: no file path");
-  const rel = toRel(filePath, projectDir);
 
-  for (const allow of policy.standing_allow_paths) {
-    if (globMatch(allow, rel)) {
-      audit(projectDir, { tool: toolName, input: rel, verdict: "allow", rule: "standing_allow_path:" + allow });
-      return decide("allow", "keel: path covered by standing approval (" + allow + ")");
+  // A session is often opened above the project being edited — a workspace of
+  // several repos, a monorepo. Resolving the policy from the session directory
+  // alone means a subproject's own AGENT_POLICY.md is never read, and its globs
+  // would not match anyway: it writes `plugins/**`, the session sees
+  // `some/nested/path/plugins/**`.
+  //
+  // So the policy that governs a write is the nearest one **above the file**,
+  // and its globs are matched against a path relative to *its* root. The
+  // session-root policy stays as the fallback for what the nearest one does not
+  // mention — a subproject can only loosen a rule by declaring a standing
+  // allowance, never by merely existing.
+  // Resolve to absolute **once**, against the session root, before comparing to
+  // anything. A relative tool path is relative to the session root, so
+  // re-resolving it against each layer's directory would nest it a second time
+  // (`sub/lib/x` under `<root>/sub` becomes `<root>/sub/sub/lib/x`). That is the
+  // same defect 0.6.0 fixed in the checks script: a relative path resolved
+  // against the wrong base is correct only while the two bases coincide, which
+  // is exactly what stops being true the moment a subproject is involved.
+  const abs = path.resolve(projectDir, filePath);
+
+  const nearDir = findPolicyDir(abs, projectDir);
+  const layers = [];
+  if (nearDir && nearDir !== path.resolve(projectDir)) {
+    layers.push({ dir: nearDir, policy: loadPolicy(nearDir), scope: "project" });
+  }
+  layers.push({ dir: projectDir, policy, scope: "session" });
+
+  for (const layer of layers) {
+    const rel = toRel(abs, layer.dir);
+    const tag = layer.scope === "session" ? "" : " [" + layer.scope + "]";
+
+    for (const allow of layer.policy.standing_allow_paths) {
+      if (globMatch(allow, rel)) {
+        audit(projectDir, { tool: toolName, input: rel, policy: layer.scope, verdict: "allow", rule: "standing_allow_path:" + allow });
+        return decide("allow", "keel: path covered by standing approval (" + allow + ")" + tag);
+      }
+    }
+
+    for (const pat of layer.policy.hot_paths) {
+      if (globMatch(pat, rel)) {
+        audit(projectDir, { tool: toolName, input: rel, policy: layer.scope, verdict: HOT_VERDICT, rule: "hot_path:" + pat });
+        return decide(HOT_VERDICT, reasonHot("writes to hot path `" + rel + "` (matches `" + pat + "`)" + tag));
+      }
     }
   }
 
-  for (const pat of policy.hot_paths) {
-    if (globMatch(pat, rel)) {
-      audit(projectDir, { tool: toolName, input: rel, verdict: HOT_VERDICT, rule: "hot_path:" + pat });
-      return decide(HOT_VERDICT, reasonHot("writes to hot path `" + rel + "` (matches `" + pat + "`)"));
-    }
-  }
-
-  audit(projectDir, { tool: toolName, input: rel, verdict: "allow", rule: "no_match" });
+  audit(projectDir, { tool: toolName, input: toRel(abs, projectDir), verdict: "allow", rule: "no_match" });
   return decide("allow", "keel: path not in hot set");
+}
+
+// Nearest directory at or above the file that carries an AGENT_POLICY.md,
+// bounded by the session root. Returns null when the file sits outside the
+// session root entirely — walking further would let a write anywhere on disk
+// pick up an unrelated policy.
+function findPolicyDir(absPath, sessionRoot) {
+  let dir;
+  try {
+    dir = path.dirname(absPath);
+  } catch {
+    return null;
+  }
+  const root = path.resolve(sessionRoot);
+  if (!(dir === root || dir.startsWith(root + path.sep))) return null;
+
+  while (true) {
+    if (fs.existsSync(path.join(dir, "AGENT_POLICY.md"))) return dir;
+    if (dir === root) return null;
+    const up = path.dirname(dir);
+    if (up === dir) return null; // filesystem root; stop rather than loop
+    dir = up;
+  }
 }
 
 function classifyMcp(toolName, policy, projectDir) {

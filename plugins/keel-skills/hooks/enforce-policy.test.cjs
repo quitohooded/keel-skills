@@ -22,6 +22,13 @@ fs.writeFileSync(path.join(PROJ, "AGENT_POLICY.md"), [
   "hot_paths:",
   '  - "src/**"',
   '  - "supabase/migrations/**"',
+  // Reaches into subprojects on purpose: it is what lets a case show that the
+  // session-root policy still applies where a nested policy says nothing.
+  '  - "**/deploy/**"',
+  // Also reaches inside, and the nested policy standing-allows it. That pair is
+  // what makes the "a subproject may loosen, but only by saying so" rule
+  // testable: without the nested layer this path comes back hot.
+  '  - "**/vendor/**"',
   "hot_mcp:",
   '  - "notion-update-page"',
   "standing_allow_commands:",
@@ -30,6 +37,24 @@ fs.writeFileSync(path.join(PROJ, "AGENT_POLICY.md"), [
   '  - "_borradores/**"',
   "standing_allow_mcp:",
   '  - "delete_draft"',
+  "```",
+  "",
+].join("\n"));
+
+// A project nested inside it, with a policy of its own. This is the ordinary
+// case of opening a session on a workspace of several repos, and it is where
+// resolving the policy from the session directory alone silently governs a
+// subproject with the wrong rules.
+fs.mkdirSync(path.join(PROJ, "sub"), { recursive: true });
+fs.writeFileSync(path.join(PROJ, "sub", "AGENT_POLICY.md"), [
+  "# Nested policy",
+  "",
+  "```keel-policy",
+  "hot_paths:",
+  '  - "lib/**"',
+  "standing_allow_paths:",
+  '  - "scratch/**"',
+  '  - "vendor/**"',
   "```",
   "",
 ].join("\n"));
@@ -117,6 +142,39 @@ const cases = [
   ["chained hot headless", { tool_name: "Bash", tool_input: { command: "npm run build && git push" } }, { KEEL_NONINTERACTIVE: "1" }, "deny"],
   // The valve still opens: chaining two benign commands stays allowed.
   ["standing allow && benign", { tool_name: "Bash", tool_input: { command: "npm run build && ls -la" } }, {}, "allow"],
+
+  // --- Nested projects. The policy that governs a write is the nearest one
+  // above the file, matched against a path relative to *its* root. Before this,
+  // `sub/lib/**` was invisible: the subproject's policy was never read, and its
+  // globs could not have matched the session-relative path even if it had been.
+  ["nested policy governs its own path",
+    { tool_name: "Write", tool_input: { file_path: "sub/lib/db.ts" } }, {}, "ask"],
+  ["nested standing allow is honoured",
+    { tool_name: "Edit", tool_input: { file_path: "sub/scratch/tmp.md" } }, {}, "allow"],
+  // Discriminating: the root declares `**/vendor/**` hot and the subproject
+  // standing-allows `vendor/**`. Nearest speaks first, so the subproject's own
+  // declaration wins — a project may loosen a rule about its own files, but
+  // only by saying so. Without the nested layer this comes back `ask`.
+  ["nested standing allow overrides a root hot path",
+    { tool_name: "Write", tool_input: { file_path: "sub/vendor/lib.js" } }, {}, "allow"],
+
+  // The nearest policy wins only where it speaks. Silence falls through to the
+  // session root, so a subproject cannot loosen a rule by merely existing —
+  // only by declaring a standing allowance.
+  // The root's `**/deploy/**` reaches inside the subproject; the nested policy
+  // says nothing about it, so the root's rule stands.
+  ["nested silence falls through to session root",
+    { tool_name: "Write", tool_input: { file_path: "sub/deploy/ship.sh" } }, {}, "ask"],
+  // And an anchored root pattern does NOT leak into the subproject: the root
+  // says `src/**`, which is its own src, not `sub/src`.
+  ["anchored root pattern does not reach into the subproject",
+    { tool_name: "Write", tool_input: { file_path: "sub/src/x.ts" } }, {}, "allow"],
+  ["nested path nobody declares stays allowed",
+    { tool_name: "Write", tool_input: { file_path: "sub/notes.md" } }, {}, "allow"],
+
+  // The outer policy keeps working unchanged for files it owns.
+  ["session-root policy still applies outside the subproject",
+    { tool_name: "Write", tool_input: { file_path: "src/app/page.tsx" } }, {}, "ask"],
 
   // --- MCP refinement from the policy.
   ["mcp hot from policy", { tool_name: "mcp__notion__notion-update-page", tool_input: {} }, {}, "ask"],
