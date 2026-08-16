@@ -60,6 +60,40 @@ Suite 25 → 37, including negative controls that a closed channel must not
 swallow benign commands, standing approvals, or read-only tools. Confirmed by
 reverting the fix and watching exactly the four new cases go red.
 
+### Fixed — a session opened above a project ignored that project's policy
+
+Open a session on a workspace of several repos, edit a file in one of them, and
+the subproject's `AGENT_POLICY.md` was **never read**. Its globs could not have
+matched anyway: it declares `plugins/**` while the session sees
+`proyectos/keel-skills/plugins/**`. Anything a subproject declared hot for
+itself was invisible.
+
+The governing policy for a write is now the **nearest** one at or above the
+file, bounded by the session root, with globs matched relative to *that*
+policy's directory. The session-root policy remains the fallback for what the
+nearest one does not mention, so a subproject cannot loosen a rule by merely
+existing — only by declaring a standing allowance, which is a project relaxing a
+rule about its own files and saying so.
+
+Fixing it surfaced a second defect in the fix itself, of exactly the shape 0.6.0
+fixed in the checks script: a relative tool path is relative to the *session*
+root, so re-resolving it against each candidate directory nested it twice
+(`sub/lib/x` under `<root>/sub` became `<root>/sub/sub/lib/x`). It passed a
+hand-run with absolute paths and failed the bank with relative ones. **A
+relative path resolved against the wrong base is correct only while the two
+bases coincide, which is precisely what stops being true when a subproject
+appears.** Resolved to absolute once, up front.
+
+**Known limit, stated rather than left to be found:** this applies to actions
+that name a file. Shell commands and MCP calls carry no target path and are
+still classified against the session-root policy, so a subproject cannot declare
+a command hot for itself. That is the safer direction — the outer policy is the
+broader one — but it is a gap, and it is now in the spec (§7.2).
+
+Bank 37 → 44, including a case pinning that a nested standing allowance
+overrides a root hot path. Confirmed by reverting: two cases go red, one in each
+direction.
+
 ### Added — spec 0.4
 
 - **§6.2 When the approval channel is closed.** Generalises §6.1: an unattended
@@ -74,6 +108,13 @@ reverting the fix and watching exactly the four new cases go red.
   as good as what the host reports, and partial-approval modes leave the brake
   half-engaged. The absence of this disclosure is what let the reference
   implementation run inert.
+- **§7.2 Where the policy is read from.** 0.3 said only "from the project root",
+  which is silent about a session opened above the project. Five requirements:
+  resolve the target to absolute once against the session root, evaluate against
+  the nearest policy above it, fall back to the session root for what that one
+  does not mention, allow a nearer policy to override only through an explicit
+  standing allowance, and never walk above the session root. Plus the disclosure
+  that targetless actions resolve at the session root.
 
 ## [0.6.0] — 2026-08-14
 

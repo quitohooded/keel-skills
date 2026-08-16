@@ -168,13 +168,17 @@ have caught this. **Gap 3 stays open.**
    known-limits list does not mention it** — it lists indirection, shell-written
    files, and substring matching. A limit the spec makes normative and the
    implementation cannot meet belongs on that list.
-3. **The policy is resolved from the session's working directory**, not from the
-   project being worked on. Running this session from the workspace root meant
-   `SessionStart` reported "no `AGENT_POLICY.md`" while working inside a repo
-   that has one, and the audit log landed at the workspace root rather than the
-   project. `session-start` §1 says a missing injection means the hook isn't
-   running — here it was running fine and looking somewhere else, so the
-   command's own diagnosis points the reader at the wrong cause.
+3. ~~**The policy is resolved from the session's working directory.**~~ **Closed
+   2026-08-16 for actions with a file target**, which is where it mattered: the
+   governing policy is now the nearest one above the file, and spec §7.2 defines
+   the resolution order that 0.3 had left silent. **Still open, and now
+   disclosed rather than latent:** shell commands and MCP calls carry no target
+   path, so they are still classified against the session-root policy — a
+   subproject cannot declare a command hot for itself. Also still true, and
+   unrelated to enforcement: the audit log lands at the session root, and
+   `session-start` §1 still teaches that a missing policy injection means the
+   hook isn't running, which sends the reader to the wrong cause when it is
+   simply looking elsewhere. Both are small and neither is in the brake.
 
 **Two documentation mismatches, smaller:**
 
