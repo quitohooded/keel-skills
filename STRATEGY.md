@@ -146,7 +146,8 @@ reasoned), so a closed approval channel now degrades to `deny` exactly as
 headless does. Spec 0.4 §6.2 makes it normative, §8.1 discloses what is still
 uncovered, and the bank went 25 → 37 — including a fix to the bank itself, which
 had been silently dropping every stdin field it did not name and so could never
-have caught this. **Gap 3 stays open.**
+have caught this. **Gap 3 is partially closed** — resolved for actions with a file
+target (item 3 below); the residue, commands and MCP calls with no file target, stays open.
 
 1. **`ask` did not stop anything.** All 21 hot verdicts were `ask`, and every
    one of those actions proceeded — commits and pushes included — with no
@@ -189,16 +190,20 @@ have caught this. **Gap 3 stays open.**
   history is `CHANGELOG.md`, which is release-scoped by policy ("one entry per
   release"), and has no place for a session line. One of the two has to give.
 
-**First thing a next session should do:** gap 3, the smallest of the three and
-now the only one left in the enforcement layer — the policy and the audit log
-resolve against the session's working directory, so running from a parent
-workspace silently governs a subproject with the wrong policy. Then decide
-whether 0.7.0 gets its own launch beat: *"the brake I shipped wasn't engaging in
-the mode I run it in"* is the same shape of story as the 0.6 bypass, told a
-second time, and a second one lands differently — either as proof the honesty
-is a practice rather than a pose, or as a pattern of shipping enforcement that
-was never exercised. That call is Esteban's and it is worth making deliberately
-rather than by default.
+**Decided (Esteban, 2026-08-17): 0.7.0 does not get a launch beat.**
+*"The brake I shipped wasn't engaging in the mode I run it in"* is the same
+shape of story as the 0.6 bypass, told a second time — the call was made
+deliberately rather than by default. No post, no bug-history content for this
+release.
+
+**First thing a next session should do:** the residue of gap 3, the only piece
+of the enforcement layer still open. Shell commands and MCP calls carry no file
+target, so they classify against the session-root policy — a subproject cannot
+declare a command hot for itself. Two smaller queues ride along, neither in the
+brake: the audit log lands at the session root regardless of which policy
+governed the action, and `session-start` §1 still teaches that a missing policy
+injection means the hook isn't running, when it can simply be looking
+elsewhere.
 
 **Then, in rough order of leverage:**
 
